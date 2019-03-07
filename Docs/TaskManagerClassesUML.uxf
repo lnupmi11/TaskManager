@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.3.0">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>270</x>
+      <y>110</y>
+      <w>210</w>
+      <h>170</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Task&gt;&gt;
+Package::DataAccess.Entities
+--
++Id: int
++Name: string
++Description: string
++WatchType: WachType
++IsActive: bool
++IsRunning: bool
++UserId: int
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>600</x>
+      <y>170</y>
+      <w>240</w>
+      <h>170</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;User&gt;&gt;
+Package::DataAccess.Entities
+--
++Id: int
++Email: string
++FirstName: string
++LastName: string
++Password: string
++Tasks: ICollection&lt;Task&gt;
++UserRoles: ICollection&lt;UserRole&gt;</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>470</x>
+      <y>210</y>
+      <w>150</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>130.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>270</x>
+      <y>370</y>
+      <w>210</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;DateInfo&gt;&gt;
+Package::DataAccess.Entities
+--
++ElapsedTime: DataTime
++LastStartTime: DataTime
+
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>350</x>
+      <y>270</y>
+      <w>30</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
+  </element>
+</diagram>
