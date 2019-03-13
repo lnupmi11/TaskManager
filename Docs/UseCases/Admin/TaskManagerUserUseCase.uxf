@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.3.0">
+  <zoom_level>12</zoom_level>
+  <element>
+    <id>UMLActor</id>
+    <coordinates>
+      <x>108</x>
+      <y>408</y>
+      <w>120</w>
+      <h>132</h>
+    </coordinates>
+    <panel_attributes>Administator</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>372</x>
+      <y>384</y>
+      <w>216</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>Manage accounts</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>192</x>
+      <y>408</y>
+      <w>204</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>150.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>552</x>
+      <y>312</y>
+      <w>288</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;extends&gt;&gt;</panel_attributes>
+    <additional_attributes>220.0;10.0;10.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>816</x>
+      <y>264</y>
+      <w>228</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>Remove user accounts</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>252</x>
+      <y>96</y>
+      <w>1128</w>
+      <h>636</h>
+    </coordinates>
+    <panel_attributes>TaskManager Admin</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>816</x>
+      <y>480</y>
+      <w>228</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>Change user role to admin</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>576</x>
+      <y>420</y>
+      <w>264</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;extends&gt;&gt;</panel_attributes>
+    <additional_attributes>200.0;80.0;10.0;10.0</additional_attributes>
+  </element>
+</diagram>
