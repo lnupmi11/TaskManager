@@ -1,7 +1,9 @@
 ﻿using System;
+using TaskManager.Models;
+
 namespace TaskManager.DTOModels
 {
-    public class TaskDto
+    public class TaskDTO
     {
         public int Id { get; set; }
 
