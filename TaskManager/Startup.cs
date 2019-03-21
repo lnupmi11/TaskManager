@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using TaskManager.EF;
 using TaskManager.Models;
 
@@ -32,6 +33,47 @@ namespace TaskManager
            
             // Add application services.
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            CreateRolesAndUsersAsync(services.BuildServiceProvider()).Wait();
+        }
+
+        private async System.Threading.Tasks.Task CreateRolesAndUsersAsync(IServiceProvider serviceProvider)
+        {
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+            if (!(await roleManager.RoleExistsAsync("Admin")))
+            {
+                var role = new IdentityRole
+                {
+                    Name = "Admin"
+                };
+                await roleManager.CreateAsync(role);
+
+                var user = new ApplicationUser
+                {
+                    UserName = Configuration.GetSection("UserSettings")["UserEmail"],
+                    Email = Configuration.GetSection("UserSettings")["UserEmail"],
+                    EmailConfirmed = true,
+                };
+
+                string userPassword = Configuration.GetSection("UserSettings")["UserPassword"];
+
+                var result = await userManager.CreateAsync(user, userPassword);
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(user, "Admin");
+                }
+            }
+
+            if (!(await roleManager.RoleExistsAsync("User")))
+            {
+                var role = new IdentityRole
+                {
+                    Name = "User"
+                };
+                await roleManager.CreateAsync(role);
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
