@@ -10,6 +10,7 @@
     <Content Remove="Data\**" />
     <EmbeddedResource Remove="Data\**" />
     <None Remove="Data\**" />
+    <Compile Remove="Controllers\TasksController.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,4 +34,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.7" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DTOModels\" />
+  </ItemGroup>
 </Project>
