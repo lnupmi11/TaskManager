@@ -10,7 +10,6 @@
     <Content Remove="Data\**" />
     <EmbeddedResource Remove="Data\**" />
     <None Remove="Data\**" />
-    <Compile Remove="Controllers\TasksController.cs" />
   </ItemGroup>
 
   <ItemGroup>

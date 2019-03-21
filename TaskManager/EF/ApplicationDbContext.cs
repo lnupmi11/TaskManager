@@ -12,5 +12,7 @@ namespace TaskManager.EF
         }
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+
+        public DbSet<Task> Task { get; set; }
     }
 }
