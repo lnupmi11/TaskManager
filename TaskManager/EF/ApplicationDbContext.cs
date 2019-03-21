@@ -10,5 +10,7 @@ namespace TaskManager.EF
             : base(options)
         {
         }
+
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
     }
 }

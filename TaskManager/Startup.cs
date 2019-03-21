@@ -29,7 +29,7 @@ namespace TaskManager
                 config => config.SignIn.RequireConfirmedEmail = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
-
+           
             // Add application services.
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
