@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using TaskManager.Models;
+using TaskManager.DAL.Models;
 
-namespace TaskManager.EF
+namespace TaskManager.DAL.EF
 {
     public class ApplicationDbContext : IdentityDbContext
     {
@@ -11,8 +11,7 @@ namespace TaskManager.EF
         {
         }
 
-        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
-
-        public DbSet<Task> Task { get; set; }
+        public DbSet<ApplicationUser> AppUsers { get; set; }
+        public DbSet<TaskItem> Tasks { get; set; }
     }
 }

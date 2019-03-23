@@ -1,14 +1,14 @@
 ﻿using System;
-using TaskManager.DTOModels;
-using Task = TaskManager.Models.Task;
+using TaskManager.DTO.Task;
+using TaskItem = TaskManager.DAL.Models.TaskItem;
 
 namespace TaskManager.Extensions
 {
     public static class TaskDTOExtension
     {
-        public static Task ToTask(this TaskDTO taskDto)
+        public static TaskItem ToTask(this TaskItemDTO taskDto)
         {
-            return new Task
+            return new TaskItem
             {
                 Id = taskDto.Id,
                 Name = taskDto.Name,
@@ -22,9 +22,9 @@ namespace TaskManager.Extensions
             };
         }
         
-        public static TaskDTO ToTaskDto(this Task task)
+        public static TaskItemDTO ToTaskDto(this TaskItem task)
         {
-            return new TaskDTO
+            return new TaskItemDTO
             {
                 Id = task.Id,
                 Name = task.Name,

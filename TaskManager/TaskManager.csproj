@@ -34,6 +34,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTO\" />
+    <ProjectReference Include="..\TaskManager.BLL\TaskManager.BLL.csproj" />
+    <ProjectReference Include="..\TaskManager.DAL\TaskManager.DAL.csproj" />
+    <ProjectReference Include="..\TaskManager.DTO\TaskManager.DTO.csproj" />
   </ItemGroup>
 </Project>

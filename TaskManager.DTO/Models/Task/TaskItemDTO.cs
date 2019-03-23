@@ -1,9 +1,9 @@
 ﻿using System;
-using TaskManager.Models;
+using TaskManager.DAL.Models;
 
-namespace TaskManager.DTOModels
+namespace TaskManager.DTO.Task
 {
-    public class TaskDTO
+    public class TaskItemDTO
     {
         public int Id { get; set; }
 
@@ -23,5 +23,4 @@ namespace TaskManager.DTOModels
 
         public WatchType WatchType { get; set; }
     }
-
 }

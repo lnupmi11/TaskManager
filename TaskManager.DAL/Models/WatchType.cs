@@ -1,5 +1,4 @@
-﻿using System;
-namespace TaskManager.Models
+﻿namespace TaskManager.DAL.Models
 {
     public enum WatchType
     {

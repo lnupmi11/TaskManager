@@ -1,7 +1,10 @@
 ﻿using System;
-namespace TaskManager.Models
+using System.ComponentModel.DataAnnotations.Schema;
+using TaskManager.DAL.Models.Enums;
+
+namespace TaskManager.DAL.Models
 {
-    public class Task
+    public class TaskItem
     {
         public int Id { get; set; }
 
