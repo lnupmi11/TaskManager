@@ -158,24 +158,24 @@ namespace TaskManager.DAL.Migrations
                 name: "Tasks",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(nullable: true),
+                    Id = table.Column<string>(nullable: false),
+                    Title = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
-                    ElapsedTime = table.Column<TimeSpan>(nullable: false),
-                    LastStartTime = table.Column<DateTime>(nullable: false),
-                    Goal = table.Column<TimeSpan>(nullable: true),
-                    IsRunning = table.Column<bool>(nullable: false),
-                    UserId = table.Column<int>(nullable: false),
-                    UserId1 = table.Column<string>(nullable: true),
-                    WatchType = table.Column<int>(nullable: false)
+                    EstimatedTime = table.Column<TimeSpan>(nullable: false),
+                    Progress = table.Column<int>(nullable: false),
+                    StartDate = table.Column<DateTime>(nullable: false),
+                    EndDate = table.Column<DateTime>(nullable: false),
+                    Category = table.Column<int>(nullable: false),
+                    Priority = table.Column<int>(nullable: false),
+                    IsActive = table.Column<bool>(nullable: false),
+                    UserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tasks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Tasks_AspNetUsers_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_Tasks_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -221,9 +221,9 @@ namespace TaskManager.DAL.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tasks_UserId1",
+                name: "IX_Tasks_UserId",
                 table: "Tasks",
-                column: "UserId1");
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

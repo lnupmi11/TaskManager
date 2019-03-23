@@ -19,7 +19,7 @@ namespace TaskManager.DAL.Repositories
 
         public bool Any(Func<ApplicationUser, bool> predicate)
         {
-            return _context.AppUsers.Any(predicate);
+            return _context.UserProfiles.Any(predicate);
         }
 
         public void Create(ApplicationUser item)
@@ -44,22 +44,22 @@ namespace TaskManager.DAL.Repositories
 
         public IEnumerable<ApplicationUser> GetAllWhere(Func<ApplicationUser, bool> predicate)
         {
-            return _context.AppUsers.Where(predicate);
+            return _context.UserProfiles.Where(predicate);
         }
 
         public ApplicationUser Find(Func<ApplicationUser, bool> predicate)
         {
-            return _context.AppUsers.Where(predicate).FirstOrDefault();
+            return _context.UserProfiles.Where(predicate).FirstOrDefault();
         }
 
         public ApplicationUser Find(string id)
         {
-            return _context.AppUsers.SingleOrDefault(p => p.Id == id);
+            return _context.UserProfiles.SingleOrDefault(p => p.Id == id);
         }
 
         public IEnumerable<ApplicationUser> GetAll()
         {
-            return _context.AppUsers;
+            return _context.UserProfiles;
         }
 
         public void Remove(ApplicationUser item)
@@ -69,18 +69,18 @@ namespace TaskManager.DAL.Repositories
 
         public ApplicationUser SingleOrDefault(Func<ApplicationUser, bool> predicate)
         {
-            return _context.AppUsers.SingleOrDefault(predicate);
+            return _context.UserProfiles.SingleOrDefault(predicate);
         }
 
         public void Update(ApplicationUser item)
         {
-            _context.AppUsers.Update(item);
+            _context.UserProfiles.Update(item);
         }
 
         public IEnumerable<ApplicationUser> GetAllByIds(IEnumerable<string> ids)
         {
             HashSet<string> usersId = new HashSet<string>(ids);
-            return _context.AppUsers.Where(p => usersId.Contains(p.Id));
+            return _context.UserProfiles.Where(p => usersId.Contains(p.Id));
         }
     }
 }
