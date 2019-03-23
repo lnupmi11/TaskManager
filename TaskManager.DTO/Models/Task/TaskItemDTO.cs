@@ -1,26 +1,30 @@
 ﻿using System;
-using TaskManager.DAL.Models;
+using TaskManager.DAL.Models.Enums;
 
 namespace TaskManager.DTO.Task
 {
     public class TaskItemDTO
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
-        public string Name { get; set; }
+        public string Title { get; set; }
 
         public string Description { get; set; }
 
-        public long ElapsedTime { get; set; }
+        public TimeSpan EstimatedTime { get; set; }
 
-        public DateTime LastStartTime { get; set; }
+        public int Progress { get; set; }
 
-        public TimeSpan? Goal { get; set; }
+        public DateTime StartDate { get; set; }
 
-        public bool IsRunning { get; set; }
+        public DateTime EndDate { get; set; }
 
-        public int UserId { get; set; }
+        public Category Category { get; set; }
 
-        public WatchType WatchType { get; set; }
+        public Priority Priority { get; set; }
+
+        public bool IsActive { get; set; }
+        
+        public string UserId { get; set; }
     }
 }

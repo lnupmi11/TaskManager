@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TaskManager.DAL.Models.Enums
+﻿namespace TaskManager.DAL.Models.Enums
 {
-    public class Priority
+    public enum Priority
     {
+        Critical,
+        Major,
+        Minor,
+        Normal,
+        Trivial
     }
 }

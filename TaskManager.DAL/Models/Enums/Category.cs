@@ -1,10 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TaskManager.DAL.Models.Enums
+﻿namespace TaskManager.DAL.Models.Enums
 {
-    public class Category
+    public enum Category
     {
+        SportActivity,
+        PhoneCall,
+        Mettings,
+        Family,
+        Friends,
+        Weekend,
+        Work,
+        Homework
     }
 }

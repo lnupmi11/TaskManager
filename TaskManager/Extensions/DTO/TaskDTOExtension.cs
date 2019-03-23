@@ -1,6 +1,5 @@
-﻿using System;
+﻿using TaskManager.DAL.Models;
 using TaskManager.DTO.Task;
-using TaskItem = TaskManager.DAL.Models.TaskItem;
 
 namespace TaskManager.Extensions
 {
@@ -11,14 +10,16 @@ namespace TaskManager.Extensions
             return new TaskItem
             {
                 Id = taskDto.Id,
-                Name = taskDto.Name,
+                Title = taskDto.Title,
                 Description = taskDto.Description,
-                ElapsedTime = TimeSpan.FromMilliseconds(taskDto.ElapsedTime),
-                Goal = taskDto.Goal,
-                LastStartTime = taskDto.LastStartTime,
-                IsRunning = taskDto.IsRunning,
-                UserId = taskDto.UserId,
-                WatchType = taskDto.WatchType
+                EstimatedTime = taskDto.EstimatedTime,
+                Progress = taskDto.Progress,
+                StartDate = taskDto.StartDate,
+                EndDate = taskDto.EndDate,
+                Category = taskDto.Category,
+                Priority = taskDto.Priority,
+                IsActive = taskDto.IsActive,
+                UserId = taskDto.UserId
             };
         }
         
@@ -27,14 +28,16 @@ namespace TaskManager.Extensions
             return new TaskItemDTO
             {
                 Id = task.Id,
-                Name = task.Name,
+                Title = task.Title,
                 Description = task.Description,
-                ElapsedTime = (int)task.ElapsedTime.TotalMilliseconds,
-                Goal = task.Goal,
-                LastStartTime = task.LastStartTime,
-                IsRunning = task.IsRunning,
-                UserId = task.UserId,
-                WatchType = task.WatchType
+                EstimatedTime = task.EstimatedTime,
+                Progress = task.Progress,
+                StartDate = task.StartDate,
+                EndDate = task.EndDate,
+                Category = task.Category,
+                Priority = task.Priority,
+                IsActive = task.IsActive,
+                UserId = task.UserId
             };
         }
     }
