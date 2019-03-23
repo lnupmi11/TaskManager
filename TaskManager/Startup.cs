@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using TaskManager.EF;
-using TaskManager.Models;
+using TaskManager.DAL.EF;
+using TaskManager.DAL.Models;
 
 namespace TaskManager
 {

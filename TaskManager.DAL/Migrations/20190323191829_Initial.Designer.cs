@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using TaskManager.EF;
+using TaskManager.DAL.EF;
 
-namespace TaskManager.Migrations
+namespace TaskManager.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190321210943_Initi")]
-    partial class Initi
+    [Migration("20190323191829_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -187,38 +187,39 @@ namespace TaskManager.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("TaskManager.Models.Task", b =>
+            modelBuilder.Entity("TaskManager.DAL.Models.TaskItem", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("Category");
 
                     b.Property<string>("Description");
 
-                    b.Property<TimeSpan>("ElapsedTime");
+                    b.Property<DateTime>("EndDate");
 
-                    b.Property<TimeSpan?>("Goal");
+                    b.Property<TimeSpan>("EstimatedTime");
 
-                    b.Property<bool>("IsRunning");
+                    b.Property<bool>("IsActive");
 
-                    b.Property<DateTime>("LastStartTime");
+                    b.Property<int>("Priority");
 
-                    b.Property<string>("Name");
+                    b.Property<int>("Progress");
 
-                    b.Property<int>("UserId");
+                    b.Property<DateTime>("StartDate");
 
-                    b.Property<string>("UserId1");
+                    b.Property<string>("Title");
 
-                    b.Property<int>("WatchType");
+                    b.Property<string>("UserId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("UserId");
 
-                    b.ToTable("Task");
+                    b.ToTable("Tasks");
                 });
 
-            modelBuilder.Entity("TaskManager.Models.ApplicationUser", b =>
+            modelBuilder.Entity("TaskManager.DAL.Models.ApplicationUser", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
@@ -273,11 +274,11 @@ namespace TaskManager.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("TaskManager.Models.Task", b =>
+            modelBuilder.Entity("TaskManager.DAL.Models.TaskItem", b =>
                 {
-                    b.HasOne("TaskManager.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId1");
+                    b.HasOne("TaskManager.DAL.Models.ApplicationUser", "User")
+                        .WithMany("Tasks")
+                        .HasForeignKey("UserId");
                 });
 #pragma warning restore 612, 618
         }

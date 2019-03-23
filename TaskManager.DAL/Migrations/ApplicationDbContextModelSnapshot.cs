@@ -3,17 +3,15 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using TaskManager.EF;
+using TaskManager.DAL.EF;
 
-namespace TaskManager.Migrations
+namespace TaskManager.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190321203323_Initial")]
-    partial class Initial
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -187,7 +185,39 @@ namespace TaskManager.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("TaskManager.Models.ApplicationUser", b =>
+            modelBuilder.Entity("TaskManager.DAL.Models.TaskItem", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("Category");
+
+                    b.Property<string>("Description");
+
+                    b.Property<DateTime>("EndDate");
+
+                    b.Property<TimeSpan>("EstimatedTime");
+
+                    b.Property<bool>("IsActive");
+
+                    b.Property<int>("Priority");
+
+                    b.Property<int>("Progress");
+
+                    b.Property<DateTime>("StartDate");
+
+                    b.Property<string>("Title");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Tasks");
+                });
+
+            modelBuilder.Entity("TaskManager.DAL.Models.ApplicationUser", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
@@ -240,6 +270,13 @@ namespace TaskManager.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("TaskManager.DAL.Models.TaskItem", b =>
+                {
+                    b.HasOne("TaskManager.DAL.Models.ApplicationUser", "User")
+                        .WithMany("Tasks")
+                        .HasForeignKey("UserId");
                 });
 #pragma warning restore 612, 618
         }
