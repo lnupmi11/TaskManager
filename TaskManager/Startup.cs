@@ -26,7 +26,7 @@ namespace TaskManager
             services.AddDbContext<ApplicationDbContext>(options =>
                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>(
+            services.AddIdentity<UserProfile, IdentityRole>(
                 config => config.SignIn.RequireConfirmedEmail = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
@@ -40,7 +40,7 @@ namespace TaskManager
         private async System.Threading.Tasks.Task CreateRolesAndUsersAsync(IServiceProvider serviceProvider)
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<UserProfile>>();
 
             //if (!(await roleManager.RoleExistsAsync("Admin")))
             //{

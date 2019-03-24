@@ -30,7 +30,7 @@ namespace TaskManager.DAL.Repositories
             }
         }
 
-        public IRepository<ApplicationUser> Users
+        public IRepository<UserProfile> Users
         {
             get
             {
