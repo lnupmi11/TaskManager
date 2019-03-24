@@ -1,6 +1,6 @@
 ﻿@using TaskManager.Views.Manage
 @using TaskManager.DAL.Models
-@inject SignInManager<ApplicationUser> SignInManager
+@inject SignInManager<UserProfile> SignInManager
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }

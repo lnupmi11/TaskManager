@@ -1,8 +1,8 @@
 @using Microsoft.AspNetCore.Identity
 @using TaskManager.DAL.Models
 
-@inject SignInManager<ApplicationUser> SignInManager
-@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<UserProfile> SignInManager
+@inject UserManager<UserProfile> UserManager
 
 @if (SignInManager.IsSignedIn(User))
 {

@@ -8,7 +8,7 @@ using TaskManager.DAL.Models;
 
 namespace TaskManager.DAL.Repositories
 {
-    public class UserRepository : IRepository<ApplicationUser>
+    public class UserRepository : IRepository<UserProfile>
     {
         private readonly ApplicationDbContext _context;
 
@@ -17,17 +17,17 @@ namespace TaskManager.DAL.Repositories
             _context = context;
         }
 
-        public bool Any(Func<ApplicationUser, bool> predicate)
+        public bool Any(Func<UserProfile, bool> predicate)
         {
             return _context.UserProfiles.Any(predicate);
         }
 
-        public void Create(ApplicationUser item)
+        public void Create(UserProfile item)
         {
             throw new NotImplementedException();
         }
 
-        public Task CreateAsync(ApplicationUser item)
+        public Task CreateAsync(UserProfile item)
         {
             throw new NotImplementedException();
         }
@@ -42,42 +42,42 @@ namespace TaskManager.DAL.Repositories
             throw new NotImplementedException();
         }
 
-        public IEnumerable<ApplicationUser> GetAllWhere(Func<ApplicationUser, bool> predicate)
+        public IEnumerable<UserProfile> GetAllWhere(Func<UserProfile, bool> predicate)
         {
             return _context.UserProfiles.Where(predicate);
         }
 
-        public ApplicationUser Find(Func<ApplicationUser, bool> predicate)
+        public UserProfile Find(Func<UserProfile, bool> predicate)
         {
             return _context.UserProfiles.Where(predicate).FirstOrDefault();
         }
 
-        public ApplicationUser Find(string id)
+        public UserProfile Find(string id)
         {
             return _context.UserProfiles.SingleOrDefault(p => p.Id == id);
         }
 
-        public IEnumerable<ApplicationUser> GetAll()
+        public IEnumerable<UserProfile> GetAll()
         {
             return _context.UserProfiles;
         }
 
-        public void Remove(ApplicationUser item)
+        public void Remove(UserProfile item)
         {
             throw new NotImplementedException();
         }
 
-        public ApplicationUser SingleOrDefault(Func<ApplicationUser, bool> predicate)
+        public UserProfile SingleOrDefault(Func<UserProfile, bool> predicate)
         {
             return _context.UserProfiles.SingleOrDefault(predicate);
         }
 
-        public void Update(ApplicationUser item)
+        public void Update(UserProfile item)
         {
             _context.UserProfiles.Update(item);
         }
 
-        public IEnumerable<ApplicationUser> GetAllByIds(IEnumerable<string> ids)
+        public IEnumerable<UserProfile> GetAllByIds(IEnumerable<string> ids)
         {
             HashSet<string> usersId = new HashSet<string>(ids);
             return _context.UserProfiles.Where(p => usersId.Contains(p.Id));

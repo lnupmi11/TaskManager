@@ -37,7 +37,7 @@ namespace TaskManager.DAL.Models
         [ForeignKey("AspNetUsers")]
         public string UserId { get; set; }
 
-        public virtual ApplicationUser User { get; set; }
+        public virtual UserProfile User { get; set; }
 
         public virtual ICollection<TaskChanges> Changes { get; set; }
     }

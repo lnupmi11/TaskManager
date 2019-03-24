@@ -7,7 +7,7 @@ namespace TaskManager.DAL.Interfaces
     public interface IUnitOfWork : IDisposable
     {
         IRepository<TaskItem> TaskItems { get; }
-        IRepository<ApplicationUser> Users { get; }
+        IRepository<UserProfile> Users { get; }
         Task SaveAsync();
     }
 }
