@@ -18,11 +18,16 @@ namespace TaskManager.DAL.EF
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
             builder.Entity<ApplicationUser>()
-            .HasMany(t => t.Tasks)
-            .WithOne(u => u.User);
+                .HasMany(t => t.Tasks)
+                .WithOne(u => u.User);
+
+            builder.Entity<TaskItem>()
+                .HasMany(c => c.Changes)
+                .WithOne(t => t.Task);
         }
 
         public DbSet<ApplicationUser> UserProfiles { get; set; }
         public DbSet<TaskItem> Tasks { get; set; }
+        public DbSet<TaskChanges> TaskChanges { get; set; }
     }
 }

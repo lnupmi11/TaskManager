@@ -10,8 +10,8 @@ using TaskManager.DAL.EF;
 namespace TaskManager.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190323191829_Initial")]
-    partial class Initial
+    [Migration("20190324122612_TaskHistoryUp4")]
+    partial class TaskHistoryUp4
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -187,6 +187,24 @@ namespace TaskManager.DAL.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("TaskManager.DAL.Models.TaskChanges", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Description");
+
+                    b.Property<DateTime>("ModifiedOn");
+
+                    b.Property<string>("TaskId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TaskId");
+
+                    b.ToTable("TaskChanges");
+                });
+
             modelBuilder.Entity("TaskManager.DAL.Models.TaskItem", b =>
                 {
                     b.Property<string>("Id")
@@ -200,13 +218,13 @@ namespace TaskManager.DAL.Migrations
 
                     b.Property<TimeSpan>("EstimatedTime");
 
-                    b.Property<bool>("IsActive");
-
                     b.Property<int>("Priority");
 
-                    b.Property<int>("Progress");
+                    b.Property<int?>("Progress");
 
                     b.Property<DateTime>("StartDate");
+
+                    b.Property<int>("Status");
 
                     b.Property<string>("Title");
 
@@ -272,6 +290,13 @@ namespace TaskManager.DAL.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("TaskManager.DAL.Models.TaskChanges", b =>
+                {
+                    b.HasOne("TaskManager.DAL.Models.TaskItem", "Task")
+                        .WithMany("Changes")
+                        .HasForeignKey("TaskId");
                 });
 
             modelBuilder.Entity("TaskManager.DAL.Models.TaskItem", b =>

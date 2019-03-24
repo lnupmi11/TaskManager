@@ -18,8 +18,9 @@ namespace TaskManager.Extensions
                 EndDate = taskDto.EndDate,
                 Category = taskDto.Category,
                 Priority = taskDto.Priority,
-                IsActive = taskDto.IsActive,
-                UserId = taskDto.UserId
+                Status = taskDto.Status,
+                Changes = taskDto.Changes,
+                UserId = taskDto.UserId,
             };
         }
         
@@ -36,7 +37,8 @@ namespace TaskManager.Extensions
                 EndDate = task.EndDate,
                 Category = task.Category,
                 Priority = task.Priority,
-                IsActive = task.IsActive,
+                Status = task.Status,
+                Changes = task.Changes,
                 UserId = task.UserId
             };
         }

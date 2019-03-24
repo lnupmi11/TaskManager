@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using TaskManager.DAL.Models.Enums;
 
@@ -6,6 +8,12 @@ namespace TaskManager.DAL.Models
 {
     public class TaskItem
     {
+        public TaskItem()
+        {
+            Changes = new List<TaskChanges>();
+        }
+
+        [Key]
         public string Id { get; set; }
 
         public string Title { get; set; }
@@ -14,7 +22,7 @@ namespace TaskManager.DAL.Models
 
         public TimeSpan EstimatedTime { get; set; }
 
-        public int Progress { get; set; }
+        public int? Progress { get; set; }
 
         public DateTime StartDate { get; set; }
 
@@ -24,11 +32,13 @@ namespace TaskManager.DAL.Models
 
         public Priority Priority { get; set; }
 
-        public bool IsActive { get; set; }
+        public Status Status { get; set; }
 
         [ForeignKey("AspNetUsers")]
         public string UserId { get; set; }
 
         public virtual ApplicationUser User { get; set; }
+
+        public virtual ICollection<TaskChanges> Changes { get; set; }
     }
 }

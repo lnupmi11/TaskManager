@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using TaskManager.DAL.Models;
 using TaskManager.DAL.Models.Enums;
 
 namespace TaskManager.DTO.Task
@@ -13,7 +15,7 @@ namespace TaskManager.DTO.Task
 
         public TimeSpan EstimatedTime { get; set; }
 
-        public int Progress { get; set; }
+        public int? Progress { get; set; }
 
         public DateTime StartDate { get; set; }
 
@@ -23,8 +25,10 @@ namespace TaskManager.DTO.Task
 
         public Priority Priority { get; set; }
 
-        public bool IsActive { get; set; }
+        public Status Status { get; set; }
         
         public string UserId { get; set; }
+
+        public ICollection<TaskChanges> Changes { get; set; }
     }
 }
