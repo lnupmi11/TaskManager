@@ -1,23 +1,24 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using TaskManager.BLL.Interfaces;
+using TaskManager.BLL.Managers;
+using TaskManager.DAL.EF;
+using TaskManager.DAL.Models;
+using TaskManager.DAL.Repositories;
 
 namespace TaskManager.Controllers
 {
     [Route("task")]
     public class TaskController : ControllerBase
     {
-        private readonly ITaskManager _taskManager;
+        private readonly TaskManager<TaskItem> _taskManager;
+        private readonly WorkContext _context;
 
-        public TaskController(ITaskManager taskManager)
+        public TaskController(ApplicationDbContext context)
         {
-            _taskManager = taskManager;
+            _context = new WorkContext(context);
+            _taskManager = new TaskManager<TaskItem>(_context);
         }
 
-        [HttpGet("getAll")]
+        [HttpGet("listOfAllTasks")]
         public IActionResult GetAllTasks()
         {
             var allTasks = _taskManager.GetAllTasks();

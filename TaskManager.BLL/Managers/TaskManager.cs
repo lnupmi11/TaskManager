@@ -1,41 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using TaskManager.BLL.Interfaces;
-using TaskManager.DAL.Interfaces;
 using TaskManager.DAL.Models;
-
-using TaskManager.DTO.Task;
-using TaskManager;
+using TaskManager.DAL.Repositories;
 namespace TaskManager.BLL.Managers
 {
-    public class TaskManager : BaseManager, ITaskManager
+    public class TaskManager<TTaskItem> : IDisposable where TTaskItem : class
     {
-        public TaskManager(IUnitOfWork unitOfWork) : base(unitOfWork)
+        private readonly WorkContext _context;
+        public TaskManager(WorkContext context)
         {
+            _context = context;
         }
 
-        public IEnumerable<TaskItemDTO> GetAllTasks()
+        public IEnumerable<TaskItem> GetAllTasks()
         {
-            var tasks = _unitOfWork.TaskItems.GetAll()
-                .Select(task => new TaskItemDTO
-                {
-                    Id = task.Id,
-                    Title = task.Title,
-                    Description = task.Description,
-                    EstimatedTime = task.EstimatedTime,
-                    Progress = task.Progress,
-                    StartDate = task.StartDate,
-                    EndDate = task.EndDate,
-                    Category = task.Category,
-                    Priority = task.Priority,
-                    Status = task.Status,
-                    Changes = task.Changes,
-                    UserId = task.UserId
-                }).ToList();
-
+            var tasks = _context.TaskItems.GetAll();
             return tasks;
         }
+
+        #region IDisposable Support
+
+        private bool disposedValue = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing && _context != null)
+                {
+                    _context.Dispose(true);
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        #endregion
     }
 }

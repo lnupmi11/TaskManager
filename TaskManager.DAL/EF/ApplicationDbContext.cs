@@ -4,7 +4,7 @@ using TaskManager.DAL.Models;
 
 namespace TaskManager.DAL.EF
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
