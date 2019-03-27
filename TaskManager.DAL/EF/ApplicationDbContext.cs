@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using System.IO;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 using TaskManager.DAL.Models;
 
 namespace TaskManager.DAL.EF
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -30,4 +33,7 @@ namespace TaskManager.DAL.EF
         public DbSet<TaskItem> Tasks { get; set; }
         public DbSet<TaskChanges> TaskChanges { get; set; }
     }
+
+    public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>     {         public ApplicationDbContext CreateDbContext(string[] args)         {             IConfigurationRoot configuration = new ConfigurationBuilder()                 .SetBasePath(Directory.GetCurrentDirectory())                 .AddJsonFile("appsettings.json")                 .Build();             var builder = new DbContextOptionsBuilder<ApplicationDbContext>();             var connectionString = configuration.GetConnectionString("DefaultConnection");             builder.UseSqlServer(connectionString);             return new ApplicationDbContext(builder.Options);         }     } 
+
 }

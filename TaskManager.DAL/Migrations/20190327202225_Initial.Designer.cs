@@ -10,14 +10,14 @@ using TaskManager.DAL.EF;
 namespace TaskManager.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190324122612_TaskHistoryUp4")]
-    partial class TaskHistoryUp4
+    [Migration("20190327202225_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.8-servicing-32085")
+                .HasAnnotation("ProductVersion", "2.2.2-servicing-10034")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -237,14 +237,17 @@ namespace TaskManager.DAL.Migrations
                     b.ToTable("Tasks");
                 });
 
-            modelBuilder.Entity("TaskManager.DAL.Models.ApplicationUser", b =>
+            modelBuilder.Entity("TaskManager.DAL.Models.UserProfile", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
+                    b.Property<string>("FirstName");
 
-                    b.ToTable("ApplicationUser");
+                    b.Property<string>("LastName");
 
-                    b.HasDiscriminator().HasValue("ApplicationUser");
+                    b.Property<DateTime>("RegistredOn");
+
+                    b.HasDiscriminator().HasValue("UserProfile");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -301,7 +304,7 @@ namespace TaskManager.DAL.Migrations
 
             modelBuilder.Entity("TaskManager.DAL.Models.TaskItem", b =>
                 {
-                    b.HasOne("TaskManager.DAL.Models.ApplicationUser", "User")
+                    b.HasOne("TaskManager.DAL.Models.UserProfile", "User")
                         .WithMany("Tasks")
                         .HasForeignKey("UserId");
                 });

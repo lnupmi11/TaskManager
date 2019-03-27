@@ -6,8 +6,8 @@ using TaskManager.DAL.Repositories;
 
 namespace TaskManager.Controllers
 {
-    [Route("task")]
-    public class TaskController : ControllerBase
+    [Route("[controller]/[action]")]
+    public class TaskController : Controller
     {
         private readonly TaskManager<TaskItem> _taskManager;
         private readonly WorkContext _context;
@@ -18,7 +18,7 @@ namespace TaskManager.Controllers
             _taskManager = new TaskManager<TaskItem>(_context);
         }
 
-        [HttpGet("listOfAllTasks")]
+        [HttpGet]
         public IActionResult GetAllTasks()
         {
             var allTasks = _taskManager.GetAllTasks();
