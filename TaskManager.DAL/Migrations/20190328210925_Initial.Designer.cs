@@ -10,8 +10,8 @@ using TaskManager.DAL.EF;
 namespace TaskManager.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190328204627_Initia")]
-    partial class Initia
+    [Migration("20190328210925_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

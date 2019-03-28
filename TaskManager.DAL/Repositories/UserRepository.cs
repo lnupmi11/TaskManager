@@ -62,7 +62,7 @@ namespace TaskManager.DAL.Repositories
             return _context.UserProfiles;
         }
 
-        public void Remove(UserProfile item)
+        public void RemoveAsync(UserProfile item)
         {
             throw new NotImplementedException();
         }
@@ -72,7 +72,7 @@ namespace TaskManager.DAL.Repositories
             return _context.UserProfiles.SingleOrDefault(predicate);
         }
 
-        public void Update(UserProfile item)
+        public void UpdateAsync(UserProfile item)
         {
             _context.UserProfiles.Update(item);
         }

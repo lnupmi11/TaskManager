@@ -39,9 +39,10 @@ namespace TaskManager.DAL.Repositories
             _context.Tasks.Add(task);
         }
 
-        public void Update(TaskItem task)
+        public async void UpdateAsync(TaskItem task)
         {
             _context.Tasks.Update(task);
+            await _context.SaveChangesAsync();
         }
 
         public IEnumerable<TaskItem> GetAllWhere(Func<TaskItem, Boolean> predicate)
@@ -61,16 +62,20 @@ namespace TaskManager.DAL.Repositories
                 .FirstOrDefault();
         }
 
-        public void Delete(string id)
+        public async void Delete(string id)
         {
             TaskItem task = _context.Tasks.Find(id);
             if (task != null)
+            {
                 _context.Tasks.Remove(task);
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public void Remove(TaskItem item)
+        public async void RemoveAsync(TaskItem item)
         {
             _context.Tasks.Remove(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task CreateAsync(TaskItem item)
@@ -82,7 +87,10 @@ namespace TaskManager.DAL.Repositories
         {
             TaskItem task = await _context.Tasks.FindAsync(id);
             if (task != null)
+            {
                 _context.Tasks.Remove(task);
+                await _context.SaveChangesAsync();
+            }
         }
 
         public TaskItem SingleOrDefault(Func<TaskItem, bool> predicate)

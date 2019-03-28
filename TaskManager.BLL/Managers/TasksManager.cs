@@ -36,6 +36,16 @@ namespace TaskManager.BLL.Managers
             return _context.TaskItems.Any(e => e.Id == id);
         }
 
+        public void Remove(TaskItem taskItem)
+        {
+            _context.TaskItems.RemoveAsync(taskItem);
+        }
+
+        public void Update(TaskItem taskItem)
+        {
+            _context.TaskItems.UpdateAsync(taskItem);
+        }
+
         #region IDisposable Support
 
         private bool disposedValue = false;

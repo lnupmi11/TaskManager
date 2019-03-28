@@ -12,9 +12,9 @@ namespace TaskManager.DAL.Interfaces
         IEnumerable<T> GetAllByIds(IEnumerable<string> ids);
         T Find(Func<T, Boolean> predicate);
         void Create(T item);
-        void Update(T item);
+        void UpdateAsync(T item);
         void Delete(string id);
-        void Remove(T item);
+        void RemoveAsync(T item);
         bool Any(Func<T, Boolean> predicate);
         Task CreateAsync(T item);
         Task DeleteAsync(string id);

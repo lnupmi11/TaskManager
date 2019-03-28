@@ -27,7 +27,7 @@ namespace TaskManager.BLL.Managers
         public async Task ChangeFirstNameAsync(UserProfile user, string firstName)
         {
             user.FirstName = firstName;
-            _context.Users.Update(user);
+            _context.Users.UpdateAsync(user);
             await _context.SaveAsync();
         }
 
@@ -40,7 +40,7 @@ namespace TaskManager.BLL.Managers
         public async Task ChangeSecondNameAsync(UserProfile user, string lastName)
         {
             user.LastName = lastName;
-            _context.Users.Update(user);
+            _context.Users.UpdateAsync(user);
             await _context.SaveAsync();
         }
 
@@ -69,7 +69,7 @@ namespace TaskManager.BLL.Managers
 
         public async Task UpdateSaveAsync(UserProfile user)
         {
-            _context.Users.Update(user);
+            _context.Users.UpdateAsync(user);
             await _context.SaveAsync();
         }
 

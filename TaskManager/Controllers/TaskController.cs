@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TaskManager.BLL.Managers;
 using TaskManager.DAL.EF;
 using TaskManager.DAL.Models;
@@ -65,6 +66,83 @@ namespace TaskManager.Controllers
             }
 
             return View(taskItem);
+        }
+
+        // GET: Task/Edit/{id}
+        public IActionResult Edit(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var taskItem = _taskManager.Find(id);
+            if (taskItem == null)
+            {
+                return NotFound();
+            }
+
+            return View(taskItem);
+        }
+
+        // POST: Task/Edit/{id}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(string id, [Bind("Id,Title,Description,EstimatedTime,Progress,StartDate,EndDate,Category,Priority,Status,UserId")] TaskItem taskItem)
+        {
+            if (id != taskItem.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _taskManager.Update(taskItem);
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!_taskManager.IsTaskExists(taskItem.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(taskItem);
+        }
+
+        // GET: Task/Delete/{id}
+        public IActionResult Delete(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var taskItem = _taskManager.Find(id);
+            if (taskItem == null)
+            {
+                return NotFound();
+            }
+
+            return View(taskItem);
+        }
+
+        // POST: Task/Delete/{id}
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirmed(string id)
+        {
+            var taskItem = _taskManager.Find(id);
+            _taskManager.Remove(taskItem);
+            return RedirectToAction(nameof(Index));
         }
     }
 }
