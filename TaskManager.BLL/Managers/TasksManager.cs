@@ -1,21 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TaskManager.DAL.Models;
 using TaskManager.DAL.Repositories;
+
 namespace TaskManager.BLL.Managers
 {
-    public class TaskManager<TTaskItem> : IDisposable where TTaskItem : class
+    public class TasksManager : IDisposable
     {
         private readonly WorkContext _context;
-        public TaskManager(WorkContext context)
+
+        public TasksManager(WorkContext context)
         {
             _context = context;
         }
 
-        public IEnumerable<TaskItem> GetAllTasks()
+        public IEnumerable<TaskItem> GetAll()
         {
-            var tasks = _context.TaskItems.GetAll();
-            return tasks;
+            return _context.TaskItems.GetAll();
+        }
+
+        public async Task CreateAsync(TaskItem task)
+        {
+            _context.TaskItems.Create(task);
+            await _context.SaveAsync();
+        }
+
+        public TaskItem Find(string id)
+        {
+            return _context.TaskItems.Find(id);
+        }
+
+        public bool IsTaskExists(string id)
+        {
+            return _context.TaskItems.Any(e => e.Id == id);
         }
 
         #region IDisposable Support
