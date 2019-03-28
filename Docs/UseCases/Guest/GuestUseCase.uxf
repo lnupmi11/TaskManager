@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.3.0">
+  <zoom_level>14</zoom_level>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>714</x>
+      <y>154</y>
+      <w>602</w>
+      <h>490</h>
+    </coordinates>
+    <panel_attributes>Account Management System</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLActor</id>
+    <coordinates>
+      <x>350</x>
+      <y>350</y>
+      <w>84</w>
+      <h>154</h>
+    </coordinates>
+    <panel_attributes>Guest</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>434</x>
+      <y>266</y>
+      <w>462</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;80.0;310.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>434</x>
+      <y>364</y>
+      <w>462</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;10.0;310.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>868</x>
+      <y>224</y>
+      <w>210</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>Sign Up</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>868</x>
+      <y>420</y>
+      <w>210</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>Sign In</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

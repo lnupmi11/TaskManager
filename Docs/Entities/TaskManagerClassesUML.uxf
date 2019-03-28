@@ -6,66 +6,68 @@
     <coordinates>
       <x>270</x>
       <y>110</y>
-      <w>210</w>
-      <h>170</h>
+      <w>250</w>
+      <h>220</h>
     </coordinates>
-    <panel_attributes>&lt;&lt;Task&gt;&gt;
-Package::DataAccess.Entities
+    <panel_attributes>&lt;&lt;TaskItem&gt;&gt;
+Package::TaskManager.DAL.Models
 --
-+Id: int
-+Name: string
++Title: string
 +Description: string
-+WatchType: WachType
-+IsActive: bool
-+IsRunning: bool
-+UserId: int
-</panel_attributes>
++EstimatedTime: TimeSpan
++Progress: int
++StartDate: DateTime
++EndDate: DateTime
++Category: Category
++Priority: Priority
++Status: Status
++Changes: ICollection&lt;TaskChanges&gt;</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>600</x>
-      <y>170</y>
+      <x>670</x>
+      <y>100</y>
       <w>240</w>
       <h>170</h>
     </coordinates>
-    <panel_attributes>&lt;&lt;User&gt;&gt;
-Package::DataAccess.Entities
+    <panel_attributes>&lt;&lt;UserProfile&gt;&gt;
+Package::TaskManager.DAL.Models
 --
-+Id: int
 +Email: string
 +FirstName: string
 +LastName: string
 +Password: string
-+Tasks: ICollection&lt;Task&gt;
-+UserRoles: ICollection&lt;UserRole&gt;</panel_attributes>
++RegistredOn: DateTime
++Tasks: ICollection&lt;TaskItem&gt;
++Role: Role</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>470</x>
+      <x>510</x>
       <y>210</y>
-      <w>150</w>
+      <w>180</w>
       <h>30</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>130.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>160.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
       <x>270</x>
-      <y>370</y>
-      <w>210</w>
-      <h>90</h>
+      <y>440</y>
+      <w>260</w>
+      <h>100</h>
     </coordinates>
-    <panel_attributes>&lt;&lt;DateInfo&gt;&gt;
-Package::DataAccess.Entities
+    <panel_attributes>&lt;&lt;TaskChanges&gt;&gt;
+Package::TaskManager.DAL.Models
 --
-+ElapsedTime: DataTime
-+LastStartTime: DataTime
++ModifiedOn: DataTime
++Description: string
 
 
 </panel_attributes>
@@ -74,12 +76,12 @@ Package::DataAccess.Entities
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>350</x>
-      <y>270</y>
+      <x>390</x>
+      <y>320</y>
       <w>30</w>
-      <h>120</h>
+      <h>140</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;120.0</additional_attributes>
   </element>
 </diagram>

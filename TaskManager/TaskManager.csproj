@@ -28,9 +28,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.4" />
     <PackageReference Include="Microsoft.AspNetCore.Razor" Version="2.1.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.7" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TaskManager.BLL\TaskManager.BLL.csproj" />
+    <ProjectReference Include="..\TaskManager.DAL\TaskManager.DAL.csproj" />
+    <ProjectReference Include="..\TaskManager.DTO\TaskManager.DTO.csproj" />
+  </ItemGroup>
 </Project>

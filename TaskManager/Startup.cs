@@ -5,8 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TaskManager.EF;
-using TaskManager.Models;
+using System;
+using TaskManager.DAL.EF;
+using TaskManager.DAL.Models;
 
 namespace TaskManager
 {
@@ -25,13 +26,54 @@ namespace TaskManager
             services.AddDbContext<ApplicationDbContext>(options =>
                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>(
+            services.AddIdentity<UserProfile, IdentityRole>(
                 config => config.SignIn.RequireConfirmedEmail = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
             // Add application services.
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            CreateRolesAndUsersAsync(services.BuildServiceProvider()).Wait();
+        }
+
+        private async System.Threading.Tasks.Task CreateRolesAndUsersAsync(IServiceProvider serviceProvider)
+        {
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<UserProfile>>();
+
+            if (!(await roleManager.RoleExistsAsync("Admin")))
+            {
+                var role = new IdentityRole
+                {
+                    Name = "Admin"
+                };
+                await roleManager.CreateAsync(role);
+
+                var user = new UserProfile
+                {
+                    UserName = Configuration.GetSection("UserSettings")["UserEmail"],
+                    Email = Configuration.GetSection("UserSettings")["UserEmail"],
+                    EmailConfirmed = true,
+                };
+
+                string userPassword = Configuration.GetSection("UserSettings")["UserPassword"];
+
+                var result = await userManager.CreateAsync(user, userPassword);
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(user, "Admin");
+                }
+            }
+
+            if (!(await roleManager.RoleExistsAsync("User")))
+            {
+                var role = new IdentityRole
+                {
+                    Name = "User"
+                };
+                await roleManager.CreateAsync(role);
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
