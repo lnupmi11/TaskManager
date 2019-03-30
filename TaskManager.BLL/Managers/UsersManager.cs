@@ -31,11 +31,11 @@ namespace TaskManager.BLL.Managers
             await _context.SaveAsync();
         }
 
-        public async Task ChangeFirstNameAsync(ClaimsPrincipal principal, string firstName)
-        {
-            var user = GetUserProfile(principal);
-            await ChangeFirstNameAsync(user, firstName);
-        }
+        //public async Task ChangeFirstNameAsync(ClaimsPrincipal principal, string firstName)
+        //{
+        //    var user = GetUserProfile(principal);
+        //    await ChangeFirstNameAsync(user, firstName);
+        //}
 
         public async Task ChangeSecondNameAsync(UserProfile user, string lastName)
         {
@@ -44,11 +44,11 @@ namespace TaskManager.BLL.Managers
             await _context.SaveAsync();
         }
 
-        public async Task ChangeSecondNameAsync(ClaimsPrincipal principal, string secondName)
-        {
-            var user = GetUserProfile(principal);
-            await ChangeSecondNameAsync(user, secondName);
-        }
+        //public async Task ChangeSecondNameAsync(ClaimsPrincipal principal, string secondName)
+        //{
+        //    var user = GetUserProfile(principal);
+        //    await ChangeSecondNameAsync(user, secondName);
+        //}
 
         public UserProfile GetUserProfile(ClaimsPrincipal principal)
         {
