@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Threading.Tasks;
 using TaskManager.DAL.EF;
 using TaskManager.DAL.Models;
 
@@ -24,7 +25,8 @@ namespace TaskManager
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-               options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+               options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+               x => x.MigrationsAssembly("TaskManager")));
 
             services.AddIdentity<UserProfile, IdentityRole>(
                 config => config.SignIn.RequireConfirmedEmail = true)
@@ -37,7 +39,7 @@ namespace TaskManager
             CreateRolesAndUsersAsync(services.BuildServiceProvider()).Wait();
         }
 
-        private async System.Threading.Tasks.Task CreateRolesAndUsersAsync(IServiceProvider serviceProvider)
+        private async Task CreateRolesAndUsersAsync(IServiceProvider serviceProvider)
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = serviceProvider.GetRequiredService<UserManager<UserProfile>>();
