@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Threading.Tasks;
 using TaskManager.DAL.EF;
 using TaskManager.DAL.Models;
 
@@ -32,12 +33,12 @@ namespace TaskManager
                 .AddDefaultTokenProviders();
 
             // Add application services.
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc();
 
-            CreateRolesAndUsersAsync(services.BuildServiceProvider()).Wait();
+           CreateRolesAndUsersAsync(services.BuildServiceProvider()).Wait();
         }
 
-        private async System.Threading.Tasks.Task CreateRolesAndUsersAsync(IServiceProvider serviceProvider)
+        private async Task CreateRolesAndUsersAsync(IServiceProvider serviceProvider)
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = serviceProvider.GetRequiredService<UserManager<UserProfile>>();
