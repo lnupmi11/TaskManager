@@ -37,7 +37,12 @@ namespace TaskManager.DAL.Repositories
 
         public IEnumerable<TaskItem> GetAllByIds(IEnumerable<string> ids)
         {
-            throw new NotImplementedException();
+            HashSet<string> tasksIds = new HashSet<string>(ids);
+
+            return _tasks
+                .Include(u => u.User)
+                .Include(c => c.Changes)
+                .Where(p => tasksIds.Contains(p.Id));
         }
 
         public TaskItem Find(string id)
@@ -46,6 +51,15 @@ namespace TaskManager.DAL.Repositories
                 .Include(u => u.User)
                 .Include(c => c.Changes)
                 .Where(p => p.Id == id)
+                .SingleOrDefault();
+        }
+
+        public TaskItem Find(Func<TaskItem, bool> predicate)
+        {
+            return _tasks
+                .Include(u => u.User)
+                .Include(c => c.Changes)
+                .Where(predicate)
                 .SingleOrDefault();
         }
 
@@ -58,19 +72,10 @@ namespace TaskManager.DAL.Repositories
         {
             if (task == null)
             {
-                throw new ArgumentNullException("entity");
+                throw new ArgumentNullException("TaskItem entity not found");
             }
             _tasks.Update(task);
             _context.SaveChanges();
-        }
-
-        public TaskItem Find(Func<TaskItem, bool> predicate)
-        {
-            return _tasks
-                .Include(u => u.User)
-                .Include(c => c.Changes)
-                .Where(predicate)
-                .SingleOrDefault();
         }
 
         public void Delete(string id)
