@@ -25,8 +25,7 @@ namespace TaskManager
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-               options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
-               x => x.MigrationsAssembly("TaskManager")));
+               options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<UserProfile, IdentityRole>(
                 config => config.SignIn.RequireConfirmedEmail = true)
@@ -34,9 +33,9 @@ namespace TaskManager
                 .AddDefaultTokenProviders();
 
             // Add application services.
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc();
 
-            CreateRolesAndUsersAsync(services.BuildServiceProvider()).Wait();
+           CreateRolesAndUsersAsync(services.BuildServiceProvider()).Wait();
         }
 
         private async Task CreateRolesAndUsersAsync(IServiceProvider serviceProvider)
