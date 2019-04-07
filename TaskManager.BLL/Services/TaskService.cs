@@ -29,14 +29,14 @@ namespace TaskManager.BLL.Services
             return _taskRepository.Find(id);
         }
 
-        public void Delete(TaskItem taskItem)
+        public void Delete(TaskItem task)
         {
-            _taskRepository.Delete(taskItem);
+            _taskRepository.Delete(task);
         }
 
-        public void Update(TaskItem taskItem)
+        public void Update(TaskItem task)
         {
-            _taskRepository.Update(taskItem);
+            _taskRepository.Update(task);
         }
 
         public bool Any(string id)

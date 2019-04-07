@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using TaskManager.DAL.Models;
 
 namespace TaskManager.BLL.Interfaces
@@ -8,8 +10,8 @@ namespace TaskManager.BLL.Interfaces
         IEnumerable<TaskItem> GetAll();
         void Create(TaskItem task);
         TaskItem Find(string id);
-        void Delete(TaskItem taskItem);
-        void Update(TaskItem taskItem);
+        void Delete(TaskItem task);
+        void Update(TaskItem task);
         bool Any(string id);
     }
 }
