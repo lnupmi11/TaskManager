@@ -10,8 +10,6 @@
     <Content Remove="Data\**" />
     <EmbeddedResource Remove="Data\**" />
     <None Remove="Data\**" />
-    <Content Remove="Views\Task\Delete.cshtml" />
-    <Content Remove="Views\Task\Edit.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
