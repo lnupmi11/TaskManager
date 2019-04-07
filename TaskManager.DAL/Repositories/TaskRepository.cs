@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using TaskManager.DAL.EF;
 using TaskManager.DAL.Interfaces;
 using TaskManager.DAL.Models;
@@ -12,106 +11,98 @@ namespace TaskManager.DAL.Repositories
     public class TaskRepository : IRepository<TaskItem>
     {
         private readonly ApplicationDbContext _context;
+        private DbSet<TaskItem> _tasks;
 
         public TaskRepository(ApplicationDbContext context)
         {
             _context = context;
+            _tasks = context.Tasks;
         }
 
         public IEnumerable<TaskItem> GetAll()
         {
-            return _context.Tasks
+            return _tasks
                 .Include(u => u.User)
                 .Include(c => c.Changes);
         }
 
-        public TaskItem Find(string id)
-        {
-            return _context.Tasks
-                .Include(u => u.User)
-                .Include(c => c.Changes)
-                .Where(p => p.Id == id)
-                .FirstOrDefault();
-        }
-
-        public void Create(TaskItem task)
-        {
-            _context.Tasks.Add(task);
-        }
-
-        public async void UpdateAsync(TaskItem task)
-        {
-            _context.Tasks.Update(task);
-            await _context.SaveChangesAsync();
-        }
-
         public IEnumerable<TaskItem> GetAllWhere(Func<TaskItem, Boolean> predicate)
         {
-            return _context.Tasks
+            return _tasks
                 .Include(u => u.User)
                 .Include(c => c.Changes)
                 .Where(predicate);
         }
 
+        public IEnumerable<TaskItem> GetAllByIds(IEnumerable<string> ids)
+        {
+            HashSet<string> tasksIds = new HashSet<string>(ids);
+
+            return _tasks
+                .Include(u => u.User)
+                .Include(c => c.Changes)
+                .Where(p => tasksIds.Contains(p.Id));
+        }
+
+        public TaskItem Find(string id)
+        {
+            return _tasks
+                .Include(u => u.User)
+                .Include(c => c.Changes)
+                .Where(p => p.Id == id)
+                .SingleOrDefault();
+        }
+
         public TaskItem Find(Func<TaskItem, bool> predicate)
         {
-            return _context.Tasks
+            return _tasks
                 .Include(u => u.User)
                 .Include(c => c.Changes)
                 .Where(predicate)
-                .FirstOrDefault();
+                .SingleOrDefault();
         }
 
-        public async void Delete(string id)
+        public void Create(TaskItem task)
         {
-            TaskItem task = _context.Tasks.Find(id);
+            _tasks.Add(task);
+            _context.SaveChanges();
+        }
+
+        public void Update(TaskItem task)
+        {
+            if (task == null)
+            {
+                throw new ArgumentNullException("TaskItem entity not found");
+            }
+            _tasks.Update(task);
+            _context.SaveChanges();
+        }
+
+        public void Delete(string id)
+        {
+            TaskItem task = _tasks.Find(id);
             if (task != null)
             {
-                _context.Tasks.Remove(task);
-                await _context.SaveChangesAsync();
+                _tasks.Remove(task);
+                _context.SaveChanges();
             }
         }
 
-        public async void RemoveAsync(TaskItem item)
+        public void Delete(TaskItem task)
         {
-            _context.Tasks.Remove(item);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task CreateAsync(TaskItem item)
-        {
-            await _context.Tasks.AddAsync(item);
-        }
-
-        public async Task DeleteAsync(string id)
-        {
-            TaskItem task = await _context.Tasks.FindAsync(id);
             if (task != null)
             {
-                _context.Tasks.Remove(task);
-                await _context.SaveChangesAsync();
+                _tasks.Remove(task);
+                _context.SaveChanges();
             }
-        }
-
-        public TaskItem SingleOrDefault(Func<TaskItem, bool> predicate)
-        {
-            return _context.Tasks
-                .Include(u => u.User)
-                .Include(c => c.Changes)
-                .SingleOrDefault(predicate);
         }
 
         public bool Any(Func<TaskItem, bool> predicate)
         {
-            return _context.Tasks
+            return _tasks
                 .Include(u => u.User)
                 .Include(c => c.Changes)
                 .Any(predicate);
-        }
-
-        public IEnumerable<TaskItem> GetAllByIds(IEnumerable<string> ids)
-        {
-            throw new NotImplementedException();
         }
     }
 }
