@@ -66,6 +66,7 @@ namespace TaskManager.DAL.Repositories
         public void Create(TaskItem task)
         {
             _tasks.Add(task);
+            _context.SaveChanges();
         }
 
         public void Update(TaskItem task)
