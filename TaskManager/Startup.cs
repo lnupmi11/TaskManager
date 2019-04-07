@@ -10,8 +10,10 @@ using System.Threading.Tasks;
 using TaskManager.BLL.Interfaces;
 using TaskManager.BLL.Services;
 using TaskManager.DAL.EF;
+using TaskManager.DAL.Interfaces;
 using TaskManager.DAL.Models;
 using TaskManager.DAL.Models.Enums;
+using TaskManager.DAL.Repositories;
 
 namespace TaskManager
 {
@@ -37,6 +39,8 @@ namespace TaskManager
 
             services.AddMvc();
 
+            services.AddScoped(typeof(IRepository<TaskItem>), typeof(TaskRepository));
+            services.AddScoped(typeof(IRepository<UserProfile>), typeof(UserRepository));
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ITaskService, TaskService>();
 

@@ -1,32 +1,28 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TaskManager.BLL.Managers;
-using TaskManager.DAL.EF;
+using TaskManager.BLL.Interfaces;
 using TaskManager.DAL.Models;
-using TaskManager.DAL.Repositories;
+using TaskManager.DAL.Models.Enums;
 
 namespace TaskManager.Controllers
 {
     [Authorize(Roles = "User")]
     public class TaskController : Controller
     {
-        private readonly WorkContext _context;
-        private readonly UsersManager _userManager;
-        private readonly TasksManager _taskManager;
+        private readonly IUserService _userService;
+        private readonly ITaskService _taskService;
 
-        public TaskController(ApplicationDbContext context)
+        public TaskController(IUserService userService, ITaskService taskService)
         {
-            _context = new WorkContext(context);
-            _userManager = new UsersManager(_context);
-            _taskManager = new TasksManager(_context);
+            _userService = userService;
+            _taskService = taskService;
         }
 
         // GET: Task
         public IActionResult Index()
         {
-            var tasks = _taskManager.GetAll();
+            var tasks = _taskService.GetAll();
             return View(tasks);
         }
 
@@ -38,7 +34,7 @@ namespace TaskManager.Controllers
                 return NotFound();
             }
 
-            var task = _taskManager.Find(id);
+            var task = _taskService.Find(id);
             if (task == null)
             {
                 return NotFound();
@@ -56,12 +52,13 @@ namespace TaskManager.Controllers
         // POST: Task/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,EstimatedTime,Progress,StartDate,EndDate,Category,Priority,Status")] TaskItem taskItem)
+        public IActionResult Create([Bind("Id,Title,Description,EstimatedTime,Progress,StartDate,EndDate,Category,Priority,Status")] TaskItem taskItem)
         {
             if (ModelState.IsValid)
             {
-                taskItem.User = _userManager.GetUserProfile(User);
-                await _taskManager.CreateAsync(taskItem);
+                taskItem.User = _userService.GetUserProfile(User);
+                _taskService.Create(taskItem);
+
                 return RedirectToAction(nameof(Index));
             }
 
@@ -76,7 +73,7 @@ namespace TaskManager.Controllers
                 return NotFound();
             }
 
-            var taskItem = _taskManager.Find(id);
+            var taskItem = _taskService.Find(id);
             if (taskItem == null)
             {
                 return NotFound();
@@ -99,11 +96,11 @@ namespace TaskManager.Controllers
             {
                 try
                 {
-                    _taskManager.Update(taskItem);
+                    _taskService.Update(taskItem);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_taskManager.IsTaskExists(taskItem.Id))
+                    if (!_taskService.Any(taskItem.Id))
                     {
                         return NotFound();
                     }
@@ -126,7 +123,7 @@ namespace TaskManager.Controllers
                 return NotFound();
             }
 
-            var taskItem = _taskManager.Find(id);
+            var taskItem = _taskService.Find(id);
             if (taskItem == null)
             {
                 return NotFound();
@@ -140,8 +137,9 @@ namespace TaskManager.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(string id)
         {
-            var taskItem = _taskManager.Find(id);
-            _taskManager.Remove(taskItem);
+            var taskItem = _taskService.Find(id);
+            _taskService.Delete(taskItem);
+
             return RedirectToAction(nameof(Index));
         }
     }
