@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TaskManager.BLL.Interfaces;
 using TaskManager.DAL.Models;
 using TaskManager.DAL.Models.Enums;
+using TaskManager.Extensions.Auth;
 
 namespace TaskManager.Controllers
 {
-    [Authorize(Roles = "User")]
+    [AuthAttributeExtension(Roles.User)]
     public class TaskController : Controller
     {
         private readonly IUserService _userService;
