@@ -7,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
+using TaskManager.BLL.Interfaces;
+using TaskManager.BLL.Services;
 using TaskManager.DAL.EF;
 using TaskManager.DAL.Models;
 
@@ -32,10 +34,12 @@ namespace TaskManager
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            // Add application services.
             services.AddMvc();
 
-           CreateRolesAndUsersAsync(services.BuildServiceProvider()).Wait();
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ITaskService, TaskService>();
+
+            CreateRolesAndUsersAsync(services.BuildServiceProvider()).Wait();
         }
 
         private async Task CreateRolesAndUsersAsync(IServiceProvider serviceProvider)
