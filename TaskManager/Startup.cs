@@ -11,6 +11,7 @@ using TaskManager.BLL.Interfaces;
 using TaskManager.BLL.Services;
 using TaskManager.DAL.EF;
 using TaskManager.DAL.Models;
+using TaskManager.DAL.Models.Enums;
 
 namespace TaskManager
 {
@@ -39,43 +40,46 @@ namespace TaskManager
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ITaskService, TaskService>();
 
-            CreateRolesAndUsersAsync(services.BuildServiceProvider()).Wait();
+            CreateRoles(services.BuildServiceProvider()).Wait();
         }
 
-        private async Task CreateRolesAndUsersAsync(IServiceProvider serviceProvider)
+        private async Task CreateRoles(IServiceProvider serviceProvider)
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = serviceProvider.GetRequiredService<UserManager<UserProfile>>();
+            var adminRole = Roles.Admin.ToString();
+            var userRole = Roles.User.ToString();
+            var userSettings = Configuration.GetSection("UserSettings");
 
-            if (!(await roleManager.RoleExistsAsync("Admin")))
+            if (!(await roleManager.RoleExistsAsync(adminRole)))
             {
                 var role = new IdentityRole
                 {
-                    Name = "Admin"
+                    Name = adminRole
                 };
                 await roleManager.CreateAsync(role);
 
                 var user = new UserProfile
                 {
-                    UserName = Configuration.GetSection("UserSettings")["UserEmail"],
-                    Email = Configuration.GetSection("UserSettings")["UserEmail"],
+                    UserName = userSettings["UserEmail"],
+                    Email = userSettings["UserEmail"],
                     EmailConfirmed = true,
                 };
 
-                string userPassword = Configuration.GetSection("UserSettings")["UserPassword"];
+                string userPassword = userSettings["UserPassword"];
 
                 var result = await userManager.CreateAsync(user, userPassword);
                 if (result.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(user, "Admin");
+                    await userManager.AddToRoleAsync(user, adminRole);
                 }
             }
 
-            if (!(await roleManager.RoleExistsAsync("User")))
+            if (!(await roleManager.RoleExistsAsync(userRole)))
             {
                 var role = new IdentityRole
                 {
-                    Name = "User"
+                    Name = userRole
                 };
                 await roleManager.CreateAsync(role);
             }
