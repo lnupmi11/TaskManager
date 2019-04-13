@@ -19,14 +19,14 @@ namespace TaskManager.DAL.Repositories
             _tasks = context.Tasks;
         }
 
-        public IEnumerable<TaskItem> GetAll()
+        public virtual IEnumerable<TaskItem> GetAll()
         {
             return _tasks
                 .Include(u => u.User)
                 .Include(c => c.Changes);
         }
 
-        public IEnumerable<TaskItem> GetAllWhere(Func<TaskItem, Boolean> predicate)
+        public virtual IEnumerable<TaskItem> GetAllWhere(Func<TaskItem, Boolean> predicate)
         {
             return _tasks
                 .Include(u => u.User)
@@ -34,7 +34,7 @@ namespace TaskManager.DAL.Repositories
                 .Where(predicate);
         }
 
-        public IEnumerable<TaskItem> GetAllByIds(IEnumerable<string> ids)
+        public virtual IEnumerable<TaskItem> GetAllByIds(IEnumerable<string> ids)
         {
             HashSet<string> tasksIds = new HashSet<string>(ids);
 
@@ -44,7 +44,7 @@ namespace TaskManager.DAL.Repositories
                 .Where(p => tasksIds.Contains(p.Id));
         }
 
-        public TaskItem Find(string id)
+        public virtual TaskItem Find(string id)
         {
             return _tasks
                 .Include(u => u.User)
@@ -53,7 +53,7 @@ namespace TaskManager.DAL.Repositories
                 .SingleOrDefault();
         }
 
-        public TaskItem Find(Func<TaskItem, bool> predicate)
+        public virtual TaskItem Find(Func<TaskItem, bool> predicate)
         {
             return _tasks
                 .Include(u => u.User)
@@ -62,13 +62,13 @@ namespace TaskManager.DAL.Repositories
                 .SingleOrDefault();
         }
 
-        public void Create(TaskItem task)
+        public virtual void Create(TaskItem task)
         {
             _tasks.Add(task);
             _context.SaveChanges();
         }
 
-        public void Update(TaskItem task)
+        public virtual void Update(TaskItem task)
         {
             if (task == null)
             {
@@ -78,7 +78,7 @@ namespace TaskManager.DAL.Repositories
             _context.SaveChanges();
         }
 
-        public void Delete(string id)
+        public virtual void Delete(string id)
         {
             TaskItem task = _tasks.Find(id);
             if (task != null)
@@ -88,7 +88,7 @@ namespace TaskManager.DAL.Repositories
             }
         }
 
-        public void Delete(TaskItem task)
+        public virtual void Delete(TaskItem task)
         {
             if (task != null)
             {
@@ -97,7 +97,7 @@ namespace TaskManager.DAL.Repositories
             }
         }
 
-        public bool Any(Func<TaskItem, bool> predicate)
+        public virtual bool Any(Func<TaskItem, bool> predicate)
         {
             return _tasks
                 .Include(u => u.User)
