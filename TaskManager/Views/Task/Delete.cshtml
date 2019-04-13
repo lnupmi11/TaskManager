@@ -1,4 +1,4 @@
-﻿@model TaskManager.DAL.Models.TaskItem
+﻿@model TaskManager.DTO.Task.TaskItemDTO
 @{
     ViewBag.Title = "Delete";
 }
@@ -61,12 +61,6 @@
         </dt>
         <dd>
             @Html.DisplayFor(model => model.Status)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.User)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.User.Id)
         </dd>
     </dl>
 </div>

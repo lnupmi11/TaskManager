@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TaskManager.BLL.Interfaces;
 using TaskManager.DAL.Models;
 using TaskManager.DAL.Models.Enums;
+using TaskManager.DTO.Task;
 using TaskManager.Extensions.Auth;
 
 namespace TaskManager.Controllers
@@ -12,11 +14,13 @@ namespace TaskManager.Controllers
     {
         private readonly IUserService _userService;
         private readonly ITaskService _taskService;
+        private readonly IMapper _mapper;
 
-        public TaskController(IUserService userService, ITaskService taskService)
+        public TaskController(IUserService userService, ITaskService taskService, IMapper mapper)
         {
             _userService = userService;
             _taskService = taskService;
+            _mapper = mapper;
         }
 
         // GET: Task
@@ -39,8 +43,9 @@ namespace TaskManager.Controllers
             {
                 return NotFound();
             }
+            var taskDTO = _mapper.Map<TaskItemDTO>(task);
 
-            return View(task);
+            return View(taskDTO);
         }
 
         // GET: Task/Create
@@ -52,17 +57,18 @@ namespace TaskManager.Controllers
         // POST: Task/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Id,Title,Description,EstimatedTime,Progress,StartDate,EndDate,Category,Priority,Status")] TaskItem taskItem)
+        public IActionResult Create([Bind("Id,Title,Description,EstimatedTime,Progress,StartDate,EndDate,Category,Priority,Status")] TaskItemDTO taskItemDTO)
         {
             if (ModelState.IsValid)
             {
+                var taskItem = _mapper.Map<TaskItem>(taskItemDTO);
                 taskItem.User = _userService.GetUserProfile(User);
                 _taskService.Create(taskItem);
 
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(taskItem);
+            return View(taskItemDTO);
         }
 
         // GET: Task/Edit/{id}
@@ -78,15 +84,18 @@ namespace TaskManager.Controllers
             {
                 return NotFound();
             }
+            var taskItemDTO = _mapper.Map<TaskItemDTO>(taskItem);
 
-            return View(taskItem);
+            return View(taskItemDTO);
         }
 
         // POST: Task/Edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(string id, [Bind("Id,Title,Description,EstimatedTime,Progress,StartDate,EndDate,Category,Priority,Status,UserId")] TaskItem taskItem)
+        public IActionResult Edit(string id, [Bind("Id,Title,Description,EstimatedTime,Progress,StartDate,EndDate,Category,Priority,Status,UserId")] TaskItemDTO taskItemDTO)
         {
+            var taskItem = _mapper.Map<TaskItem>(taskItemDTO);
+
             if (id != taskItem.Id)
             {
                 return NotFound();
@@ -112,7 +121,7 @@ namespace TaskManager.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(taskItem);
+            return View(taskItemDTO);
         }
 
         // GET: Task/Delete/{id}
@@ -128,8 +137,10 @@ namespace TaskManager.Controllers
             {
                 return NotFound();
             }
+            var taskItemDTO = _mapper.Map<TaskItemDTO>(taskItem);
+            
 
-            return View(taskItem);
+            return View(taskItemDTO);
         }
 
         // POST: Task/Delete/{id}
