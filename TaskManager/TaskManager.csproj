@@ -13,14 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove=".bowerrc" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include=".bowerrc" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="BuildBundlerMinifier" Version="2.9.406" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
