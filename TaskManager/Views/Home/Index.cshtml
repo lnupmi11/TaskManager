@@ -2,93 +2,143 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
-    <ol class="carousel-indicators">
-        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-        <li data-target="#myCarousel" data-slide-to="1"></li>
-        <li data-target="#myCarousel" data-slide-to="2"></li>
-    </ol>
-    <div class="carousel-inner" role="listbox">
-        <div class="item active">
-            <img src="~/images/banner1.svg" alt="ASP.NET" class="img-responsive" />
-            <div class="carousel-caption" role="option">
-                <p>
-                    Learn how to build ASP.NET apps that can run anywhere.
-                    <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525028&clcid=0x409">
-                        Learn More
-                    </a>
-                </p>
-            </div>
-        </div>
-        <div class="item">
-            <img src="~/images/banner2.svg" alt="Visual Studio" class="img-responsive" />
-            <div class="carousel-caption" role="option">
-                <p>
-                    There are powerful new features in Visual Studio for building modern web apps.
-                    <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525030&clcid=0x409">
-                        Learn More
-                    </a>
-                </p>
-            </div>
-        </div>
-        <div class="item">
-            <img src="~/images/banner3.svg" alt="Microsoft Azure" class="img-responsive" />
-            <div class="carousel-caption" role="option">
-                <p>
-                    Learn how Microsoft's Azure cloud platform allows you to build, deploy, and scale web apps.
-                    <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525027&clcid=0x409">
-                        Learn More
-                    </a>
-                </p>
-            </div>
-        </div>
-    </div>
-    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
-        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
-    </a>
-    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
-        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
-    </a>
 </div>
 
-<div class="row">
-    <div class="col-md-3">
-        <h2>Application uses</h2>
-        <ul>
-            <li>Sample pages using ASP.NET Core MVC</li>
-            <li>Theming using <a href="https://go.microsoft.com/fwlink/?LinkID=398939">Bootstrap</a></li>
-        </ul>
+<header id="main-header" class="masthead d-flex">
+    <div class="container text-center my-auto margin-top-lg">
+        <h1 class="mb-1">Task Manager</h1>
+        <h3 class="mb-5">Your limitation—it’s only your imagination</h3>
+        <a class="btn btn-primary btn-xl js-scroll-trigger" asp-controller="Task" asp-action="Index">The Way To Start</a>
     </div>
-    <div class="col-md-3">
-        <h2>How to</h2>
-        <ul>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=398600">Add a Controller and View</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=699315">Manage User Secrets using Secret Manager.</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=699316">Use logging to log a message.</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=699317">Add packages using NuGet.</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=699319">Target development, staging or production environment.</a></li>
-        </ul>
+    <div class="overlay"></div>
+</header>
+
+<section class="content-section bg-light" id="about">
+    <div class="container text-center">
+        <div class="row">
+            <div class="col-lg-12 mx-auto">
+                <h2>
+                    Task Manager is a completely new way to manage your tasks
+                </h2>
+                <p class="lead mb-5">
+                    Make it fast and easy to add, organize and keep track of your tasks!
+                </p>
+                <a class="btn btn-dark btn-xl js-scroll-trigger" asp-controller="Task" asp-action="Index">Improve Your Performance</a>
+            </div>
+        </div>
     </div>
-    <div class="col-md-3">
-        <h2>Overview</h2>
-        <ul>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=518008">Conceptual overview of what is ASP.NET Core</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=699320">Fundamentals of ASP.NET Core such as Startup and middleware.</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=398602">Working with Data</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=398603">Security</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=699321">Client side development</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=699322">Develop on different platforms</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=699323">Read more on the documentation site</a></li>
-        </ul>
+</section>
+
+<section class="content-section bg-primary text-white text-center" id="services">
+    <div class="container">
+        <div class="content-section-heading">
+            <h2 class="mb-5">What We Offer</h2>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-md-4 mb-5 mb-lg-0">
+                <span class="service-icon rounded-circle mx-auto mb-3">
+                    <i class="icon-screen-smartphone"></i>
+                </span>
+                <h4>
+                    <strong>Multiple ways to organize your tasks</strong>
+                </h4>
+                <p class="text-faded mb-0">Sort your tasks by different categories, assign priorities to see what is the most important for you, track progress of your performance</p>
+            </div>
+            <div class="col-lg-4 col-md-4 mb-5 mb-lg-0">
+                <span class="service-icon rounded-circle mx-auto mb-3">
+                    <i class="icon-pencil"></i>
+                </span>
+                <h4>
+                    <strong>Modern Design</strong>
+                </h4>
+                <p class="text-faded mb-0">It will not make you any problem to start using our service. It is fully adaptive, easy and pleasant to use</p>
+            </div>
+            <div class="col-lg-4 col-md-4 mb-5 mb-md-0">
+                <span class="service-icon rounded-circle mx-auto mb-3">
+                    <i class="icon-like"></i>
+                </span>
+                <h4>
+                    <strong>Favorited</strong>
+                </h4>
+                <p class="text-faded mb-0">
+                    Millions of users are improving their performance together with us.
+                    Every day we get a lot of feedbacks that we help people to change their lives for better
+                    <i class="fas fa-heart"></i>
+                    Start Bootstrap!
+                </p>
+            </div>
+        </div>
     </div>
-    <div class="col-md-3">
-        <h2>Run &amp; Deploy</h2>
-        <ul>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=517851">Run your app</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=517853">Run tools such as EF migrations and more</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=398609">Publish to Microsoft Azure Web Apps</a></li>
-        </ul>
+</section>
+
+<section class="content-section" id="portfolio">
+    <div class="container">
+        <div class="content-section-heading text-center">
+            <h2 class="mb-5">Features</h2>
+        </div>
+        <div class="row no-gutters">
+            <div class="col-lg-6">
+                <a class="portfolio-item">
+                    <span class="caption">
+                        <span class="caption-content">
+                            <h2>Statistics</h2>
+                            <p class="mb-0">View statistics of your completed tasks. We help you to analyze your productivity!</p>
+                        </span>
+                    </span>
+                    <img class="img-fluid" src="~/images/portfolio-1.jpg" alt="">
+                </a>
+            </div>
+            <div class="col-lg-6">
+                <a class="portfolio-item">
+                    <span class="caption">
+                        <span class="caption-content">
+                            <h2>Archive</h2>
+                            <p class="mb-0">View, restore, update, delete your previous tasks!</p>
+                        </span>
+                    </span>
+                    <img class="img-fluid" src="~/images/portfolio-2.jpg" alt="">
+                </a>
+            </div>
+            <div class="col-lg-6">
+                <a class="portfolio-item">
+                    <span class="caption">
+                        <span class="caption-content">
+                            <h2>Organize</h2>
+                            <p class="mb-0">Sort your tasks by different categories - activity with your family, sport trainning, business meeting and a lot of other
+                            categories </p>
+                        </span>
+                    </span>
+                    <img class="img-fluid" src="~/images/portfolio-3.jpg" alt="">
+                </a>
+            </div>
+            <div class="col-lg-6">
+                <a class="portfolio-item">
+                    <span class="caption">
+                        <span class="caption-content">
+                            <h2>Statuses</h2>
+                            <p class="mb-0">Yo are able to set various statuses to your tasks for better understanding of your scope of work</p>
+                        </span>
+                    </span>
+                    <img class="img-fluid" src="~/images/portfolio-4.jpg" alt="">
+                </a>
+            </div>
+        </div>
     </div>
-</div>
+</section>
+
+
+<section class="callout">
+    <div class="container text-center">
+        <h2 class="mx-auto mb-5">
+            Don't delay for tomorrow
+        </h2>
+        <a class="btn btn-primary btn-xl" asp-controller="Task" asp-action="Index">Start Now!</a>
+    </div>
+</section>
+
+
+<a id="scroll-top" class="scroll-to-top rounded js-scroll-trigger">
+    <i class="icon-arrow-up "></i>
+</a>
+
+<div>
