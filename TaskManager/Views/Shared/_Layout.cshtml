@@ -21,7 +21,7 @@
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
         <div class="container">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -31,7 +31,20 @@
                 <ul class="nav navbar-nav mr-auto">
                     <li class="nav-link"><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                     <li class="nav-link"><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li class="nav-link"><a asp-area="" asp-controller="Task" asp-action="Index">Tasks</a></li>
+                    @if (User.IsInRole(Roles.User.ToString()))
+                    {
+                        <li class="nav-link dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" asp-controller="Task" asp-action="Index">
+                                Tasks<span class="caret"></span>
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" asp-controller="Task">Active</a>
+                                <a class="dropdown-item" asp-controller="Task">Archived</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" asp-controller="Task">Manage</a>
+                            </div>
+                        </li>
+                    }
                 </ul>
                 <partial name="_LoginPartial" />
             </div>

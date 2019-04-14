@@ -116,13 +116,15 @@
 }
 
 .navbar-nav > li > button:hover {
-    color: #a5e4f7;
+    color: white;
 }
 
+.navbar-nav .dropdown-menu > a:hover {
+    background-color: rgba(46, 166, 203, 0.90);
+}
 /*.navbar-fixed-top {
     background-color: transparent;
 }*/
-
 /*.navbar-inverse .navbar-brand {
     color :#000;
     font-size : 20px;
@@ -143,7 +145,6 @@
         transition: color 0.5s ease;
         color: #d9d9d9;
     }*/
-
 .service-icon {
     background-color: #fff;
     color: #1D809F;
