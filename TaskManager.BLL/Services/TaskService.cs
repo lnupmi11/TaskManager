@@ -14,32 +14,32 @@ namespace TaskManager.BLL.Services
             _taskRepository = taskRepository;
         }
 
-        public IEnumerable<TaskItem> GetAll()
+        public virtual IEnumerable<TaskItem> GetAll()
         {
             return _taskRepository.GetAll();
         }
 
-        public void Create(TaskItem task)
+        public virtual void Create(TaskItem task)
         {
             _taskRepository.Create(task);
         }
 
-        public TaskItem Find(string id)
+        public virtual TaskItem Find(string id)
         {
             return _taskRepository.Find(id);
         }
 
-        public void Delete(TaskItem task)
+        public virtual void Delete(TaskItem task)
         {
             _taskRepository.Delete(task);
         }
 
-        public void Update(TaskItem task)
+        public virtual void Update(TaskItem task)
         {
             _taskRepository.Update(task);
         }
 
-        public bool Any(string id)
+        public virtual bool Any(string id)
         {
             return _taskRepository.Any(e => e.Id == id);
         }

@@ -16,56 +16,56 @@ namespace TaskManager.BLL.Services
             _userRepository = userRepository;
         }
 
-        public UserProfile GetUserProfile(ClaimsPrincipal principal)
+        public virtual UserProfile GetUserProfile(ClaimsPrincipal principal)
         {
             return _userRepository.Find(principal.GetUserId());
         }
 
-        public UserProfile GetUserProfile(string id)
+        public virtual UserProfile GetUserProfile(string id)
         {
             return _userRepository.Find(id);
         }
 
-        public string GetUserProfileId(ClaimsPrincipal principal)
+        public virtual string GetUserProfileId(ClaimsPrincipal principal)
         {
             return principal.GetUserId();
         }
 
-        public IEnumerable<UserProfile> GetUserProfiles()
+        public virtual IEnumerable<UserProfile> GetUserProfiles()
         {
             return _userRepository.GetAll();
         }
 
-        public void ChangeFirstName(UserProfile user, string firstName)
+        public virtual void ChangeFirstName(UserProfile user, string firstName)
         {
             user.FirstName = firstName;
             _userRepository.Update(user);
         }
 
-        public void ChangeFirstName(ClaimsPrincipal principal, string firstName)
+        public virtual void ChangeFirstName(ClaimsPrincipal principal, string firstName)
         {
             var user = GetUserProfile(principal);
             ChangeFirstName(user, firstName);
         }
 
-        public void ChangeSecondName(UserProfile user, string lastName)
+        public virtual void ChangeSecondName(UserProfile user, string lastName)
         {
             user.LastName = lastName;
             _userRepository.Update(user);
         }
 
-        public void ChangeSecondName(ClaimsPrincipal principal, string secondName)
+        public virtual void ChangeSecondName(ClaimsPrincipal principal, string secondName)
         {
             var user = GetUserProfile(principal);
             ChangeSecondName(user, secondName);
         }
 
-        public void Update(UserProfile user)
+        public virtual void Update(UserProfile user)
         {
             _userRepository.Update(user);
         }
 
-        public void Delete(UserProfile user)
+        public virtual void Delete(UserProfile user)
         {
             _userRepository.Delete(user);
         }
