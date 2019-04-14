@@ -38,10 +38,9 @@
                                 Tasks<span class="caret"></span>
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" asp-controller="Task">Active</a>
-                                <a class="dropdown-item" asp-controller="Task">Archived</a>
+                                <a class="dropdown-item" asp-controller="Task" asp-action="Index">Active</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" asp-controller="Task">Manage</a>
+                                <a class="dropdown-item" asp-controller="Task" asp-action="Archive">Archive</a>
                             </div>
                         </li>
                     }
@@ -54,6 +53,9 @@
     <div class="container body-content">
         @RenderBody()
         <hr />
+        <a id="scroll-top" class="scroll-to-top rounded js-scroll-trigger">
+            <i class="icon-arrow-up "></i>
+        </a>
         <footer class="footer text-center">
             <div class="container">
                 <ul class="list-inline mb-2">
