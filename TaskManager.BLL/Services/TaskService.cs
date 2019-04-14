@@ -15,7 +15,7 @@ namespace TaskManager.BLL.Services
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
-        public TaskService(IRepository<TaskItem> taskRepository, IUserService userService,  IMapper mapper)
+        public TaskService(IRepository<TaskItem> taskRepository, IUserService userService, IMapper mapper)
         {
             _taskRepository = taskRepository;
             _userService = userService;

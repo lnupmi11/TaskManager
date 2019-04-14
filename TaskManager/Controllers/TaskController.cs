@@ -106,6 +106,7 @@ namespace TaskManager.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
 

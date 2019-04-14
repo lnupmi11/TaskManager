@@ -8,7 +8,7 @@ namespace TaskManager.BLL.Interfaces
     public interface ITaskService
     {
         IEnumerable<TaskItemDTO> GetAll();
-        void Create(ClaimsPrincipal user,TaskItemDTO taskItemDTO);
+        void Create(ClaimsPrincipal user, TaskItemDTO taskItemDTO);
         TaskItemDTO Find(string id);
         void Delete(string id);
         void Update(TaskItemDTO taskItemDTO);
