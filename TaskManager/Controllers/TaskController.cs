@@ -1,8 +1,6 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TaskManager.BLL.Interfaces;
-using TaskManager.DAL.Models;
 using TaskManager.DAL.Models.Enums;
 using TaskManager.DTO.Task;
 using TaskManager.Extensions.Auth;
@@ -12,15 +10,11 @@ namespace TaskManager.Controllers
     [AuthAttributeExtension(Roles.User)]
     public class TaskController : Controller
     {
-        private readonly IUserService _userService;
         private readonly ITaskService _taskService;
-        private readonly IMapper _mapper;
 
-        public TaskController(IUserService userService, ITaskService taskService, IMapper mapper)
+        public TaskController(ITaskService taskService)
         {
-            _userService = userService;
             _taskService = taskService;
-            _mapper = mapper;
         }
 
         // GET: Task
@@ -38,14 +32,13 @@ namespace TaskManager.Controllers
                 return NotFound();
             }
 
-            var task = _taskService.Find(id);
-            if (task == null)
+            var taskItemDTO = _taskService.Find(id);
+            if (taskItemDTO == null)
             {
                 return NotFound();
             }
-            var taskDTO = _mapper.Map<TaskItemDTO>(task);
 
-            return View(taskDTO);
+            return View(taskItemDTO);
         }
 
         // GET: Task/Create
@@ -61,9 +54,7 @@ namespace TaskManager.Controllers
         {
             if (ModelState.IsValid)
             {
-                var taskItem = _mapper.Map<TaskItem>(taskItemDTO);
-                taskItem.User = _userService.GetUserProfile(User);
-                _taskService.Create(taskItem);
+                _taskService.Create(User, taskItemDTO);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -79,12 +70,11 @@ namespace TaskManager.Controllers
                 return NotFound();
             }
 
-            var taskItem = _taskService.Find(id);
-            if (taskItem == null)
+            var taskItemDTO = _taskService.Find(id);
+            if (taskItemDTO == null)
             {
                 return NotFound();
             }
-            var taskItemDTO = _mapper.Map<TaskItemDTO>(taskItem);
 
             return View(taskItemDTO);
         }
@@ -94,9 +84,7 @@ namespace TaskManager.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(string id, [Bind("Id,Title,Description,EstimatedTime,Progress,StartDate,EndDate,Category,Priority,Status,UserId")] TaskItemDTO taskItemDTO)
         {
-            var taskItem = _mapper.Map<TaskItem>(taskItemDTO);
-
-            if (id != taskItem.Id)
+            if (id != taskItemDTO.Id)
             {
                 return NotFound();
             }
@@ -105,11 +93,11 @@ namespace TaskManager.Controllers
             {
                 try
                 {
-                    _taskService.Update(taskItem);
+                    _taskService.Update(taskItemDTO);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_taskService.Any(taskItem.Id))
+                    if (!_taskService.Any(taskItemDTO.Id))
                     {
                         return NotFound();
                     }
@@ -118,6 +106,7 @@ namespace TaskManager.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
 
@@ -132,14 +121,12 @@ namespace TaskManager.Controllers
                 return NotFound();
             }
 
-            var taskItem = _taskService.Find(id);
-            if (taskItem == null)
+            var taskItemDTO = _taskService.Find(id);
+            if (taskItemDTO == null)
             {
                 return NotFound();
             }
-            var taskItemDTO = _mapper.Map<TaskItemDTO>(taskItem);
             
-
             return View(taskItemDTO);
         }
 
@@ -148,8 +135,12 @@ namespace TaskManager.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(string id)
         {
-            var taskItem = _taskService.Find(id);
-            _taskService.Delete(taskItem);
+            if(!_taskService.Any(id))
+            {
+                return NotFound();
+            }
+
+            _taskService.Delete(id);
 
             return RedirectToAction(nameof(Index));
         }
