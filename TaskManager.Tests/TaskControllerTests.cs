@@ -35,12 +35,12 @@ namespace TaskManager.Tests
             var task = new TaskItemDTO { Id = "1", Description = "Description", UserId = "1" };
             var taskItem = new TaskItem { Id = "1", Description = "Description", UserId = "1" };
             mapper.Setup(x => x.Map<TaskItem>(task)).Returns(taskItem);
-
-            var service = new TaskService(repository);
-           
             var userService = new Mock<UserService>(userRep.Object);
+
+            var service = new TaskService(repository,userService.Object,mapper.Object);
+           
          
-            var controller = new TaskController(userService.Object,service,mapper.Object);
+            var controller = new TaskController(service);
             // Act
             var view=controller.Create(task);
 
@@ -71,11 +71,12 @@ namespace TaskManager.Tests
             var taskItem1 = new TaskItem { Id = "1", Description = "new", UserId = "1" };
             mapper.Setup(x => x.Map<TaskItem>(task1)).Returns(taskItem1);
             mapper.Setup(x => x.Map<TaskItemDTO>(taskItem1)).Returns(task1);
-            var service = new TaskService(repository);
-
             var userService = new Mock<UserService>(userRep.Object);
+            var service = new TaskService(repository, userService.Object, mapper.Object);
 
-            var controller = new TaskController(userService.Object, service, mapper.Object);
+
+
+            var controller = new TaskController(service);
 
 
             // Act
@@ -104,12 +105,12 @@ namespace TaskManager.Tests
             var taskItem = new TaskItem { Id = "1", Description = "Description", UserId = "1" };
             mapper.Setup(x => x.Map<TaskItem>(task)).Returns(taskItem);
             mapper.Setup(x => x.Map<TaskItemDTO>(taskItem)).Returns(task);
-            var service = new TaskService(repository);
-
             var userService = new Mock<UserService>(userRep.Object);
+            var service = new TaskService(repository, userService.Object, mapper.Object);
 
-            var controller = new TaskController(userService.Object, service, mapper.Object);
-            // Act
+
+
+            var controller = new TaskController(service);// Act
             var view = controller.Create(task);
             // Act
             var actionResult = controller.Details("1");
@@ -139,13 +140,12 @@ namespace TaskManager.Tests
             mapper.Setup(x => x.Map<TaskItem>(task)).Returns(taskItem);
             mapper.Setup(x => x.Map<TaskItemDTO>(taskItem)).Returns(task);
 
-            var service = new TaskService(repository);
-
             var userService = new Mock<UserService>(userRep.Object);
+            var service = new TaskService(repository, userService.Object, mapper.Object);
 
-            var controller = new TaskController(userService.Object, service, mapper.Object);
 
 
+            var controller = new TaskController(service);
             // Act
             controller.Create(task);
             var result = controller.Delete("100");
@@ -172,13 +172,12 @@ namespace TaskManager.Tests
             var taskItem = new TaskItem { Id = "1", Description = "Description", UserId = "1" };
             mapper.Setup(x => x.Map<TaskItem>(task)).Returns(taskItem);
             mapper.Setup(x => x.Map<TaskItemDTO>(taskItem)).Returns(task);
-            var service = new TaskService(repository);
-
             var userService = new Mock<UserService>(userRep.Object);
+            var service = new TaskService(repository, userService.Object, mapper.Object);
 
-            var controller = new TaskController(userService.Object, service, mapper.Object);
 
-            // Act
+
+            var controller = new TaskController(service);// Act
             controller.Create(task);
             controller.DeleteConfirmed("1");
 
@@ -192,11 +191,13 @@ namespace TaskManager.Tests
             var context = new ApplicationDbContext(options);
             var repository = new Mock<TaskRepository>(context);
             var userRep = new Mock<UserRepository>(context);
-            var service = new TaskService(repository.Object);
-            var userService = new UserService(userRep.Object);
+            var userService = new Mock<UserService>(userRep.Object);
             var mapper = new Mock<IMapper>();
-            var controller = new TaskController(userService, service, mapper.Object);
-            // Act
+            var service = new TaskService(repository.Object, userService.Object, mapper.Object);
+
+
+
+            var controller = new TaskController(service);// Act
             var actionResult = controller.Delete("1");
 
             // Assert

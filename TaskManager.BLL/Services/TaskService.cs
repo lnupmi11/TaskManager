@@ -22,7 +22,7 @@ namespace TaskManager.BLL.Services
             _mapper = mapper;
         }
 
-        public virtual IEnumerable<TaskItem> GetAll()
+        public virtual IEnumerable<TaskItemDTO> GetAll()
         {
             var tasksDTO = _taskRepository.GetAll().Select(task => _mapper.Map<TaskItemDTO>(task)).ToList();
 
@@ -30,16 +30,15 @@ namespace TaskManager.BLL.Services
         }
 
 
-        public virtual void Create(TaskItem task)
+        public virtual void Create(ClaimsPrincipal user,TaskItemDTO taskItemDTO)
         {
             var taskItem = _mapper.Map<TaskItem>(taskItemDTO);
             taskItem.User = _userService.GetUserProfile(user);
-
             _taskRepository.Create(taskItem);
         }
 
 
-        public virtual TaskItem Find(string id)
+        public virtual TaskItemDTO Find(string id)
         {
             var taskItem = _taskRepository.Find(id);
             var taskItemDTO = _mapper.Map<TaskItemDTO>(taskItem);
@@ -48,14 +47,13 @@ namespace TaskManager.BLL.Services
         }
 
 
-        public virtual void Delete(TaskItem task)
-
+        public virtual void Delete(string id)
         {
             _taskRepository.Delete(id);
         }
 
 
-        public virtual void Update(TaskItem task)
+        public virtual void Update(TaskItemDTO taskItemDTO)
         {
             var taskItem = _mapper.Map<TaskItem>(taskItemDTO);
             _taskRepository.Update(taskItem);
