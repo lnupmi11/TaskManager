@@ -261,9 +261,9 @@ __pycache__/
 *.pyc
 
 # Images
-*.jpg
-*.jpeg
-*.png
+#*.jpg
+#*.jpeg
+#*.png
 *.gif
 
 #Secrets
