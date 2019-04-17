@@ -28,12 +28,12 @@ namespace TaskManager.Tests
             mockSet.As<IQueryable<TaskItem>>().Setup(m => m.GetEnumerator()).Returns(list.GetEnumerator());
 
             var mockContext = new Mock<ApplicationDbContext>();
-
             mockContext.Setup(item => item.Tasks).Returns(mockSet.Object);
 
             var repository = new TaskRepository(mockContext.Object);
 
             var userRep = new Mock<UserRepository>(mockContext.Object);
+
             var mapper = new Mock<IMapper>();
             var task = new TaskItemDTO { Id = "1", Description = "aaaa"};
             var taskItem = new TaskItem { Id = "1", Description = "aaaa"};
@@ -52,6 +52,7 @@ namespace TaskManager.Tests
             // Act
             var actual = service.GetAll();
 
+            // Assert
             Assert.Equal(list.Count(), actual.Count());
         }
 
@@ -67,14 +68,12 @@ namespace TaskManager.Tests
             var repository = new Mock<TaskRepository>(mockContext.Object);
 
             // Act 
-            var expTask = new TaskItem { Id = "4", Description = "ssss" };
             var expTaskDTO = new TaskItemDTO { Id = "4", Description = "ssss" };
+
             var userRep = new Mock<UserRepository>(mockContext.Object);
+
             var mapper = new Mock<IMapper>();
-            var task = new TaskItemDTO { Id = "1", Description = "Description", UserId = "1" };
-            var taskItem = new TaskItem { Id = "1", Description = "Description", UserId = "1" };
-            mapper.Setup(x => x.Map<TaskItem>(task)).Returns(taskItem);
-            mapper.Setup(x => x.Map<TaskItemDTO>(taskItem)).Returns(task);
+
             var userService = new Mock<UserService>(userRep.Object);
 
             var service = new Mock<TaskService>(repository.Object, userService.Object, mapper.Object);
@@ -97,57 +96,26 @@ namespace TaskManager.Tests
 
             var repository = new TaskRepository(mockContext.Object);
 
-            // Act 
             var userRep = new Mock<UserRepository>(mockContext.Object);
+
             var mapper = new Mock<IMapper>();
             var task = new TaskItemDTO { Id = "1", Description = "Description", UserId = "1" };
             var taskItem = new TaskItem { Id = "1", Description = "Description", UserId = "1" };
             mapper.Setup(x => x.Map<TaskItem>(task)).Returns(taskItem);
             mapper.Setup(x => x.Map<TaskItemDTO>(taskItem)).Returns(task);
+
             var userService = new Mock<UserService>(userRep.Object);
 
             var service = new TaskService(repository, userService.Object, mapper.Object);
             var cp = new Mock<ClaimsPrincipal>();
             cp.Setup(m => m.HasClaim(It.IsAny<string>(), It.IsAny<string>())).Returns(true);
 
+            // Act 
             service.Create(cp.Object, task);
             service.Update(task);
             // Assert
             mockDbSet.Verify(m => m.Update(It.IsAny<TaskItem>()), Times.Once());
         }
-        //[Fact]
-        //public void FindTest()
-        //{
-        //    // Arrange
-        //    var list = GetTestList().AsQueryable();
-        //    var mockSet = new Mock<DbSet<TaskItem>>();
-        //    mockSet.As<IQueryable<TaskItem>>().Setup(m => m.Provider).Returns(list.Provider);
-        //    mockSet.As<IQueryable<TaskItem>>().Setup(m => m.Expression).Returns(list.Expression);
-        //    mockSet.As<IQueryable<TaskItem>>().Setup(m => m.ElementType).Returns(list.ElementType);
-        //    mockSet.As<IQueryable<TaskItem>>().Setup(m => m.GetEnumerator()).Returns(list.GetEnumerator());
-
-        //    var mockContext = new Mock<ApplicationDbContext>();
-
-        //    mockContext.Setup(item => item.Tasks).Returns(mockSet.Object);
-
-        //    var repository = new TaskRepository(mockContext.Object);
-
-        //    var userRep = new Mock<UserRepository>(mockContext.Object);
-        //    var mapper = new Mock<IMapper>();
-        //    var task = new TaskItemDTO { Id = "1", Description = "aaaa"};
-        //    var taskItem = new TaskItem { Id = "1", Description = "aaaa"};
-        //    mapper.Setup(x => x.Map<TaskItem>(task)).Returns(taskItem);
-        //    mapper.Setup(x => x.Map<TaskItemDTO>(taskItem)).Returns(task);
-        //    var userService = new Mock<UserService>(userRep.Object);
-
-        //    var service = new TaskService(repository, userService.Object, mapper.Object);
-        //    // Act 
-        //    var res=service.Find(list.First().Id);
-
-        //    // Assert
-        //    Assert.Equal(res.Id, list.First().Id);
-        //}
-
         [Fact]
         public void AnyTest()
         {
@@ -183,8 +151,6 @@ namespace TaskManager.Tests
         [Fact]
         public void DeleteTest()
         {
-            //var task = new TaskItem { Id = "3", Description = "ssss" };
-
             // Arrange
             var mockDbSet = new Mock<DbSet<TaskItem>>();
             var mockContext = new Mock<ApplicationDbContext>();
@@ -194,11 +160,13 @@ namespace TaskManager.Tests
             var repository = new Mock<TaskRepository>(mockContext.Object);
 
             var userRep = new Mock<UserRepository>(mockContext.Object);
+
             var mapper = new Mock<IMapper>();
             var task = new TaskItemDTO { Id = "1", Description = "Description", UserId = "1" };
             var taskItem = new TaskItem { Id = "1", Description = "Description", UserId = "1" };
             mapper.Setup(x => x.Map<TaskItem>(task)).Returns(taskItem);
             mapper.Setup(x => x.Map<TaskItemDTO>(taskItem)).Returns(task);
+
             var userService = new Mock<UserService>(userRep.Object);
 
             var service = new Mock<TaskService>(repository.Object, userService.Object, mapper.Object);
