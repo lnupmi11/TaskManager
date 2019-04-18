@@ -1,45 +1,65 @@
-﻿using System.Collections.Generic;
+﻿using AutoMapper;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using TaskManager.BLL.Interfaces;
 using TaskManager.DAL.Interfaces;
 using TaskManager.DAL.Models;
+using TaskManager.DTO.Task;
 
 namespace TaskManager.BLL.Services
 {
     public class TaskService : ITaskService
     {
-        private IRepository<TaskItem> _taskRepository;
+        private readonly IRepository<TaskItem> _taskRepository;
+        private readonly IUserService _userService;
+        private readonly IMapper _mapper;
 
-        public TaskService(IRepository<TaskItem> taskRepository)
+        public TaskService(IRepository<TaskItem> taskRepository, IUserService userService, IMapper mapper)
         {
             _taskRepository = taskRepository;
+            _userService = userService;
+            _mapper = mapper;
         }
 
-        public IEnumerable<TaskItem> GetAll()
+        public virtual IEnumerable<TaskItemDTO> GetAll()
         {
-            return _taskRepository.GetAll();
+            var tasksDTO = _taskRepository.GetAll().Select(task => _mapper.Map<TaskItemDTO>(task)).ToList();
+
+            return tasksDTO;
         }
 
-        public void Create(TaskItem task)
+
+        public virtual void Create(ClaimsPrincipal user,TaskItemDTO taskItemDTO)
         {
-            _taskRepository.Create(task);
+            var taskItem = _mapper.Map<TaskItem>(taskItemDTO);
+            taskItem.User = _userService.GetUserProfile(user);
+            _taskRepository.Create(taskItem);
         }
 
-        public TaskItem Find(string id)
+
+        public virtual TaskItemDTO Find(string id)
         {
-            return _taskRepository.Find(id);
+            var taskItem = _taskRepository.Find(id);
+            var taskItemDTO = _mapper.Map<TaskItemDTO>(taskItem);
+
+            return taskItemDTO;
         }
 
-        public void Delete(TaskItem task)
+
+        public virtual void Delete(string id)
         {
-            _taskRepository.Delete(task);
+            _taskRepository.Delete(id);
         }
 
-        public void Update(TaskItem task)
+
+        public virtual void Update(TaskItemDTO taskItemDTO)
         {
-            _taskRepository.Update(task);
+            var taskItem = _mapper.Map<TaskItem>(taskItemDTO);
+            _taskRepository.Update(taskItem);
         }
 
-        public bool Any(string id)
+        public virtual bool Any(string id)
         {
             return _taskRepository.Any(e => e.Id == id);
         }

@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Security.Claims;
 using TaskManager.DAL.Models;
+using TaskManager.DTO.Task;
 
 namespace TaskManager.BLL.Interfaces
 {
     public interface ITaskService
     {
-        IEnumerable<TaskItem> GetAll();
-        void Create(TaskItem task);
-        TaskItem Find(string id);
-        void Delete(TaskItem task);
-        void Update(TaskItem task);
+        IEnumerable<TaskItemDTO> GetAll();
+        void Create(ClaimsPrincipal user, TaskItemDTO taskItemDTO);
+        TaskItemDTO Find(string id);
+        void Delete(string id);
+        void Update(TaskItemDTO taskItemDTO);
         bool Any(string id);
     }
 }

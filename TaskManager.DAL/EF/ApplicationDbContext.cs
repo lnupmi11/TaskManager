@@ -6,6 +6,7 @@ namespace TaskManager.DAL.EF
 {
     public class ApplicationDbContext : IdentityDbContext
     {
+        public ApplicationDbContext(){}
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -24,8 +25,8 @@ namespace TaskManager.DAL.EF
                 .WithOne(t => t.Task);
         }
 
-        public DbSet<UserProfile> UserProfiles { get; set; }
-        public DbSet<TaskItem> Tasks { get; set; }
-        public DbSet<TaskChanges> TaskChanges { get; set; }
+        public virtual DbSet<UserProfile> UserProfiles { get; set; }
+        public virtual DbSet<TaskItem> Tasks { get; set; }
+        public virtual DbSet<TaskChanges> TaskChanges { get; set; }
     }
 }
