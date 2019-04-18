@@ -1,32 +1,26 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TaskManager.BLL.Managers;
-using TaskManager.DAL.EF;
-using TaskManager.DAL.Models;
-using TaskManager.DAL.Repositories;
+using TaskManager.BLL.Interfaces;
+using TaskManager.DAL.Models.Enums;
+using TaskManager.DTO.Task;
+using TaskManager.Extensions.Auth;
 
 namespace TaskManager.Controllers
 {
-    [Authorize(Roles = "User")]
+    [AuthAttributeExtension(Roles.User)]
     public class TaskController : Controller
     {
-        private readonly WorkContext _context;
-        private readonly UsersManager _userManager;
-        private readonly TasksManager _taskManager;
+        private readonly ITaskService _taskService;
 
-        public TaskController(ApplicationDbContext context)
+        public TaskController(ITaskService taskService)
         {
-            _context = new WorkContext(context);
-            _userManager = new UsersManager(_context);
-            _taskManager = new TasksManager(_context);
+            _taskService = taskService;
         }
 
         // GET: Task
         public IActionResult Index()
         {
-            var tasks = _taskManager.GetAll();
+            var tasks = _taskService.GetAll();
             return View(tasks);
         }
 
@@ -38,13 +32,13 @@ namespace TaskManager.Controllers
                 return NotFound();
             }
 
-            var task = _taskManager.Find(id);
-            if (task == null)
+            var taskItemDTO = _taskService.Find(id);
+            if (taskItemDTO == null)
             {
                 return NotFound();
             }
 
-            return View(task);
+            return View(taskItemDTO);
         }
 
         // GET: Task/Create
@@ -56,16 +50,16 @@ namespace TaskManager.Controllers
         // POST: Task/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,EstimatedTime,Progress,StartDate,EndDate,Category,Priority,Status")] TaskItem taskItem)
+        public IActionResult Create([Bind("Id,Title,Description,EstimatedTime,Progress,StartDate,EndDate,Category,Priority,Status")] TaskItemDTO taskItemDTO)
         {
             if (ModelState.IsValid)
             {
-                taskItem.User = _userManager.GetUserProfile(User);
-                await _taskManager.CreateAsync(taskItem);
+                _taskService.Create(User, taskItemDTO);
+
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(taskItem);
+            return View(taskItemDTO);
         }
 
         // GET: Task/Edit/{id}
@@ -76,21 +70,21 @@ namespace TaskManager.Controllers
                 return NotFound();
             }
 
-            var taskItem = _taskManager.Find(id);
-            if (taskItem == null)
+            var taskItemDTO = _taskService.Find(id);
+            if (taskItemDTO == null)
             {
                 return NotFound();
             }
 
-            return View(taskItem);
+            return View(taskItemDTO);
         }
 
         // POST: Task/Edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(string id, [Bind("Id,Title,Description,EstimatedTime,Progress,StartDate,EndDate,Category,Priority,Status,UserId")] TaskItem taskItem)
+        public IActionResult Edit(string id, [Bind("Id,Title,Description,EstimatedTime,Progress,StartDate,EndDate,Category,Priority,Status,UserId")] TaskItemDTO taskItemDTO)
         {
-            if (id != taskItem.Id)
+            if (id != taskItemDTO.Id)
             {
                 return NotFound();
             }
@@ -99,11 +93,11 @@ namespace TaskManager.Controllers
             {
                 try
                 {
-                    _taskManager.Update(taskItem);
+                    _taskService.Update(taskItemDTO);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_taskManager.IsTaskExists(taskItem.Id))
+                    if (!_taskService.Any(taskItemDTO.Id))
                     {
                         return NotFound();
                     }
@@ -112,10 +106,11 @@ namespace TaskManager.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(taskItem);
+            return View(taskItemDTO);
         }
 
         // GET: Task/Delete/{id}
@@ -126,13 +121,13 @@ namespace TaskManager.Controllers
                 return NotFound();
             }
 
-            var taskItem = _taskManager.Find(id);
-            if (taskItem == null)
+            var taskItemDTO = _taskService.Find(id);
+            if (taskItemDTO == null)
             {
                 return NotFound();
             }
-
-            return View(taskItem);
+            
+            return View(taskItemDTO);
         }
 
         // POST: Task/Delete/{id}
@@ -140,8 +135,13 @@ namespace TaskManager.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(string id)
         {
-            var taskItem = _taskManager.Find(id);
-            _taskManager.Remove(taskItem);
+            if(!_taskService.Any(id))
+            {
+                return NotFound();
+            }
+
+            _taskService.Delete(id);
+
             return RedirectToAction(nameof(Index));
         }
     }

@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using TaskManager.DAL.EF;
 using TaskManager.DAL.Interfaces;
 using TaskManager.DAL.Models;
@@ -17,70 +17,88 @@ namespace TaskManager.DAL.Repositories
             _context = context;
         }
 
-        public bool Any(Func<UserProfile, bool> predicate)
+        public virtual IEnumerable<UserProfile> GetAll()
         {
-            return _context.UserProfiles.Any(predicate);
+            return _context.UserProfiles
+                .Include(t => t.Tasks)
+                .ThenInclude(c => c.Changes);
         }
 
-        public void Create(UserProfile item)
+        public virtual IEnumerable<UserProfile> GetAllWhere(Func<UserProfile, bool> predicate)
         {
-            throw new NotImplementedException();
+            return _context.UserProfiles
+                .Include(t => t.Tasks)
+                .ThenInclude(c => c.Changes)
+                .Where(predicate);
         }
 
-        public Task CreateAsync(UserProfile item)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Delete(string id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task DeleteAsync(string id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<UserProfile> GetAllWhere(Func<UserProfile, bool> predicate)
-        {
-            return _context.UserProfiles.Where(predicate);
-        }
-
-        public UserProfile Find(Func<UserProfile, bool> predicate)
-        {
-            return _context.UserProfiles.Where(predicate).FirstOrDefault();
-        }
-
-        public UserProfile Find(string id)
-        {
-            return _context.UserProfiles.SingleOrDefault(p => p.Id == id);
-        }
-
-        public IEnumerable<UserProfile> GetAll()
-        {
-            return _context.UserProfiles;
-        }
-
-        public void RemoveAsync(UserProfile item)
-        {
-            throw new NotImplementedException();
-        }
-
-        public UserProfile SingleOrDefault(Func<UserProfile, bool> predicate)
-        {
-            return _context.UserProfiles.SingleOrDefault(predicate);
-        }
-
-        public void UpdateAsync(UserProfile item)
-        {
-            _context.UserProfiles.Update(item);
-        }
-
-        public IEnumerable<UserProfile> GetAllByIds(IEnumerable<string> ids)
+        public virtual IEnumerable<UserProfile> GetAllByIds(IEnumerable<string> ids)
         {
             HashSet<string> usersId = new HashSet<string>(ids);
-            return _context.UserProfiles.Where(p => usersId.Contains(p.Id));
+
+            return _context.UserProfiles
+                .Include(t => t.Tasks)
+                .ThenInclude(c => c.Changes)
+                .Where(p => usersId.Contains(p.Id));
+        }
+
+        public virtual UserProfile Find(string id)
+        {
+            return _context.UserProfiles
+                .Include(t => t.Tasks)
+                .ThenInclude(c => c.Changes)
+                .SingleOrDefault(p => p.Id == id);
+        }
+
+        public virtual UserProfile Find(Func<UserProfile, bool> predicate)
+        {
+            return _context.UserProfiles
+                .Include(t => t.Tasks)
+                .ThenInclude(c => c.Changes)
+                .Where(predicate)
+                .SingleOrDefault();
+        }
+
+        public virtual void Create(UserProfile user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void Update(UserProfile user)
+        {
+            if (user == null)
+            {
+                throw new ArgumentNullException("UserProfile entity not found");
+            }
+            _context.UserProfiles.Update(user);
+            _context.SaveChanges();
+        }
+
+        public virtual void Delete(string id)
+        {
+            UserProfile user = _context.UserProfiles.Find(id);
+            if (user != null)
+            {
+                _context.UserProfiles.Remove(user);
+                _context.SaveChanges();
+            }
+        }
+
+        public virtual void Delete(UserProfile user)
+        {
+            if (user != null)
+            {
+                _context.UserProfiles.Remove(user);
+                _context.SaveChanges();
+            }
+        }
+
+        public virtual bool Any(Func<UserProfile, bool> predicate)
+        {
+            return _context.UserProfiles
+                .Include(t => t.Tasks)
+                .ThenInclude(c => c.Changes)
+                .Any(predicate);
         }
     }
 }
