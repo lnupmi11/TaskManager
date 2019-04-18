@@ -19,14 +19,14 @@ namespace TaskManager.DAL.Repositories
             _users = context.UserProfiles;
         }
 
-        public IEnumerable<UserProfile> GetAll()
+        public virtual IEnumerable<UserProfile> GetAll()
         {
             return _users
                 .Include(t => t.Tasks)
                 .ThenInclude(c => c.Changes);
         }
 
-        public IEnumerable<UserProfile> GetAllWhere(Func<UserProfile, bool> predicate)
+        public virtual IEnumerable<UserProfile> GetAllWhere(Func<UserProfile, bool> predicate)
         {
             return _users
                 .Include(t => t.Tasks)
@@ -34,7 +34,7 @@ namespace TaskManager.DAL.Repositories
                 .Where(predicate);
         }
 
-        public IEnumerable<UserProfile> GetAllByIds(IEnumerable<string> ids)
+        public virtual IEnumerable<UserProfile> GetAllByIds(IEnumerable<string> ids)
         {
             HashSet<string> usersId = new HashSet<string>(ids);
 
@@ -44,7 +44,7 @@ namespace TaskManager.DAL.Repositories
                 .Where(p => usersId.Contains(p.Id));
         }
 
-        public UserProfile Find(string id)
+        public virtual UserProfile Find(string id)
         {
             return _users
                 .Include(t => t.Tasks)
@@ -52,7 +52,7 @@ namespace TaskManager.DAL.Repositories
                 .SingleOrDefault(p => p.Id == id);
         }
 
-        public UserProfile Find(Func<UserProfile, bool> predicate)
+        public virtual UserProfile Find(Func<UserProfile, bool> predicate)
         {
             return _users
                 .Include(t => t.Tasks)
@@ -61,12 +61,12 @@ namespace TaskManager.DAL.Repositories
                 .SingleOrDefault();
         }
 
-        public void Create(UserProfile user)
+        public virtual void Create(UserProfile user)
         {
             throw new NotImplementedException();
         }
 
-        public void Update(UserProfile user)
+        public virtual void Update(UserProfile user)
         {
             if (user == null)
             {
@@ -76,7 +76,7 @@ namespace TaskManager.DAL.Repositories
             _context.SaveChanges();
         }
 
-        public void Delete(string id)
+        public virtual void Delete(string id)
         {
             UserProfile user = _users.Find(id);
             if (user != null)
@@ -86,7 +86,7 @@ namespace TaskManager.DAL.Repositories
             }
         }
 
-        public void Delete(UserProfile user)
+        public virtual void Delete(UserProfile user)
         {
             if (user != null)
             {
@@ -95,7 +95,7 @@ namespace TaskManager.DAL.Repositories
             }
         }
 
-        public bool Any(Func<UserProfile, bool> predicate)
+        public virtual bool Any(Func<UserProfile, bool> predicate)
         {
             return _users
                 .Include(t => t.Tasks)
