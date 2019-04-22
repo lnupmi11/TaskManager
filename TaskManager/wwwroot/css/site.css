@@ -319,24 +319,8 @@ footer.footer {
 .background {
     border: 1px solid #000;
     border-radius: 10px 10px 10px 10px;
-    margin: 50px 200px;
     box-shadow: 0px 0px 12px 0px rgba(0,0,0,0.75);
     text-align: center;
-}
-
-.form-wrapper {
-    display: flex;
-    justify-content: space-around;
-}
-
-.form {
-    margin: 0 90px;
-}
-
-.colom-wrapper {
-    display: flex;
-    flex-direction: column;
-    margin: 0 20px;
 }
 
 .form-header {
