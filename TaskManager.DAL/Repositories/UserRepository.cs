@@ -11,24 +11,22 @@ namespace TaskManager.DAL.Repositories
     public class UserRepository : IRepository<UserProfile>
     {
         private readonly ApplicationDbContext _context;
-        private DbSet<UserProfile> _users;
 
         public UserRepository(ApplicationDbContext context)
         {
             _context = context;
-            _users = context.UserProfiles;
         }
 
         public virtual IEnumerable<UserProfile> GetAll()
         {
-            return _users
+            return _context.UserProfiles
                 .Include(t => t.Tasks)
                 .ThenInclude(c => c.Changes);
         }
 
         public virtual IEnumerable<UserProfile> GetAllWhere(Func<UserProfile, bool> predicate)
         {
-            return _users
+            return _context.UserProfiles
                 .Include(t => t.Tasks)
                 .ThenInclude(c => c.Changes)
                 .Where(predicate);
@@ -38,7 +36,7 @@ namespace TaskManager.DAL.Repositories
         {
             HashSet<string> usersId = new HashSet<string>(ids);
 
-            return _users
+            return _context.UserProfiles
                 .Include(t => t.Tasks)
                 .ThenInclude(c => c.Changes)
                 .Where(p => usersId.Contains(p.Id));
@@ -46,7 +44,7 @@ namespace TaskManager.DAL.Repositories
 
         public virtual UserProfile Find(string id)
         {
-            return _users
+            return _context.UserProfiles
                 .Include(t => t.Tasks)
                 .ThenInclude(c => c.Changes)
                 .SingleOrDefault(p => p.Id == id);
@@ -54,7 +52,7 @@ namespace TaskManager.DAL.Repositories
 
         public virtual UserProfile Find(Func<UserProfile, bool> predicate)
         {
-            return _users
+            return _context.UserProfiles
                 .Include(t => t.Tasks)
                 .ThenInclude(c => c.Changes)
                 .Where(predicate)
@@ -72,16 +70,16 @@ namespace TaskManager.DAL.Repositories
             {
                 throw new ArgumentNullException("UserProfile entity not found");
             }
-            _users.Update(user);
+            _context.UserProfiles.Update(user);
             _context.SaveChanges();
         }
 
         public virtual void Delete(string id)
         {
-            UserProfile user = _users.Find(id);
+            UserProfile user = _context.UserProfiles.Find(id);
             if (user != null)
             {
-                _users.Remove(user);
+                _context.UserProfiles.Remove(user);
                 _context.SaveChanges();
             }
         }
@@ -90,14 +88,14 @@ namespace TaskManager.DAL.Repositories
         {
             if (user != null)
             {
-                _users.Remove(user);
+                _context.UserProfiles.Remove(user);
                 _context.SaveChanges();
             }
         }
 
         public virtual bool Any(Func<UserProfile, bool> predicate)
         {
-            return _users
+            return _context.UserProfiles
                 .Include(t => t.Tasks)
                 .ThenInclude(c => c.Changes)
                 .Any(predicate);

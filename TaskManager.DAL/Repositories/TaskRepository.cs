@@ -11,24 +11,22 @@ namespace TaskManager.DAL.Repositories
     public class TaskRepository : IRepository<TaskItem>
     {
         private readonly ApplicationDbContext _context;
-        private DbSet<TaskItem> _tasks;
 
         public TaskRepository(ApplicationDbContext context)
         {
             _context = context;
-            _tasks = context.Tasks;
         }
 
         public virtual IEnumerable<TaskItem> GetAll()
         {
-            return _tasks
+            return _context.Tasks
                 .Include(u => u.User)
                 .Include(c => c.Changes);
         }
 
         public virtual IEnumerable<TaskItem> GetAllWhere(Func<TaskItem, Boolean> predicate)
         {
-            return _tasks
+            return _context.Tasks
                 .Include(u => u.User)
                 .Include(c => c.Changes)
                 .Where(predicate);
@@ -38,7 +36,7 @@ namespace TaskManager.DAL.Repositories
         {
             HashSet<string> tasksIds = new HashSet<string>(ids);
 
-            return _tasks
+            return _context.Tasks
                 .Include(u => u.User)
                 .Include(c => c.Changes)
                 .Where(p => tasksIds.Contains(p.Id));
@@ -46,7 +44,7 @@ namespace TaskManager.DAL.Repositories
 
         public virtual TaskItem Find(string id)
         {
-            return _tasks
+            return _context.Tasks
                 .Include(u => u.User)
                 .Include(c => c.Changes)
                 .Where(p => p.Id == id)
@@ -55,7 +53,7 @@ namespace TaskManager.DAL.Repositories
 
         public virtual TaskItem Find(Func<TaskItem, bool> predicate)
         {
-            return _tasks
+            return _context.Tasks
                 .Include(u => u.User)
                 .Include(c => c.Changes)
                 .Where(predicate)
@@ -64,7 +62,7 @@ namespace TaskManager.DAL.Repositories
 
         public virtual void Create(TaskItem task)
         {
-            _tasks.Add(task);
+            _context.Tasks.Add(task);
             _context.SaveChanges();
         }
 
@@ -74,16 +72,16 @@ namespace TaskManager.DAL.Repositories
             {
                 throw new ArgumentNullException("TaskItem entity not found");
             }
-            _tasks.Update(task);
+            _context.Tasks.Update(task);
             _context.SaveChanges();
         }
 
         public virtual void Delete(string id)
         {
-            TaskItem task = _tasks.Find(id);
+            TaskItem task = _context.Tasks.Find(id);
             if (task != null)
             {
-                _tasks.Remove(task);
+                _context.Tasks.Remove(task);
                 _context.SaveChanges();
             }
         }
@@ -92,14 +90,14 @@ namespace TaskManager.DAL.Repositories
         {
             if (task != null)
             {
-                _tasks.Remove(task);
+                _context.Tasks.Remove(task);
                 _context.SaveChanges();
             }
         }
 
         public virtual bool Any(Func<TaskItem, bool> predicate)
         {
-            return _tasks
+            return _context.Tasks
                 .Include(u => u.User)
                 .Include(c => c.Changes)
                 .Any(predicate);
