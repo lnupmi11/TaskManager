@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using TaskManager.BLL.Extensions.Identity;
 using TaskManager.BLL.Interfaces;
 using TaskManager.DAL.Interfaces;
 using TaskManager.DAL.Models;
@@ -12,13 +13,13 @@ namespace TaskManager.BLL.Services
     public class TaskService : ITaskService
     {
         private readonly IRepository<TaskItem> _taskRepository;
-        private readonly IUserService _userService;
+        private readonly IRepository<UserProfile> _userRepository;
         private readonly IMapper _mapper;
 
-        public TaskService(IRepository<TaskItem> taskRepository, IUserService userService, IMapper mapper)
+        public TaskService(IRepository<TaskItem> taskRepository, IRepository<UserProfile> userRepository, IMapper mapper)
         {
             _taskRepository = taskRepository;
-            _userService = userService;
+            _userRepository = userRepository;
             _mapper = mapper;
         }
 
@@ -30,13 +31,12 @@ namespace TaskManager.BLL.Services
         }
 
 
-        public virtual void Create(ClaimsPrincipal user,TaskItemDTO taskItemDTO)
+        public virtual void Create(ClaimsPrincipal user, TaskItemDTO taskItemDTO)
         {
             var taskItem = _mapper.Map<TaskItem>(taskItemDTO);
-            taskItem.User = _userService.GetUserProfile(user);
+            taskItem.User = _userRepository.Find(user.GetUserId());
             _taskRepository.Create(taskItem);
         }
-
 
         public virtual TaskItemDTO Find(string id)
         {
@@ -45,7 +45,6 @@ namespace TaskManager.BLL.Services
 
             return taskItemDTO;
         }
-
 
         public virtual void Delete(string id)
         {
