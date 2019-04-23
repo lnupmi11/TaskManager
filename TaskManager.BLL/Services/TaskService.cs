@@ -31,7 +31,7 @@ namespace TaskManager.BLL.Services
             return tasksDTO;
         }
 
-        public virtual IEnumerable<TaskItemDTO> GetAllByFilters(List<Priority> priorities, Category? category)
+        public virtual IEnumerable<TaskItemDTO> GetByFilters(List<Priority> priorities, Category? category)
         {
             var tasksDTO = _taskRepository
                 .GetAllWhere(x => (!category.HasValue || x.Category == category) && (priorities.Count == 0 || priorities.Contains(x.Priority)))

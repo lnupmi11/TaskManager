@@ -9,7 +9,7 @@ namespace TaskManager.BLL.Interfaces
     public interface ITaskService
     {
         IEnumerable<TaskItemDTO> GetAll();
-        IEnumerable<TaskItemDTO> GetAllByFilters(List<Priority> priorities, Category? category);
+        IEnumerable<TaskItemDTO> GetByFilters(List<Priority> priorities, Category? category);
         void Create(ClaimsPrincipal user, TaskItemDTO taskItemDTO);
         TaskItemDTO Find(string id);
         void Delete(string id);

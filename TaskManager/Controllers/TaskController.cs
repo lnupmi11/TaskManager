@@ -25,7 +25,7 @@ namespace TaskManager.Controllers
             ViewBag.Priorities = priorities;
             ViewBag.Category = category;
 
-            var tasks = _taskService.GetAllByFilters(priorities, category);
+            var tasks = _taskService.GetByFilters(priorities, category);
             return View(tasks);
         }
 
