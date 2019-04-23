@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using TaskManager.BLL.Interfaces;
 using TaskManager.DAL.Models.Enums;
 using TaskManager.DTO.Task;
@@ -18,9 +20,12 @@ namespace TaskManager.Controllers
         }
 
         // GET: Task
-        public IActionResult Index()
+        public IActionResult Index(List<Priority> priorities, Category? category)
         {
-            var tasks = _taskService.GetAll();
+            ViewBag.Priorities = priorities;
+            ViewBag.Category = category;
+
+            var tasks = _taskService.GetAllByFilters(priorities, category);
             return View(tasks);
         }
 

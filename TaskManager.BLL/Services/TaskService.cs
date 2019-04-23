@@ -6,6 +6,7 @@ using TaskManager.BLL.Extensions.Identity;
 using TaskManager.BLL.Interfaces;
 using TaskManager.DAL.Interfaces;
 using TaskManager.DAL.Models;
+using TaskManager.DAL.Models.Enums;
 using TaskManager.DTO.Task;
 
 namespace TaskManager.BLL.Services
@@ -26,6 +27,15 @@ namespace TaskManager.BLL.Services
         public virtual IEnumerable<TaskItemDTO> GetAll()
         {
             var tasksDTO = _taskRepository.GetAll().Select(task => _mapper.Map<TaskItemDTO>(task)).ToList();
+
+            return tasksDTO;
+        }
+
+        public virtual IEnumerable<TaskItemDTO> GetAllByFilters(List<Priority> priorities, Category? category)
+        {
+            var tasksDTO = _taskRepository
+                .GetAllWhere(x => (!category.HasValue || x.Category == category) && (priorities.Count == 0 || priorities.Contains(x.Priority)))
+                .Select(task => _mapper.Map<TaskItemDTO>(task)).ToList();
 
             return tasksDTO;
         }
