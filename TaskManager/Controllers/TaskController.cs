@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using TaskManager.BLL.Interfaces;
 using TaskManager.DAL.Models.Enums;
 using TaskManager.DTO.Task;
 using TaskManager.Extensions.Auth;
+using TaskManager.Extensions.UI;
 
 namespace TaskManager.Controllers
 {
@@ -13,6 +15,7 @@ namespace TaskManager.Controllers
     public class TaskController : Controller
     {
         private readonly ITaskService _taskService;
+        private int _itemsPerPage = 5;
 
         public TaskController(ITaskService taskService)
         {
@@ -20,13 +23,14 @@ namespace TaskManager.Controllers
         }
 
         // GET: Task
-        public IActionResult Index(List<Priority> priorities, Category? category)
+        public IActionResult Index(List<Priority> priorities, Category? category, int? page)
         {
             ViewBag.Priorities = priorities;
             ViewBag.Category = category;
 
             var tasks = _taskService.GetByFilters(priorities, category);
-            return View(tasks);
+
+            return View(PaginatedList<TaskItemDTO>.Create(tasks.AsQueryable(), page ?? 1, _itemsPerPage));
         }
 
         // GET: Task/Details/{id}
