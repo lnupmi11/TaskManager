@@ -4,11 +4,10 @@
 @{
     ViewData["Title"] = "Create";
 }
-<h2>Create</h2>
-<h4>TaskItem</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+
+<div class="container">
+    <div class="background m-5 p-5">
+        <h2 class="mb-3 card-header-border form-header">Create</h2>
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -18,59 +17,62 @@
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
+                <textarea asp-for="Description" class="form-control"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
-            @*<div class="form-group">
-                    <label asp-for="EstimatedTime" class="control-label"></label>
-                    <input asp-for="EstimatedTime" class="form-control" />
-                    <span asp-validation-for="EstimatedTime" class="text-danger"></span>
-                </div>*@
-            <div class="form-group">
-                <label asp-for="Progress" class="control-label"></label>
-                <input asp-for="Progress" class="form-control" />
-                <span asp-validation-for="Progress" class="text-danger"></span>
+            <div class="row">
+                <div class="col col-sm-12 col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Progress" class="control-label"></label>
+                        <input asp-for="Progress" class="form-control" />
+                        <span asp-validation-for="Progress" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="StartDate" class="control-label" id="StartDate"></label>
+                        <input asp-for="StartDate" class="form-control" onchange="OnChangeStartDateEvent(event);" />
+                        <span asp-validation-for="StartDate" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="EndDate" class="control-label"></label>
+                        <input asp-for="EndDate" class="form-control" onchange="OnChangeEndDateEvent(event);" />
+                        <span asp-validation-for="EndDate" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col col-sm-12 col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Category" class="control-label"></label>
+                        <select asp-for="Category" class="form-control" asp-items="Html.GetEnumSelectList<Category>()">
+                            <option selected="selected" value="">Please select</option>
+                        </select>
+                        <span asp-validation-for="Category" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Priority" class="control-label"></label>
+                        <select asp-for="Priority" class="form-control" asp-items="Html.GetEnumSelectList<Priority>()">
+                            <option selected="selected" value="">Please select</option>
+                        </select>
+                        <span asp-validation-for="Priority" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Status" class="control-label"></label>
+                        <select asp-for="Status" class="form-control" asp-items="Html.GetEnumSelectList<Status>()">
+                            <option selected="selected" value="">Please select</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+                </div>
             </div>
             <div class="form-group">
-                <label asp-for="StartDate" class="control-label" id="StartDate"></label>
-                <input asp-for="StartDate" class="form-control" onchange="OnChangeStartDateEvent(event);" />
-                <span asp-validation-for="StartDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EndDate" class="control-label"></label>
-                <input asp-for="EndDate" class="form-control" onchange="OnChangeEndDateEvent(event);" />
-                <span asp-validation-for="EndDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Category" class="control-label"></label>
-                <select asp-for="Category" asp-items="Html.GetEnumSelectList<Category>()">
-                    <option selected="selected" value="">Please select</option>
-                </select>
-                <span asp-validation-for="Category" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Priority" class="control-label"></label>
-                <select asp-for="Priority" asp-items="Html.GetEnumSelectList<Priority>()">
-                    <option selected="selected" value="">Please select</option>
-                </select>
-                <span asp-validation-for="Priority" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <select asp-for="Status" asp-items="Html.GetEnumSelectList<Status>()">
-                    <option selected="selected" value="">Please select</option>
-                </select>
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
+
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script src="~/js/dateValidation.js" type="text/javascript"></script>

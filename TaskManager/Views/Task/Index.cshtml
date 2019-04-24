@@ -1,83 +1,183 @@
-﻿@model IEnumerable<TaskManager.DTO.Task.TaskItemDTO>
+﻿@model TaskManager.Extensions.UI.PaginatedList<TaskItemDTO>
+
+@using TaskManager.DAL.Models.Enums;
 
 @{
     ViewData["Title"] = "Index";
+    int index = 0;
 }
 
-<h2>Index</h2>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EstimatedTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Progress)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StartDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EndDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Priority)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EstimatedTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Progress)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Priority)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="container-fluid">
+    <div class="row mt-4">
+        <div class="col-md-6 col-lg-3 d-flex">
+            <div class="card mb-grid w-100">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between mb-3">
+                        <h5 class="card-title mb-0">
+                            Personal Performance
+                        </h5>
+                    </div>
+
+                    <div class="progress mt-auto">
+                        <div class="progress-bar" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0"
+                             aria-valuemax="100">70%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3 d-flex">
+            <div class="card mb-grid w-100">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between mb-3">
+                        <h5 class="card-title mb-0">
+                            Open Tasks
+                        </h5>
+                        <div class="card-title-sub">
+                            18/30
+                        </div>
+                    </div>
+
+                    <div class="progress mt-auto">
+                        <div class="progress-bar" role="progressbar" style="width: 60%;" aria-valuenow="75" aria-valuemin="0"
+                             aria-valuemax="100"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3 d-flex">
+            <div class="card border-0 bg-primary text-white text-center mb-grid w-100">
+                <div class="d-flex flex-row align-items-center h-100">
+                    <div class="card-body">
+                        <div class="card-info-title">Completed this week</div>
+                        <h3 class="card-title mb-0">
+                            3
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3 d-flex">
+            <div class="card border-0 bg-success text-white text-center mb-grid w-100">
+                <div class="d-flex flex-row align-items-center h-100">
+                    <div class="card-body">
+                        <div class="card-info-title">Your rate among 2000 users</div>
+                        <h3 class="card-title mb-0">
+                            1,258
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-lg-3">
+            <form asp-controller="Task" asp-action="Index">
+                <div class="card">
+                    <article class="card-group-item">
+                        <header class="card-header">
+                            <h6 class="title">Priority</h6>
+                        </header>
+                        <div class="filter-content">
+                            <div class="card-body">
+                                @foreach (var value in Enum.GetNames(typeof(TaskManager.DAL.Models.Enums.Priority)))
+                                {
+                                    <label class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="@value"
+                                               name="priorities" @(((List<Priority>)ViewBag.Priorities).Any(x => x.ToString() == value) ? "checked" : string.Empty)>
+                                        <span class="form-check-label">
+                                            @value
+                                        </span>
+                                    </label>
+                                }
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card-group-item">
+                        <header class="card-header">
+                            <h6 class="title">Category</h6>
+                        </header>
+                        <div class="filter-content">
+                            <div class="card-body">
+                                @foreach (var value in Enum.GetNames(typeof(TaskManager.DAL.Models.Enums.Category)))
+                                {
+                                    <label class="form-check">
+                                        <input class="form-check-input" type="radio" name="category"
+                                               value="@value" @(((Category?)ViewBag.Category).ToString() == value ? "checked" : string.Empty)>
+                                        <span class="form-check-label">
+                                            @value
+                                        </span>
+                                    </label>
+                                }
+                            </div>
+                        </div>
+                    </article>
+                    <input type="submit" class="btn btn-success" value="Apply Filters" />
+                </div>
+            </form>
+        </div>
+
+        <div class="col-lg-9">
+            <h2 class="pb-1">Active tasks</h2>
+            <a asp-action="Create" class="btn btn-lg btn-primary m-3 mb-5">Create new</a>
+            @foreach (var item in Model)
+            {
+                index++;
+                <div class="card mb-5">
+                    <div class="card-header container-fluid bg-light-green">
+                        <div class="row">
+                            <div class="col float-left">
+                                <div class="card-header-title">TM-@index</div>
+                            </div>
+                            <div class="col text-right">
+                                <a asp-action="Details" asp-route-id="@item.Id"
+                                   data-toggle="tooltip" data-placement="bottom" title="Detail">
+                                    <i class="icon-eye" style="font-size:24px"></i>
+                                </a>
+                                <a asp-action="Edit" asp-route-id="@item.Id"
+                                   data-toggle="tooltip" data-placement="bottom" title="Edit">
+                                    <i class="icon-pencil" style="font-size:24px"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.Id"
+                                   data-toggle="tooltip" data-placement="bottom" title="Delete">
+                                    <i class="icon-trash" style="font-size:24px"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body collapse show">
+                        <h4 class="card-title">@item.Title</h4>
+                        <p class="card-text">@item.Description</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="center-block text-center">
+    @{
+        var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    }
+
+    <a asp-action="Index"
+       asp-route-page="@(Model.PageIndex - 1)"
+       class="btn btn-default @prevDisabled">
+        Previous
+    </a>
+    @Model.PageIndex
+    <a asp-action="Index"
+       asp-route-page="@(Model.PageIndex + 1)"
+       class="btn btn-default @nextDisabled">
+        Next
+    </a>
+</div>
+
+<div>

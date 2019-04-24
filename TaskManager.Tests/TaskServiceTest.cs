@@ -5,6 +5,7 @@ using System.Security.Claims;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using TaskManager.BLL.Extensions.Identity;
 using TaskManager.BLL.Services;
 using TaskManager.DAL.EF;
 using TaskManager.DAL.Models;
@@ -47,7 +48,7 @@ namespace TaskManager.Tests
 
             var userService = new Mock<UserService>(userRep.Object);
 
-            var service = new TaskService(repository,userService.Object,mapper.Object);
+            var service = new TaskService(repository,userRep.Object, mapper.Object);
 
             // Act
             var actual = service.GetAll();
@@ -76,11 +77,14 @@ namespace TaskManager.Tests
 
             var userService = new Mock<UserService>(userRep.Object);
 
-            var service = new Mock<TaskService>(repository.Object, userService.Object, mapper.Object);
+            var service = new Mock<TaskService>(repository.Object, userRep.Object, mapper.Object);
 
             var cp = new Mock<ClaimsPrincipal>();
             cp.Setup(m => m.HasClaim(It.IsAny<string>(), It.IsAny<string>())).Returns(true);
+            var mockMyImplementation = new Mock<IdentityExtension>();
 
+            IdentityExtensions.Implementation = mockMyImplementation.Object;
+            mockMyImplementation.Setup(m => m.GetUserId(cp.Object)).Returns("1");
             service.Setup(x => x.Create(cp.Object, expTaskDTO));
             service.Object.Create(cp.Object, expTaskDTO);
             service.Verify(i => i.Create(cp.Object, expTaskDTO));
@@ -106,10 +110,14 @@ namespace TaskManager.Tests
 
             var userService = new Mock<UserService>(userRep.Object);
 
-            var service = new TaskService(repository, userService.Object, mapper.Object);
+            var service = new TaskService(repository, userRep.Object, mapper.Object);
             var cp = new Mock<ClaimsPrincipal>();
             cp.Setup(m => m.HasClaim(It.IsAny<string>(), It.IsAny<string>())).Returns(true);
 
+            var mockMyImplementation = new Mock<IdentityExtension>();
+
+            IdentityExtensions.Implementation = mockMyImplementation.Object;
+            mockMyImplementation.Setup(m => m.GetUserId(cp.Object)).Returns("1");
             // Act 
             service.Create(cp.Object, task);
             service.Update(task);
@@ -138,9 +146,13 @@ namespace TaskManager.Tests
             mapper.Setup(x => x.Map<TaskItemDTO>(taskItem)).Returns(task);
             var userService = new Mock<UserService>(userRep.Object);
 
-            var service = new Mock<TaskService>(repository.Object, userService.Object, mapper.Object);
+            var service = new Mock<TaskService>(repository.Object, userRep.Object, mapper.Object);
             var cp = new Mock<ClaimsPrincipal>();
             cp.Setup(m => m.HasClaim(It.IsAny<string>(), It.IsAny<string>())).Returns(true);
+            var mockMyImplementation = new Mock<IdentityExtension>();
+
+            IdentityExtensions.Implementation = mockMyImplementation.Object;
+            mockMyImplementation.Setup(m => m.GetUserId(cp.Object)).Returns("1");
             service.Setup(x => x.Create(cp.Object,exp));
             service.Object.Create(cp.Object, exp);
             service.Setup(x => x.Any(exp.Id));
@@ -169,7 +181,7 @@ namespace TaskManager.Tests
 
             var userService = new Mock<UserService>(userRep.Object);
 
-            var service = new Mock<TaskService>(repository.Object, userService.Object, mapper.Object);
+            var service = new Mock<TaskService>(repository.Object, userRep.Object, mapper.Object);
 
             service.Setup(x => x.Delete(task.Id));
             service.Object.Delete(task.Id);

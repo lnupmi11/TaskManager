@@ -115,9 +115,9 @@
     color: #fff;
 }
 
-.navbar-nav > li > button:hover {
-    color: white;
-}
+    .navbar-nav > li > button:hover {
+        color: white;
+    }
 
 .navbar-nav .dropdown-menu > a:hover {
     background-color: rgba(46, 166, 203, 0.90);
@@ -314,4 +314,26 @@ footer.footer {
 
 .text-secondary {
     color: #ecb807 !important;
+}
+
+.background {
+    border: 1px solid #000;
+    border-radius: 10px 10px 10px 10px;
+    box-shadow: 0px 0px 12px 0px rgba(0,0,0,0.75);
+    text-align: center;
+}
+
+.form-header {
+    background-color: #1D809F !important;
+    border-color: #1D809F !important;
+    color: #fff !important;
+}
+
+.card-header-border {
+    padding: 0.75rem 1.25rem;
+    border-radius: 10px 10px 0 0;
+}
+
+.bg-light-green {
+    background-color: #c9e4bc;
 }
