@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,13 +21,23 @@ namespace TaskManager.Controllers
             _taskService = taskService;
         }
 
-        // GET: Task
-        public IActionResult Index(List<Priority> priorities, Category? category, int? page)
+        // GET: Active
+        public IActionResult Active(List<Priority> priorities, Category? category, int? page)
         {
             ViewBag.Priorities = priorities;
             ViewBag.Category = category;
 
-            var tasks = _taskService.GetByFilters(priorities, category);
+            var tasks = _taskService.GetActiveByFilters(priorities, category);
+
+            return View(PaginatedList<TaskItemDTO>.Create(tasks.AsQueryable(), page ?? 1, _itemsPerPage));
+        }
+
+        public IActionResult Archive(List<Priority> priorities, Category? category, int? page)
+        {
+            ViewBag.Priorities = priorities;
+            ViewBag.Category = category;
+
+            var tasks = _taskService.GetArchivedByFilters(priorities, category);
 
             return View(PaginatedList<TaskItemDTO>.Create(tasks.AsQueryable(), page ?? 1, _itemsPerPage));
         }
@@ -65,7 +74,7 @@ namespace TaskManager.Controllers
             {
                 _taskService.Create(User, taskItemDTO);
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Active));
             }
 
             return View(taskItemDTO);
@@ -116,7 +125,7 @@ namespace TaskManager.Controllers
                     }
                 }
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Active));
             }
 
             return View(taskItemDTO);
@@ -151,7 +160,7 @@ namespace TaskManager.Controllers
 
             _taskService.Delete(id);
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Active));
         }
     }
 }

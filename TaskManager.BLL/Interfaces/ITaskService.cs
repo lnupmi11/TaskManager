@@ -10,6 +10,8 @@ namespace TaskManager.BLL.Interfaces
     {
         IEnumerable<TaskItemDTO> GetAll();
         IEnumerable<TaskItemDTO> GetByFilters(List<Priority> priorities, Category? category);
+        IEnumerable<TaskItemDTO> GetActiveByFilters(List<Priority> priorities, Category? category);
+        IEnumerable<TaskItemDTO> GetArchivedByFilters(List<Priority> priorities, Category? category);
         void Create(ClaimsPrincipal user, TaskItemDTO taskItemDTO);
         TaskItemDTO Find(string id);
         void Delete(string id);

@@ -3,7 +3,7 @@
 @using TaskManager.DAL.Models.Enums;
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Archive";
     int index = 0;
 }
 
@@ -77,7 +77,7 @@
 
     <div class="row mt-5">
         <div class="col-lg-3">
-            <form asp-controller="Task" asp-action="Index">
+            <form asp-controller="Task" asp-action="Archive">
                 <div class="card">
                     <article class="card-group-item">
                         <header class="card-header">
@@ -124,8 +124,7 @@
         </div>
 
         <div class="col-lg-9">
-            <h2 class="pb-1">Active tasks</h2>
-            <a asp-action="Create" class="btn btn-lg btn-primary m-3 mb-5">Create new</a>
+            <h2 class="pb-1">Archive tasks (closed tasks)</h2>
             @foreach (var item in Model)
             {
                 index++;
@@ -167,13 +166,13 @@
         var nextDisabled = !Model.HasNextPage ? "disabled" : "";
     }
 
-    <a asp-action="Index"
+    <a asp-action="Archive"
        asp-route-page="@(Model.PageIndex - 1)"
        class="btn btn-default @prevDisabled">
         Previous
     </a>
     @Model.PageIndex
-    <a asp-action="Index"
+    <a asp-action="Archive"
        asp-route-page="@(Model.PageIndex + 1)"
        class="btn btn-default @nextDisabled">
         Next

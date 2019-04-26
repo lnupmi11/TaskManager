@@ -34,7 +34,30 @@ namespace TaskManager.BLL.Services
         public virtual IEnumerable<TaskItemDTO> GetByFilters(List<Priority> priorities, Category? category)
         {
             var tasksDTO = _taskRepository
-                .GetAllWhere(x => (!category.HasValue || x.Category == category) && (priorities.Count == 0 || priorities.Contains(x.Priority)))
+                .GetAllWhere(x => (!category.HasValue || x.Category == category) &&
+                (priorities.Count == 0 || priorities.Contains(x.Priority)))
+                .Select(task => _mapper.Map<TaskItemDTO>(task)).ToList();
+
+            return tasksDTO;
+        }
+
+        public virtual IEnumerable<TaskItemDTO> GetActiveByFilters(List<Priority> priorities, Category? category)
+        {
+            var tasksDTO = _taskRepository
+                .GetAllWhere(x => (!category.HasValue || x.Category == category) &&
+                (priorities.Count == 0 || priorities.Contains(x.Priority)) &&
+                (x.Status != Status.Closed))
+                .Select(task => _mapper.Map<TaskItemDTO>(task)).ToList();
+
+            return tasksDTO;
+        }
+
+        public virtual IEnumerable<TaskItemDTO> GetArchivedByFilters(List<Priority> priorities, Category? category)
+        {
+            var tasksDTO = _taskRepository
+                .GetAllWhere(x => (!category.HasValue || x.Category == category) &&
+                (priorities.Count == 0 || priorities.Contains(x.Priority)) &&
+                (x.Status == Status.Closed))
                 .Select(task => _mapper.Map<TaskItemDTO>(task)).ToList();
 
             return tasksDTO;
@@ -60,7 +83,6 @@ namespace TaskManager.BLL.Services
         {
             _taskRepository.Delete(id);
         }
-
 
         public virtual void Update(TaskItemDTO taskItemDTO)
         {
