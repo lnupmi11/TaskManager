@@ -50,6 +50,16 @@ namespace TaskManager.DAL.Repositories
                 .SingleOrDefault(p => p.Id == id);
         }
 
+        public UserProfile FindAsNoTracking(string id)
+        {
+            return _context.UserProfiles
+                .Include(t => t.Tasks)
+                .ThenInclude(c => c.Changes)
+                .AsNoTracking()
+                .SingleOrDefault(p => p.Id == id);
+        }
+
+
         public virtual UserProfile Find(Func<UserProfile, bool> predicate)
         {
             return _context.UserProfiles
