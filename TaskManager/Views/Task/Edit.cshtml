@@ -7,8 +7,8 @@
 
 <div class="container">
     <div class="background m-5 p-5">
-        <h2 class="mb-3 card-header-border form-header">Create</h2>
-        <form asp-action="Create">
+        <h2 class="mb-3 card-header-border form-header">Edit</h2>
+        <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
@@ -58,6 +58,14 @@
                         <select asp-for="Status" class="form-control" asp-items="Html.GetEnumSelectList<Status>()">
                             <option selected="selected" value="">Please select</option>
                         </select>
+                        @if (Model.Status != Status.Closed)
+                        {
+                            <span class="text-info">if you changet status to Closed - task will be moved to archive</span>
+                        }
+                        else
+                        {
+                            <span class="text-info">if you change status - task will be moved to active board</span>
+                        }
                         <span asp-validation-for="Status" class="text-danger"></span>
                     </div>
                 </div>
@@ -70,7 +78,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Active">Back to List</a>
 </div>
 
 
