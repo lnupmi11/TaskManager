@@ -1,14 +1,15 @@
-﻿@model IEnumerable<TaskManager.DTO.Task.TaskItemDTO>
+﻿@model TaskManager.Extensions.UI.PaginatedList<TaskItemDTO>
+
+@using TaskManager.DAL.Models.Enums;
 
 @{
     ViewData["Title"] = "Index";
-    
+    int index = 0;
 }
 
 </div>
 
 <div class="container-fluid">
-
     <div class="row mt-4">
         <div class="col-md-6 col-lg-3 d-flex">
             <div class="card mb-grid w-100">
@@ -17,7 +18,6 @@
                         <h5 class="card-title mb-0">
                             Personal Performance
                         </h5>
-
                     </div>
 
                     <div class="progress mt-auto">
@@ -35,7 +35,6 @@
                         <h5 class="card-title mb-0">
                             Open Tasks
                         </h5>
-
                         <div class="card-title-sub">
                             18/30
                         </div>
@@ -78,87 +77,107 @@
 
     <div class="row mt-5">
         <div class="col-lg-3">
-            
-            <div class="card">
-                <article class="card-group-item">
-                    <header class="card-header">
-                        <h6 class="title">Statuses </h6>
-                    </header>
-                    <div class="filter-content">
-                        <div class="card-body">
-                            <form>
-                                <label class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="">
-                                    <span class="form-check-label">
-                                        Mersedes Benz
-                                    </span>
-                                </label>
-                                <label class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="">
-                                    <span class="form-check-label">
-                                        Nissan Altima
-                                    </span>
-                                </label>
-                                <label class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="">
-                                    <span class="form-check-label">
-                                        Another Brand
-                                    </span>
-                                </label>
-                            </form>
+            <form asp-controller="Task" asp-action="Index">
+                <div class="card">
+                    <article class="card-group-item">
+                        <header class="card-header">
+                            <h6 class="title">Priority</h6>
+                        </header>
+                        <div class="filter-content">
+                            <div class="card-body">
+                                @foreach (var value in Enum.GetNames(typeof(TaskManager.DAL.Models.Enums.Priority)))
+                                {
+                                    <label class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="@value"
+                                               name="priorities" @(((List<Priority>)ViewBag.Priorities).Any(x => x.ToString() == value) ? "checked" : string.Empty)>
+                                        <span class="form-check-label">
+                                            @value
+                                        </span>
+                                    </label>
+                                }
+                            </div>
                         </div>
-                    </div>
-                </article>
+                    </article>
 
-                <article class="card-group-item">
-                    <header class="card-header">
-                        <h6 class="title">Category</h6>
-                    </header>
-                    <div class="filter-content">
-                        <div class="card-body">
-                            <label class="form-check">
-                                <input class="form-check-input" type="radio" name="exampleRadio" value="">
-                                <span class="form-check-label">
-                                    First hand items
-                                </span>
-                            </label>
-                            <label class="form-check">
-                                <input class="form-check-input" type="radio" name="exampleRadio" value="">
-                                <span class="form-check-label">
-                                    Brand new items
-                                </span>
-                            </label>
-                            <label class="form-check">
-                                <input class="form-check-input" type="radio" name="exampleRadio" value="">
-                                <span class="form-check-label">
-                                    Some other option
-                                </span>
-                            </label>
+                    <article class="card-group-item">
+                        <header class="card-header">
+                            <h6 class="title">Category</h6>
+                        </header>
+                        <div class="filter-content">
+                            <div class="card-body">
+                                @foreach (var value in Enum.GetNames(typeof(TaskManager.DAL.Models.Enums.Category)))
+                                {
+                                    <label class="form-check">
+                                        <input class="form-check-input" type="radio" name="category"
+                                               value="@value" @(((Category?)ViewBag.Category).ToString() == value ? "checked" : string.Empty)>
+                                        <span class="form-check-label">
+                                            @value
+                                        </span>
+                                    </label>
+                                }
+                            </div>
                         </div>
-                    </div>
-                </article>
-                <button type="button" class="btn btn-success">Apply Filters</button>
-            </div>
+                    </article>
+                    <input type="submit" class="btn btn-success" value="Apply Filters" />
+                </div>
+            </form>
         </div>
-       
+
         <div class="col-lg-9">
             <h2 class="pb-1">Active tasks</h2>
-            <a asp-action="Create" class="btn btn-lg btn-primary m-3">Create new</a>
+            <a asp-action="Create" class="btn btn-lg btn-primary m-3 mb-5">Create new</a>
             @foreach (var item in Model)
             {
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <div class="card-header-title">TM-index</div>
+                index++;
+                <div class="card mb-5">
+                    <div class="card-header container-fluid bg-light-green">
+                        <div class="row">
+                            <div class="col float-left">
+                                <div class="card-header-title">TM-@index</div>
+                            </div>
+                            <div class="col text-right">
+                                <a asp-action="Details" asp-route-id="@item.Id"
+                                   data-toggle="tooltip" data-placement="bottom" title="Detail">
+                                    <i class="icon-eye" style="font-size:24px"></i>
+                                </a>
+                                <a asp-action="Edit" asp-route-id="@item.Id"
+                                   data-toggle="tooltip" data-placement="bottom" title="Edit">
+                                    <i class="icon-pencil" style="font-size:24px"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.Id"
+                                   data-toggle="tooltip" data-placement="bottom" title="Delete">
+                                    <i class="icon-trash" style="font-size:24px"></i>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                     <div class="card-body collapse show">
                         <h4 class="card-title">@item.Title</h4>
                         <p class="card-text">@item.Description</p>
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">View</a>
                     </div>
                 </div>
             }
         </div>
     </div>
+</div>
+
+<div class="center-block text-center">
+    @{
+        var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    }
+
+    <a asp-action="Index"
+       asp-route-page="@(Model.PageIndex - 1)"
+       class="btn btn-default @prevDisabled">
+        Previous
+    </a>
+    @Model.PageIndex
+    <a asp-action="Index"
+       asp-route-page="@(Model.PageIndex + 1)"
+       class="btn btn-default @nextDisabled">
+        Next
+    </a>
 </div>
 
 <div>
