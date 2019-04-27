@@ -9,6 +9,7 @@ namespace TaskManager.DAL.Interfaces
         IEnumerable<T> GetAllWhere(Func<T, Boolean> predicate);
         IEnumerable<T> GetAllByIds(IEnumerable<string> ids);
         T Find(string id);
+        T FindAsNoTracking(string id);
         T Find(Func<T, Boolean> predicate);
         void Create(T item);
         void Update(T item);

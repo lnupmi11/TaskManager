@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -87,12 +88,50 @@ namespace TaskManager.BLL.Services
         public virtual void Update(TaskItemDTO taskItemDTO)
         {
             var taskItem = _mapper.Map<TaskItem>(taskItemDTO);
+            var prevTaskItem = _taskRepository.FindAsNoTracking(taskItem.Id);
+            var diff = GetDiff(prevTaskItem, taskItem);
+
+            foreach (var item in diff)
+            {
+                taskItem.Changes.Add(item);
+            }
+
             _taskRepository.Update(taskItem);
         }
 
         public virtual bool Any(string id)
         {
             return _taskRepository.Any(e => e.Id == id);
+        }
+
+        private List<TaskChanges> GetDiff(TaskItem oldTask, TaskItem newTask)
+        {
+            List<TaskChanges> changes = new List<TaskChanges>();
+
+            var oType = oldTask.GetType();
+
+            foreach (var oProperty in oType.GetProperties())
+            {
+                var oOldValue = oProperty.GetValue(oldTask, null);
+                var oNewValue = oProperty.GetValue(newTask, null);
+                if (!Equals(oOldValue, oNewValue) &&
+                    oProperty.Name != "TaskChanges" &&
+                    oProperty.Name != "User")
+                {
+                    var sOldValue = oOldValue == null ? "" : oOldValue.ToString();
+                    var sNewValue = oNewValue == null ? "" : oNewValue.ToString();
+
+                    changes.Add(new TaskChanges
+                    {
+                        ModifiedOn = DateTime.Now,
+                        Description = "Property " + oProperty.Name + " was changed from \"" + sOldValue + "\" to \"" + sNewValue + "\"",
+                        TaskId = newTask.Id
+                    });
+
+                }
+            }
+
+            return changes;
         }
     }
 }
