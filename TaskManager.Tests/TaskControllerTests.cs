@@ -162,19 +162,12 @@ namespace TaskManager.Tests
 
             var controller = new TaskController(service);
             // Act
-<<<<<<< HEAD
             controller.Create(task);
             controller.DeleteConfirmed("1");
 
             // Assert
             Assert.Equal(0, context.Tasks.Count());
-=======
-            var view = controller.Create(task);
-            controller.DeleteConfirmed("3");
 
-            // Assert
-       //     Assert.Equal(1, context.Tasks.Count());
->>>>>>> dev
         }
 
         [Fact]
