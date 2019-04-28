@@ -14,13 +14,16 @@ namespace TaskManager.Tests
 {
     public class UserServiceTest
     {
+        private UserService svc;
+        private IEnumerable<UserProfile> list;
+        public UserServiceTest()
+        {
+            svc = SetUpService();
+            list = GetTestCollection();
+        }
         [Fact]
         public void GetUserProfilesTest()
         {
-            // Arrange
-            var list = GetTestCollection();
-            var svc = SetUpService();
-
             // Act
             IEnumerable<UserProfile> actual = svc.GetUserProfiles();
 
@@ -35,7 +38,6 @@ namespace TaskManager.Tests
         public void GetUserProfileByIdTest(string id)
         {
             // Arrange
-            var svc = SetUpService();
             var dtos = GetTestCollection();
             var expected = dtos.First(i => i.Id == id);
 
@@ -51,8 +53,6 @@ namespace TaskManager.Tests
         [Fact]
         public void GetUserProfileByIdNotExistingTest()
         {
-            // Arrange
-            var svc = SetUpService();
 
             // Act
             var actual = svc.GetUserProfile("15");
@@ -77,11 +77,12 @@ namespace TaskManager.Tests
                 FirstName = "aaa",
                 LastName = "aaa"
                 }});
-            var svc = new UserService(repository.Object);
+
+            var service = new UserService(repository.Object);
 
 
             // Act
-            svc.Update(expected);
+            service.Update(expected);
 
             // Assert
             repository.Verify(r => r.Update(It.IsAny<UserProfile>()), Times.Once());
@@ -105,10 +106,10 @@ namespace TaskManager.Tests
                 FirstName = "aaa",
                 LastName = "aaa"
                 }});
-            var svc = new UserService(repository.Object);
+            var service = new UserService(repository.Object);
 
             // Act
-            svc.Delete(expected);
+            service.Delete(expected);
 
             // Assert
             repository.Verify(r => r.Delete(It.IsAny<UserProfile>()), Times.Once());
@@ -142,20 +143,20 @@ namespace TaskManager.Tests
 
         private UserService SetUpService()
         {
-            var list = GetTestCollection().AsQueryable();
+            var data = GetTestCollection().AsQueryable();
             var mockSet = new Mock<DbSet<UserProfile>>();
-            mockSet.As<IQueryable<UserProfile>>().Setup(p => p.Provider).Returns(list.Provider);
-            mockSet.As<IQueryable<UserProfile>>().Setup(p => p.Expression).Returns(list.Expression);
-            mockSet.As<IQueryable<UserProfile>>().Setup(p => p.ElementType).Returns(list.ElementType);
-            mockSet.As<IQueryable<UserProfile>>().Setup(p => p.GetEnumerator()).Returns(list.GetEnumerator);
+            mockSet.As<IQueryable<UserProfile>>().Setup(p => p.Provider).Returns(data.Provider);
+            mockSet.As<IQueryable<UserProfile>>().Setup(p => p.Expression).Returns(data.Expression);
+            mockSet.As<IQueryable<UserProfile>>().Setup(p => p.ElementType).Returns(data.ElementType);
+            mockSet.As<IQueryable<UserProfile>>().Setup(p => p.GetEnumerator()).Returns(data.GetEnumerator);
 
             var mockCtx = new Mock<ApplicationDbContext>();
             mockCtx.Setup(p => p.UserProfiles).Returns(mockSet.Object);
 
             var repository = new UserRepository(mockCtx.Object);
 
-            var svc = new UserService(repository);
-            return svc;
+            var service = new UserService(repository);
+            return service;
         }
     }
 }
