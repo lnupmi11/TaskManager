@@ -30,7 +30,6 @@
             <div class="navbar-collapse collapse" id="navbarSupportedContent">
                 <ul class="nav navbar-nav mr-auto">
                     <li class="nav-link"><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li class="nav-link"><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     @if (User.IsInRole(Roles.User.ToString()))
                     {
                         <li class="nav-link dropdown">
