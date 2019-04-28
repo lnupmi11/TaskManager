@@ -22,32 +22,35 @@ namespace TaskManager.Tests
         [Fact]
         public void CreateTest()
         {
-            // Arrange
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "create")
-                .Options;
-
-            var context = new ApplicationDbContext(options);
+            var context = new ApplicationDbContext();
 
             var repository = new TaskRepository(context);
 
             var userRep = new Mock<UserRepository>(context);
 
             var mapper = new Mock<IMapper>();
-            var task = new TaskItemDTO { Id = "1", Description = "Description", UserId = "1" };
-            var taskItem = new TaskItem { Id = "1", Description = "Description", UserId = "1" };
+            var principal = new Mock<ClaimsPrincipal>();
+            principal.Setup(b => b.Identity.IsAuthenticated).Returns(true);
+            principal.Setup(b => b.FindFirst(It.IsAny<string>())).Returns(new Claim(ClaimTypes.NameIdentifier, "1"));
+
+            var iden = new Mock<ClaimsIdentity>();
+            iden.Setup(i => i.IsAuthenticated).Returns(true);
+            iden.Setup(b => b.FindFirst(It.IsAny<string>())).Returns(new Claim(ClaimTypes.NameIdentifier, "1"));
+            var task = new TaskItemDTO { Id = "1", Description = "Description", UserId = "1"};
+            var taskItem = new TaskItem { Id = "1", Description = "Description", UserId = "1"};
             mapper.Setup(x => x.Map<TaskItem>(task)).Returns(taskItem);
 
             var userService = new Mock<UserService>(userRep.Object);
 
-            var service = new TaskService(repository,userRep.Object,mapper.Object);
-                  
-            var controller = new TaskController(service);
+            var service = new Mock<TaskService>(repository,userRep.Object,mapper.Object);
+            service.Setup(i => i.Create(principal.Object, task));
+            var controller = new TaskController(service.Object);
+
             // Act
             var view = controller.Create(task);
 
             // Assert
-            Assert.Equal(1, context.Tasks.Count());
+            Assert.Equal("Microsoft.AspNetCore.Mvc.RedirectToActionResult", view.ToString());
         }
         [Fact]
         public void UpdateTest()
@@ -73,11 +76,13 @@ namespace TaskManager.Tests
             var taskItem1 = new TaskItem { Id = "1", Description = "new", UserId = "1" };
             mapper.Setup(x => x.Map<TaskItem>(task1)).Returns(taskItem1);
             mapper.Setup(x => x.Map<TaskItemDTO>(taskItem1)).Returns(task1);
+            var principal = new Mock<ClaimsPrincipal>();
+            principal.Setup(b => b.Identity.IsAuthenticated).Returns(true);
+            principal.Setup(b => b.FindFirst(It.IsAny<string>())).Returns(new Claim(ClaimTypes.NameIdentifier, "1"));
 
             var userService = new Mock<UserService>(userRep.Object);
 
             var service = new TaskService(repository, userRep.Object, mapper.Object);
-
             var controller = new TaskController(service);
             // Act
             controller.Create(task);
@@ -107,6 +112,9 @@ namespace TaskManager.Tests
             var taskItem = new TaskItem { Id = "1", Description = "Description", UserId = "1" };
             mapper.Setup(x => x.Map<TaskItem>(task)).Returns(taskItem);
             mapper.Setup(x => x.Map<TaskItemDTO>(taskItem)).Returns(task);
+            var principal = new Mock<ClaimsPrincipal>();
+            principal.Setup(b => b.Identity.IsAuthenticated).Returns(true);
+            principal.Setup(b => b.FindFirst(It.IsAny<string>())).Returns(new Claim(ClaimTypes.NameIdentifier, "1"));
 
             var userService = new Mock<UserService>(userRep);
 
@@ -127,7 +135,7 @@ namespace TaskManager.Tests
         }
 
         [Fact]
-        public void DeleteConfirmedNotExistingTest()
+        public void DeleteConfirmedTest()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseInMemoryDatabase(databaseName: "delete1")
@@ -136,6 +144,9 @@ namespace TaskManager.Tests
             var context = new ApplicationDbContext(options);
 
             var repository = new TaskRepository(context);
+            var principal = new Mock<ClaimsPrincipal>();
+            principal.Setup(b => b.Identity.IsAuthenticated).Returns(true);
+            principal.Setup(b => b.FindFirst(It.IsAny<string>())).Returns(new Claim(ClaimTypes.NameIdentifier, "1"));
 
             var userRep = new Mock<UserRepository>(context);
 
@@ -144,22 +155,19 @@ namespace TaskManager.Tests
             var taskItem = new TaskItem { Id = "1", Description = "Description", UserId = "1" };
             mapper.Setup(x => x.Map<TaskItem>(task)).Returns(taskItem);
             mapper.Setup(x => x.Map<TaskItemDTO>(taskItem)).Returns(task);
-            var task1 = new TaskItemDTO { Id = "3", Description = "Description", UserId = "1" };
-            var taskItem1 = new TaskItem { Id = "3", Description = "Description", UserId = "1" };
-            mapper.Setup(x => x.Map<TaskItem>(task1)).Returns(taskItem1);
-            mapper.Setup(x => x.Map<TaskItemDTO>(taskItem1)).Returns(task);
-
+   
             var userService = new Mock<UserService>(userRep.Object);
 
             var service = new TaskService(repository, userRep.Object, mapper.Object);
 
             var controller = new TaskController(service);
             // Act
-            var view = controller.Create(task);
-            controller.DeleteConfirmed("3");
+            controller.Create(task);
+            controller.DeleteConfirmed("1");
 
             // Assert
-       //     Assert.Equal(1, context.Tasks.Count());
+            Assert.Equal(0, context.Tasks.Count());
+
         }
 
         [Fact]
@@ -173,6 +181,9 @@ namespace TaskManager.Tests
             var context = new ApplicationDbContext(options);
 
             var repository = new TaskRepository(context);
+            var principal = new Mock<ClaimsPrincipal>();
+            principal.Setup(b => b.Identity.IsAuthenticated).Returns(true);
+            principal.Setup(b => b.FindFirst(It.IsAny<string>())).Returns(new Claim(ClaimTypes.NameIdentifier, "1"));
 
             var userRep = new Mock<UserRepository>(context);
 
