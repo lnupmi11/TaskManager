@@ -27,7 +27,20 @@ namespace TaskManager.BLL.Services
 
         public virtual IEnumerable<TaskItemDTO> GetAll()
         {
-            var tasksDTO = _taskRepository.GetAll().Select(task => _mapper.Map<TaskItemDTO>(task)).ToList();
+            var tasksDTO = _taskRepository
+                .GetAll()
+                .Select(task => _mapper.Map<TaskItemDTO>(task))
+                .ToList();
+
+            return tasksDTO;
+        }
+
+        public virtual IEnumerable<TaskItemDTO> GetUserTasks(ClaimsPrincipal principal)
+        {
+            var tasksDTO = _taskRepository
+                .GetAllWhere(p => p.UserId == principal.GetUserId())
+                .Select(task => _mapper.Map<TaskItemDTO>(task))
+                .ToList();
 
             return tasksDTO;
         }
@@ -37,7 +50,20 @@ namespace TaskManager.BLL.Services
             var tasksDTO = _taskRepository
                 .GetAllWhere(x => (!category.HasValue || x.Category == category) &&
                 (priorities.Count == 0 || priorities.Contains(x.Priority)))
-                .Select(task => _mapper.Map<TaskItemDTO>(task)).ToList();
+                .Select(task => _mapper.Map<TaskItemDTO>(task))
+                .ToList();
+
+            return tasksDTO;
+        }
+
+        public virtual IEnumerable<TaskItemDTO> GetUserTasksByFilters(ClaimsPrincipal principal, List<Priority> priorities, Category? category)
+        {
+            var tasksDTO = _taskRepository
+                .GetAllWhere(x => (x.UserId == principal.GetUserId()) &&
+                (!category.HasValue || x.Category == category) &&
+                (priorities.Count == 0 || priorities.Contains(x.Priority)))
+                .Select(task => _mapper.Map<TaskItemDTO>(task))
+                .ToList();
 
             return tasksDTO;
         }
@@ -48,7 +74,21 @@ namespace TaskManager.BLL.Services
                 .GetAllWhere(x => (!category.HasValue || x.Category == category) &&
                 (priorities.Count == 0 || priorities.Contains(x.Priority)) &&
                 (x.Status != Status.Closed))
-                .Select(task => _mapper.Map<TaskItemDTO>(task)).ToList();
+                .Select(task => _mapper.Map<TaskItemDTO>(task))
+                .ToList();
+
+            return tasksDTO;
+        }
+
+        public virtual IEnumerable<TaskItemDTO> GetUserActiveTasksByFilters(ClaimsPrincipal principal, List<Priority> priorities, Category? category)
+        {
+            var tasksDTO = _taskRepository
+                .GetAllWhere(x => (x.UserId == principal.GetUserId()) &&
+                (!category.HasValue || x.Category == category) &&
+                (priorities.Count == 0 || priorities.Contains(x.Priority)) &&
+                (x.Status != Status.Closed))
+                .Select(task => _mapper.Map<TaskItemDTO>(task))
+                .ToList();
 
             return tasksDTO;
         }
@@ -59,11 +99,24 @@ namespace TaskManager.BLL.Services
                 .GetAllWhere(x => (!category.HasValue || x.Category == category) &&
                 (priorities.Count == 0 || priorities.Contains(x.Priority)) &&
                 (x.Status == Status.Closed))
-                .Select(task => _mapper.Map<TaskItemDTO>(task)).ToList();
+                .Select(task => _mapper.Map<TaskItemDTO>(task))
+                .ToList();
 
             return tasksDTO;
         }
 
+        public virtual IEnumerable<TaskItemDTO> GetUserArchivedTasksByFilters(ClaimsPrincipal principal, List<Priority> priorities, Category? category)
+        {
+            var tasksDTO = _taskRepository
+                .GetAllWhere(x => (x.UserId == principal.GetUserId()) &&
+                (!category.HasValue || x.Category == category) &&
+                (priorities.Count == 0 || priorities.Contains(x.Priority)) &&
+                (x.Status == Status.Closed))
+                .Select(task => _mapper.Map<TaskItemDTO>(task))
+                .ToList();
+
+            return tasksDTO;
+        }
 
         public virtual void Create(ClaimsPrincipal user, TaskItemDTO taskItemDTO)
         {

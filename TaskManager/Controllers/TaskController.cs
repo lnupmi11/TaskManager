@@ -27,17 +27,18 @@ namespace TaskManager.Controllers
             ViewBag.Priorities = priorities;
             ViewBag.Category = category;
 
-            var tasks = _taskService.GetActiveByFilters(priorities, category);
+            var tasks = _taskService.GetUserActiveTasksByFilters(User, priorities, category);
 
             return View(PaginatedList<TaskItemDTO>.Create(tasks.AsQueryable(), page ?? 1, _itemsPerPage));
         }
 
+        // GET: Archive
         public IActionResult Archive(List<Priority> priorities, Category? category, int? page)
         {
             ViewBag.Priorities = priorities;
             ViewBag.Category = category;
 
-            var tasks = _taskService.GetArchivedByFilters(priorities, category);
+            var tasks = _taskService.GetUserArchivedTasksByFilters(User, priorities, category);
 
             return View(PaginatedList<TaskItemDTO>.Create(tasks.AsQueryable(), page ?? 1, _itemsPerPage));
         }
