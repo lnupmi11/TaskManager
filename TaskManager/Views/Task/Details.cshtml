@@ -4,69 +4,50 @@
     ViewData["Title"] = "Details";
 }
 
-<h2>Details</h2>
+<div class="container">
+    <div class="background m-5 p-5">
+        <h2 class="mb-3 card-header-border form-header">Details</h2>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <p class="form-control bg-grey text-left">@Html.DisplayFor(model => model.Priority)</p>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <p class="form-control bg-grey text-left">@Html.DisplayFor(model => model.Description)</p>
+            </div>
+            <div class="row">
+                <div class="col col-sm-12 col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Progress" class="control-label"></label>
+                        <p class="form-control bg-grey text-left">@Html.DisplayFor(model => model.Progress)</p>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="StartDate" class="control-label" id="StartDate"></label>
+                        <p class="form-control bg-grey text-left">@Html.DisplayFor(model => model.StartDate)</p>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="EndDate" class="control-label"></label>
+                        <p class="form-control bg-grey text-left">@Html.DisplayFor(model => model.EndDate)</p>
+                    </div>
+                </div>
+                <div class="col col-sm-12 col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Category" class="control-label"></label>
+                        <p class="form-control bg-grey text-left">@Html.DisplayFor(model => model.Category)</p>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Priority" class="control-label"></label>
+                        <p class="form-control bg-grey text-left">@Html.DisplayFor(model => model.Priority)</p>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Status" class="control-label"></label>
+                        <p class="form-control bg-grey text-left">@Html.DisplayFor(model => model.Status)</p>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
 
 <div>
-    <h4>TaskItem</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.EstimatedTime)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.EstimatedTime)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Progress)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Progress)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.StartDate)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.StartDate)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.EndDate)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.EndDate)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Category)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Category)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Priority)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Priority)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Active">Back to List</a>
 </div>
