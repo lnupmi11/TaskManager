@@ -51,6 +51,16 @@ namespace TaskManager.DAL.Repositories
                 .SingleOrDefault();
         }
 
+        public virtual TaskItem FindAsNoTracking(string id)
+        {
+            return _context.Tasks
+                .Include(u => u.User)
+                .Include(c => c.Changes)
+                .Where(p => p.Id == id)
+                .AsNoTracking()
+                .SingleOrDefault();
+        }
+
         public virtual TaskItem Find(Func<TaskItem, bool> predicate)
         {
             return _context.Tasks

@@ -34,6 +34,10 @@ namespace TaskManager.DTO.Task
         
         public string UserId { get; set; }
 
+        public int? OpenTask { get; set; }
+
+        public int? AllTask { get; set; }
+
         public ICollection<TaskChanges> Changes { get; set; }
     }
 }

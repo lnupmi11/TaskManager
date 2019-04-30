@@ -21,8 +21,8 @@
                     </div>
 
                     <div class="progress mt-auto">
-                        <div class="progress-bar" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0"
-                             aria-valuemax="100">70%</div>
+                        <div class="progress-bar" role="progressbar" style="width: @ViewBag.Progress%;" aria-valuenow="@ViewBag.Progress" aria-valuemin="0"
+                             aria-valuemax="100">@ViewBag.Progress%</div>
                     </div>
                 </div>
             </div>
@@ -36,12 +36,12 @@
                             Open Tasks
                         </h5>
                         <div class="card-title-sub">
-                            18/30
+                            @ViewBag.OpenTasks/@ViewBag.AllTasks
                         </div>
                     </div>
 
                     <div class="progress mt-auto">
-                        <div class="progress-bar" role="progressbar" style="width: 60%;" aria-valuenow="75" aria-valuemin="0"
+                        <div class="progress-bar" role="progressbar" style="width: @ViewBag.Progress%;" aria-valuenow="@ViewBag.Progress" aria-valuemin="0"
                              aria-valuemax="100"></div>
                     </div>
                 </div>
@@ -52,9 +52,9 @@
             <div class="card border-0 bg-primary text-white text-center mb-grid w-100">
                 <div class="d-flex flex-row align-items-center h-100">
                     <div class="card-body">
-                        <div class="card-info-title">Completed this week</div>
+                        <div class="card-info-title">Completed</div>
                         <h3 class="card-title mb-0">
-                            3
+                            @ViewBag.Closed
                         </h3>
                     </div>
                 </div>
@@ -77,7 +77,7 @@
 
     <div class="row mt-5">
         <div class="col-lg-3">
-            <form asp-controller="Task" asp-action="Index">
+            <form asp-controller="Task" asp-action="Active">
                 <div class="card">
                     <article class="card-group-item">
                         <header class="card-header">
@@ -85,7 +85,7 @@
                         </header>
                         <div class="filter-content">
                             <div class="card-body">
-                                @foreach (var value in Enum.GetNames(typeof(TaskManager.DAL.Models.Enums.Priority)))
+                                @foreach (var value in Enum.GetNames(typeof(Priority)))
                                 {
                                     <label class="form-check">
                                         <input class="form-check-input" type="checkbox" value="@value"
@@ -105,7 +105,7 @@
                         </header>
                         <div class="filter-content">
                             <div class="card-body">
-                                @foreach (var value in Enum.GetNames(typeof(TaskManager.DAL.Models.Enums.Category)))
+                                @foreach (var value in Enum.GetNames(typeof(Category)))
                                 {
                                     <label class="form-check">
                                         <input class="form-check-input" type="radio" name="category"
@@ -167,13 +167,13 @@
         var nextDisabled = !Model.HasNextPage ? "disabled" : "";
     }
 
-    <a asp-action="Index"
+    <a asp-action="Active"
        asp-route-page="@(Model.PageIndex - 1)"
        class="btn btn-default @prevDisabled">
         Previous
     </a>
     @Model.PageIndex
-    <a asp-action="Index"
+    <a asp-action="Active"
        asp-route-page="@(Model.PageIndex + 1)"
        class="btn btn-default @nextDisabled">
         Next
