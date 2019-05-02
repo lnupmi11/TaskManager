@@ -89,7 +89,8 @@ namespace TaskManager.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new UserProfile { UserName = model.Email, Email = model.Email, EmailConfirmed = true };
+                var user = new UserProfile { UserName = model.Email, Email = model.Email,
+                    EmailConfirmed = true , RegistredOn = DateTime.Now};
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
