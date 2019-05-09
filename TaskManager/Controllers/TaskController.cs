@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TaskManager.BLL.Interfaces;
@@ -32,8 +33,8 @@ namespace TaskManager.Controllers
             ViewBag.AllTasks = all;
             var closed = _taskService.GetUserArchivedTasksByFilters(User, priorities, category).Count();
             ViewBag.Closed = closed;
-            var progress = closed * 1.0 / all * 100;
-            ViewBag.Progress = progress;
+            var progress = (all == 0) ? 0 : closed * 1.0 / all * 100;
+            ViewBag.Progress = Math.Round(progress);
             var tasks = _taskService.GetUserActiveTasksByFilters(User, priorities, category);
 
             return View(PaginatedList<TaskItemDTO>.Create(tasks.AsQueryable(), page ?? 1, _itemsPerPage));
@@ -50,8 +51,8 @@ namespace TaskManager.Controllers
             ViewBag.AllTasks = all;
             var closed = _taskService.GetUserArchivedTasksByFilters(User, priorities, category).Count();
             ViewBag.Closed = closed;
-            var progress = closed * 1.0 / all * 100;
-            ViewBag.Progress = progress;
+            var progress = (all==0)?0:closed * 1.0 / all * 100;
+            ViewBag.Progress = Math.Round(progress);
             var tasks = _taskService.GetUserArchivedTasksByFilters(User, priorities, category);
 
             return View(PaginatedList<TaskItemDTO>.Create(tasks.AsQueryable(), page ?? 1, _itemsPerPage));

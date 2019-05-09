@@ -3,7 +3,7 @@
 @using TaskManager.DAL.Models.Enums;
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Active";
     int index = 0;
 }
 
@@ -16,7 +16,7 @@
                 <div class="card-body d-flex flex-column">
                     <div class="d-flex justify-content-between mb-3">
                         <h5 class="card-title mb-0">
-                            Personal Performance
+                            Personal performance
                         </h5>
                     </div>
 
@@ -33,7 +33,7 @@
                 <div class="card-body d-flex flex-column">
                     <div class="d-flex justify-content-between mb-3">
                         <h5 class="card-title mb-0">
-                            Open Tasks
+                            Open tasks
                         </h5>
                         <div class="card-title-sub">
                             @ViewBag.OpenTasks/@ViewBag.AllTasks
@@ -118,7 +118,7 @@
                             </div>
                         </div>
                     </article>
-                    <input type="submit" class="btn btn-success" value="Apply Filters" />
+                    <input type="submit" class="btn btn-success" value="Apply filters" />
                 </div>
             </form>
         </div>
@@ -154,6 +154,14 @@
                     <div class="card-body collapse show">
                         <h4 class="card-title">@item.Title</h4>
                         <p class="card-text">@item.Description</p>
+                        <hr>
+                        <div>
+                            <p class="card-text"><b>Categoty:</b> @item.Category</p>
+                            <p class="card-text"><b>Status:</b> @item.Status</p>
+                            <p class="card-text"><b>Priority:</b> @item.Priority</p>
+                            <p class="card-text"><b>Progress:</b> @item.Progress</p>
+                            <p class="card-text"><b>Start date:</b> @item.StartDate.ToString("dd/MM/yyyy")</p>
+                        </div>
                     </div>
                 </div>
             }

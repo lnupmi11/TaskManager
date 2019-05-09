@@ -4,6 +4,8 @@ using TaskManager.DAL.Models;
 using TaskManager.BLL.Extensions.Identity;
 using TaskManager.DAL.Interfaces;
 using TaskManager.BLL.Interfaces;
+using TaskManager.DAL.Models.Enums;
+using System.Linq;
 
 namespace TaskManager.BLL.Services
 {
@@ -34,6 +36,11 @@ namespace TaskManager.BLL.Services
         public virtual IEnumerable<UserProfile> GetUserProfiles()
         {
             return _userRepository.GetAll();
+        }
+
+        public IEnumerable<UserProfile> GetUserProfilesByIds(IEnumerable<string> ids)
+        {
+            return _userRepository.GetAllByIds(ids);
         }
 
         public virtual void ChangeFirstName(UserProfile user, string firstName)

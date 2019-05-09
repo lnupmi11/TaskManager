@@ -6,7 +6,8 @@
 
 <div class="container">
     <div class="background m-5 p-5">
-        <h2 class="mb-3 card-header-border form-header">Details</h2>
+        <h2 class="mb-3">Details</h2>
+        <hr>
         <div class="form-group">
             <label asp-for="Title" class="control-label"></label>
             <p class="form-control bg-grey text-left">@Html.DisplayFor(model => model.Priority)</p>
@@ -45,9 +46,32 @@
                 </div>
             </div>
         </div>
+        <div class="text-left">
+            <a asp-action="Active">Back to List</a>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-action="Active">Back to List</a>
+    <div class="row">
+        <div class="col-sm-12">
+            <h3>Activity</h3>
+        </div>
+        @if (Model.Changes.Count == 0)
+        {
+            <p>No previous activity were tracked</p>
+        }
+        else
+        {
+            @foreach (var item in Model.Changes)
+            {
+                <div class="col-sm-12 m-3">
+                    <div>
+                        <strong>You</strong> <span class="text-muted">updated task on @item.ModifiedOn</span>
+                        <div>
+                            @item.Description
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
 </div>
