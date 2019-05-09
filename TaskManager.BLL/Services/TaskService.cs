@@ -168,16 +168,16 @@ namespace TaskManager.BLL.Services
                 var oOldValue = oProperty.GetValue(oldTask, null);
                 var oNewValue = oProperty.GetValue(newTask, null);
                 if (!Equals(oOldValue, oNewValue) &&
-                    oProperty.Name != "TaskChanges" &&
+                    oProperty.Name != "Changes" &&
                     oProperty.Name != "User")
                 {
                     var sOldValue = oOldValue == null ? "" : oOldValue.ToString();
                     var sNewValue = oNewValue == null ? "" : oNewValue.ToString();
-
+                    var date = DateTime.Now;
                     changes.Add(new TaskChanges
                     {
-                        ModifiedOn = DateTime.Now,
-                        Description = "Property " + oProperty.Name + " was changed from \"" + sOldValue + "\" to \"" + sNewValue + "\"",
+                        ModifiedOn = date,
+                        Description = oProperty.Name + " was changed from \"" + sOldValue + "\" to \"" + sNewValue + "\"",
                         TaskId = newTask.Id
                     });
 
