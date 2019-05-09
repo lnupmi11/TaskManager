@@ -16,6 +16,7 @@ namespace TaskManager.DTO.Task
 
         public TimeSpan EstimatedTime { get; set; }
 
+        [RangeAttribute(0, 100)]
         public int? Progress { get; set; }
 
         [DataType(DataType.Date)]
