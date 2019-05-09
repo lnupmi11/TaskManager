@@ -60,11 +60,9 @@
             @foreach (var item in Model.Changes)
             {
                 <div class="col-sm-12 m-3">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <strong>You</strong> <span class="text-muted">updated task on @item.ModifiedOn</span>
-                        </div>
-                        <div class="panel-body">
+                    <div>
+                        <strong>You</strong> <span class="text-muted">updated task on @item.ModifiedOn</span>
+                        <div>
                             @item.Description
                         </div>
                     </div>
