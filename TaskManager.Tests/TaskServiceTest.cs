@@ -69,19 +69,21 @@ namespace TaskManager.Tests
 
             mockContext.Setup(item => item.Tasks).Returns(mockDbSet.Object);
 
-            var repository = new TaskRepository(mockContext.Object);
+            var repository = new Mock<TaskRepository>(mockContext.Object);
 
             var userRep = new Mock<UserRepository>(mockContext.Object);
-
+            
             var mapper = new Mock<IMapper>();
             var task = new TaskItemDTO { Id = "1", Description = "Description", UserId = "1" };
             var taskItem = new TaskItem { Id = "1", Description = "Description", UserId = "1" };
             mapper.Setup(x => x.Map<TaskItem>(task)).Returns(taskItem);
             mapper.Setup(x => x.Map<TaskItemDTO>(taskItem)).Returns(task);
 
+            repository.Setup(i => i.FindAsNoTracking(It.IsAny<string>())).Returns(taskItem);
+
             var userService = new Mock<UserService>(userRep.Object);
 
-            var service = new TaskService(repository, userRep.Object, mapper.Object);
+            var service = new Mock<TaskService>(repository.Object, userRep.Object, mapper.Object);
             var cp = new Mock<ClaimsPrincipal>();
             cp.Setup(m => m.HasClaim(It.IsAny<string>(), It.IsAny<string>())).Returns(true);
 
@@ -90,10 +92,12 @@ namespace TaskManager.Tests
             IdentityExtensions.Implementation = mockMyImplementation.Object;
             mockMyImplementation.Setup(m => m.GetUserId(cp.Object)).Returns("1");
             // Act 
-            service.Create(cp.Object, task);
-            service.Update(task);
+            service.Setup(i=>i.Create(cp.Object, task));
+            service.Object.Create(cp.Object, task);
+            service.Setup(i=>i.Update(task));
+            service.Object.Update(task);
             // Assert
-            mockDbSet.Verify(m => m.Update(It.IsAny<TaskItem>()), Times.Once());
+            service.Verify(i => i.Update(task));
         }
         [Fact]
         public void AnyTest()
