@@ -3,7 +3,7 @@
 @using TaskManager.DAL.Models.Enums;
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Active";
     int index = 0;
 }
 
@@ -16,7 +16,7 @@
                 <div class="card-body d-flex flex-column">
                     <div class="d-flex justify-content-between mb-3">
                         <h5 class="card-title mb-0">
-                            Personal Performance
+                            Personal performance
                         </h5>
                     </div>
 
@@ -33,7 +33,7 @@
                 <div class="card-body d-flex flex-column">
                     <div class="d-flex justify-content-between mb-3">
                         <h5 class="card-title mb-0">
-                            Open Tasks
+                            Open tasks
                         </h5>
                         <div class="card-title-sub">
                             @ViewBag.OpenTasks/@ViewBag.AllTasks
@@ -118,7 +118,7 @@
                             </div>
                         </div>
                     </article>
-                    <input type="submit" class="btn btn-success" value="Apply Filters" />
+                    <input type="submit" class="btn btn-success" value="Apply filters" />
                 </div>
             </form>
         </div>
