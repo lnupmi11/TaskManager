@@ -6,7 +6,8 @@
 
 <div class="container">
     <div class="background m-5 p-5">
-        <h2 class="mb-3 card-header-border form-header">Details</h2>
+        <h2 class="mb-3">Details</h2>
+        <hr>
         <div class="form-group">
             <label asp-for="Title" class="control-label"></label>
             <p class="form-control bg-grey text-left">@Html.DisplayFor(model => model.Priority)</p>
@@ -45,9 +46,10 @@
                 </div>
             </div>
         </div>
+        <div class="left">
+            <a asp-action="Active">Back to List</a>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Active">Back to List</a>
-</div>
+

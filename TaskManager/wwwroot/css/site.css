@@ -341,3 +341,7 @@ footer.footer {
 .bg-grey {
     background-color: #e9ecef;
 }
+
+.left {
+    float: left;
+}
