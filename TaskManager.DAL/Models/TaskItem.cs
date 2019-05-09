@@ -22,6 +22,7 @@ namespace TaskManager.DAL.Models
 
         public TimeSpan EstimatedTime { get; set; }
 
+        [RangeAttribute(0, 100)]
         public int? Progress { get; set; }
 
         [DataType(DataType.Date)]
