@@ -47,7 +47,7 @@ namespace TaskManager
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ITaskService, TaskService>();
 
-            CreateRoles(services.BuildServiceProvider()).Wait();
+            //CreateRoles(services.BuildServiceProvider()).Wait();
         }
 
         private async Task CreateRoles(IServiceProvider serviceProvider)
