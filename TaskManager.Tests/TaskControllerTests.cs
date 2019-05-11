@@ -63,7 +63,7 @@ namespace TaskManager.Tests
 
             var context = new ApplicationDbContext(options);
 
-            var repository = new TaskRepository(context);
+            var repository = new Mock<TaskRepository>(context);
 
             var userRep = new Mock<UserRepository>(context);
 
@@ -81,16 +81,16 @@ namespace TaskManager.Tests
             principal.Setup(b => b.FindFirst(It.IsAny<string>())).Returns(new Claim(ClaimTypes.NameIdentifier, "1"));
 
             var userService = new Mock<UserService>(userRep.Object);
-
-            var service = new TaskService(repository, userRep.Object, mapper.Object);
-            var controller = new TaskController(service);
+            repository.Setup(i => i.FindAsNoTracking(It.IsAny<string>())).Returns(taskItem1);
+            var service = new Mock<TaskService>(repository.Object, userRep.Object, mapper.Object);
+            var controller = new TaskController(service.Object);
             // Act
             controller.Create(task);
             task.Description = "new";
             var view = controller.Edit(task.Id,task);
             var str = view.ToString();
             // Assert
-            Assert.Equal(1, context.Tasks.Count());
+            Assert.NotNull(view);
         }
 
         [Fact]

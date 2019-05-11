@@ -14,5 +14,7 @@ namespace TaskManager.DAL.Models.Enums
         Progress,
         [Description("Closed")]
         Closed,
+        [Description("Paused")]
+        Paused,
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace TaskManager.DAL.Models
 {
@@ -16,6 +17,8 @@ namespace TaskManager.DAL.Models
         
         public string LastName { get; set; }
 
+        [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime RegistredOn { get; set; }
 
         public virtual ICollection<TaskItem> Tasks { get; set; }
