@@ -17,7 +17,8 @@ namespace TaskManager.Controllers
         private readonly ITaskService _taskService;
         private readonly IUserService _userService;
         private readonly UserManager<UserProfile> _userManager;
-        private int _itemsPerPage = 5;
+        private readonly int _itemsPerPage = 5;
+        private readonly string _infoMessage = "Ban users who are igonorig their tasks and notify them via email";
 
         public UserManagementController(UserManager<UserProfile> userManager, ITaskService taskService, IUserService userService)
         {
@@ -27,52 +28,88 @@ namespace TaskManager.Controllers
         }
 
         // GET: Users
-        public async Task<IActionResult> Users()
+        public IActionResult Users()
+        {
+            ViewBag.InfoMessage = _infoMessage;
+            return View();
+        }
+
+        // GET: UsersPartial
+        [HttpGet]
+        public async Task<PartialViewResult> UsersPartial()
         {
             var ids = (await _userManager.GetUsersInRoleAsync(Roles.User.ToString())).Select(u => u.Id);
-            var users =_userService.GetUserProfilesByIds(ids);
+            var users = _userService.GetUserProfilesByIds(ids);
 
-            return View(PaginatedList<UserProfile>.Create(users.AsQueryable(), 1, _itemsPerPage));
+            return PartialView(PaginatedList<UserProfile>.Create(users.AsQueryable(), 1, _itemsPerPage));
         }
 
         // POST: User/Ban/{id}
         public async Task<IActionResult> Ban(string id)
         {
+            var ret = false;
+
             if (id == null)
             {
-                return NotFound();
+                return Json(ret);
             }
 
             var user = _userService.GetUserProfile(id);
             if (user == null)
             {
-                return NotFound();
+                return Json(ret);
             }
 
             var lockoutEndDate = new DateTime(2999, 01, 01);
             await _userManager.SetLockoutEnabledAsync(user, true);
             await _userManager.SetLockoutEndDateAsync(user, lockoutEndDate);
 
-            return RedirectToAction(nameof(Users));
+            ret = true;
+
+            return Json(ret);
         }
 
         // POST: User/Ban/{id}
         public async Task<IActionResult> Unban(string id)
         {
+            var ret = false;
             if (id == null)
             {
-                return NotFound();
+                return Json(ret);
             }
 
             var user = _userService.GetUserProfile(id);
             if (user == null)
             {
-                return NotFound();
+                return Json(ret);
             }
 
             await _userManager.SetLockoutEnabledAsync(user, false);
 
-            return RedirectToAction(nameof(Users));
+            ret = true;
+
+            return Json(ret);
+        }
+
+        public async Task<IActionResult> NotifyAccountStatusChanged(string id, bool isBanned)
+        {
+            var ret = false;
+            if (id == null)
+            {
+                return Json(ret);
+            }
+
+            var user = _userService.GetUserProfile(id);
+            if (user == null)
+            {
+                return Json(ret);
+            }
+
+            // if isBanned == true send msg that account banned, otherwise - account unclocked
+
+            // TODO : send an email that account has been banned also check if account is really banned
+
+            return Json(ret);
         }
     }
 }
