@@ -11,9 +11,6 @@
 <table class="table">
     <tr>
         <th>
-            UserName
-        </th>
-        <th>
             Registered On
         </th>
         <th>
@@ -31,9 +28,6 @@
         var rtId = "item" + index.ToString();
         <tr id="@rtId">
             <td>
-                @Html.DisplayFor(modelItem => item.UserName)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.RegistredOn)
             </td>
             <td>
@@ -43,7 +37,8 @@
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
-                <a asp-controller="UserManagement" asp-action="Delete" asp-route-id=@item.Id class="btn btn-danger">Delete user</a>
+                <a asp-controller="UserManagement" asp-action="Ban" asp-route-id=@item.Id class="btn btn-danger">Ban user</a>
+                <a asp-controller="UserManagement" asp-action="Unban" asp-route-id=@item.Id class="btn btn-primary">Unban user</a>
             </td>
         </tr>
         index++;

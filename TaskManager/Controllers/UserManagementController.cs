@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using TaskManager.BLL.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using TaskManager.DAL.Models;
@@ -6,9 +7,11 @@ using TaskManager.Extensions.UI;
 using System.Threading.Tasks;
 using System.Linq;
 using TaskManager.DAL.Models.Enums;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TaskManager.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class UserManagementController : Controller
     {
         private readonly ITaskService _taskService;
@@ -32,8 +35,8 @@ namespace TaskManager.Controllers
             return View(PaginatedList<UserProfile>.Create(users.AsQueryable(), 1, _itemsPerPage));
         }
 
-        // POST: User/Delete/{id}
-        public IActionResult Delete(string id)
+        // POST: User/Ban/{id}
+        public async Task<IActionResult> Ban(string id)
         {
             if (id == null)
             {
@@ -46,7 +49,28 @@ namespace TaskManager.Controllers
                 return NotFound();
             }
 
-            _userService.Delete(user);
+            var lockoutEndDate = new DateTime(2999, 01, 01);
+            await _userManager.SetLockoutEnabledAsync(user, true);
+            await _userManager.SetLockoutEndDateAsync(user, lockoutEndDate);
+
+            return RedirectToAction(nameof(Users));
+        }
+
+        // POST: User/Ban/{id}
+        public async Task<IActionResult> Unban(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var user = _userService.GetUserProfile(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            await _userManager.SetLockoutEnabledAsync(user, false);
 
             return RedirectToAction(nameof(Users));
         }
