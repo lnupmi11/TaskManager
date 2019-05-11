@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +16,7 @@ using TaskManager.DAL.Interfaces;
 using TaskManager.DAL.Models;
 using TaskManager.DAL.Models.Enums;
 using TaskManager.DAL.Repositories;
+using TaskManager.Extensions.Email;
 
 namespace TaskManager
 {
@@ -41,13 +43,16 @@ namespace TaskManager
             services.AddAutoMapper();
 
             services.AddMvc();
+            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
+            services.AddTransient<IEmailSender, EmailSender>();
+
 
             services.AddScoped(typeof(IRepository<TaskItem>), typeof(TaskRepository));
             services.AddScoped(typeof(IRepository<UserProfile>), typeof(UserRepository));
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ITaskService, TaskService>();
 
-            //CreateRoles(services.BuildServiceProvider()).Wait();
+            CreateRoles(services.BuildServiceProvider()).Wait();
         }
 
         private async Task CreateRoles(IServiceProvider serviceProvider)
