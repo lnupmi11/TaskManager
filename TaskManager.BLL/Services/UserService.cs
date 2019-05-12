@@ -82,6 +82,11 @@ namespace TaskManager.BLL.Services
             _userRepository.Delete(user);
         }
 
+        public virtual bool IsAccountLocked(UserProfile user)
+        {
+            return user.LockoutEnabled && user.LockoutEnd != null;
+        }
+
         public virtual int CountInactiveTasks(UserProfile user)
         {
             int countInactive = user.Tasks.Count(p => (p.Status == Status.ToDo && p.EndDate < DateTime.Today));
@@ -98,7 +103,7 @@ namespace TaskManager.BLL.Services
             {
                 var userDTO = _mapper.Map<UserProfileDTO>(user);
                 userDTO.InactiveTasksCount = CountInactiveTasks(user);
-                userDTO.IsAccountLocked = user.LockoutEnabled && user.LockoutEnd != null;
+                userDTO.IsAccountLocked = IsAccountLocked(user);
                 usersDTO.Add(userDTO);
             }
 

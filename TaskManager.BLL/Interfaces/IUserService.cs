@@ -19,6 +19,7 @@ namespace TaskManager.BLL.Interfaces
         void ChangeSecondName(ClaimsPrincipal principal, string secondName);
         void Update(UserProfile user);
         void Delete(UserProfile user);
+        bool IsAccountLocked(UserProfile user);
         int CountInactiveTasks(UserProfile user);
         IEnumerable<UserProfileDTO> GetUsers(IEnumerable<string> ids);
     }

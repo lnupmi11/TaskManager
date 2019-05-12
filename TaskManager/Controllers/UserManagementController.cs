@@ -24,6 +24,8 @@ namespace TaskManager.Controllers
         private const int BAN_END_MONTH = 1;
         private const int BAN_END_DAY = 1;
 
+        private static DateTime _lockoutEndDate = new DateTime(BAN_END_YEAR, BAN_END_MONTH, BAN_END_DAY);
+
         public UserManagementController(UserManager<UserProfile> userManager, ITaskService taskService,
             IUserService userService, IEmailSender emailSender)
         {
@@ -66,10 +68,8 @@ namespace TaskManager.Controllers
                 return Json(ret);
             }
 
-            var lockoutEndDate = new DateTime(BAN_END_YEAR, BAN_END_MONTH, BAN_END_DAY);
-
             await _userManager.SetLockoutEnabledAsync(user, true);
-            await _userManager.SetLockoutEndDateAsync(user, lockoutEndDate);
+            await _userManager.SetLockoutEndDateAsync(user, _lockoutEndDate);
 
             ret = true;
 
@@ -99,7 +99,7 @@ namespace TaskManager.Controllers
             return Json(ret);
         }
 
-        public async Task<IActionResult> NotifyAccountStatusChanged(string id, bool isBanned)
+        public IActionResult NotifyAccountStatusChanged(string id, bool isBanned)
         {
             var ret = false;
             if (id == null)
@@ -113,16 +113,27 @@ namespace TaskManager.Controllers
                 return Json(ret);
             }
 
-            if (isBanned && user.LockoutEnabled)
-            {
-                await _emailSender.SendEmailAsync(user.Email, "Account lock",
-                    "Your account has been locked due to not completing your tasks in time.");
+            var isAccountLocked = _userService.IsAccountLocked(user);
 
-            }
-            else if(!(user.LockoutEnabled || isBanned))
+            ret = true;
+
+            try
             {
-                await _emailSender.SendEmailAsync(user.Email, "Account unlock",
-                   "Your account has been unlocked!");
+                if (isBanned && isAccountLocked)
+                {
+                    _emailSender.SendEmailAsync(user.Email, "Account lock",
+                        "Your account has been locked due to not completing your tasks in time.").Wait();
+
+                }
+                else if (!isBanned && !isAccountLocked)
+                {
+                    _emailSender.SendEmailAsync(user.Email, "Account unlock",
+                       "Your account has been unlocked!").Wait();
+                }
+            }
+            catch (Exception)
+            {
+                ret = false;
             }
 
             return Json(ret);
