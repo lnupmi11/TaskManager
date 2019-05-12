@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using TaskManager.DAL.Models;
 
-
 namespace TaskManager.DTO.Models.UserManagement
 {
     public class UserProfileDTO

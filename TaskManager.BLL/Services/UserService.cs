@@ -26,7 +26,6 @@ namespace TaskManager.BLL.Services
         private DateTime _lockoutEndDate = new DateTime(BAN_END_YEAR, BAN_END_MONTH, BAN_END_DAY);
         private DateTime _lockoutEndDatePast = new DateTime(BAN_END_YEAR_PAST, BAN_END_MONTH, BAN_END_DAY);
 
-
         public UserService(IRepository<UserProfile> userRepository, IMapper mapper)
         {
             _userRepository = userRepository;
@@ -92,6 +91,12 @@ namespace TaskManager.BLL.Services
             _userRepository.Delete(user);
         }
 
+        public virtual int CountInactiveTasks(UserProfile user)
+        {
+            int countInactive = user.Tasks.Count(p => (p.Status == Status.ToDo && p.EndDate < DateTime.Today));
+            return countInactive;
+        }
+
         public virtual bool IsAccountLocked(UserProfile user)
         {
             return user.LockoutEnabled && user.LockoutEnd != null && user.LockoutEnd > DateTime.Now;
@@ -109,13 +114,6 @@ namespace TaskManager.BLL.Services
             user.LockoutEnabled = false;
             user.LockoutEnd = _lockoutEndDatePast;
             Update(user);
-        }
-
-        public virtual int CountInactiveTasks(UserProfile user)
-        {
-            int countInactive = user.Tasks.Count(p => (p.Status == Status.ToDo && p.EndDate < DateTime.Today));
-
-            return countInactive;
         }
 
         public virtual IEnumerable<UserProfileDTO> GetUsers(IEnumerable<string> ids)
