@@ -63,6 +63,7 @@ namespace TaskManager.Controllers
             }
 
             var lockoutEndDate = new DateTime(BAN_END_YEAR, BAN_END_MONTH, BAN_END_DAY);
+
             await _userManager.SetLockoutEnabledAsync(user, true);
             await _userManager.SetLockoutEndDateAsync(user, lockoutEndDate);
 
@@ -87,6 +88,7 @@ namespace TaskManager.Controllers
             }
 
             await _userManager.SetLockoutEnabledAsync(user, false);
+            await _userManager.SetLockoutEndDateAsync(user, null);
 
             ret = true;
 

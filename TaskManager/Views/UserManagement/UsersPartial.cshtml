@@ -42,9 +42,8 @@
             @Html.DisplayFor(modelItem => item.InactiveTasksCount)
         </td>
         <td>
-            @{var isLocked = item.LockoutEnabled ? "" : "checked"; }
+            @{var isLocked = item.IsAccountLocked ? "" : "checked"; }
             <input id="toggle_@item.Id" type="checkbox" @isLocked data-toggle="toggle" data-on="Active" data-off="Banned" data-onstyle="success" data-offstyle="danger">
-
             <script>
                     $('#toggle_' + '@item.Id').change(function () {
                         if ($(this).prop('checked')) {
@@ -56,7 +55,6 @@
                     });
 
             </script>
-
         </td>
     </tr>
     }
@@ -73,8 +71,7 @@
                 Notify user via email ?
                 <div id="userIdModal" style="display:none;"></div>
                 <br />
-                New status :
-                <div id="userAccountStatus"></div>
+                New status : <p id="userAccountStatus"></p>
             </div>
             <div class="modal-footer">
                 <button type="button" onclick="notifyStatusChanged()" class="btn btn-default" data-dismiss="modal">Yes</button>
@@ -117,7 +114,6 @@
             },
              success: function (result) {
                  if (result == true) {
-                     debugger;
                      $('#userIdModal').text(id);
                      $('#userAccountStatus').text("locked");
                      $('#notificationModal').modal('show');

@@ -27,7 +27,7 @@ namespace TaskManager.DTO.Models.UserManagement
 
         public string Id { get; set; }
 
-        public bool LockoutEnabled { get; set; }
+        public bool IsAccountLocked { get; set; }
 
         public string Email { get; set; }
     }

@@ -98,6 +98,7 @@ namespace TaskManager.BLL.Services
             {
                 var userDTO = _mapper.Map<UserProfileDTO>(user);
                 userDTO.InactiveTasksCount = CountInactiveTasks(user);
+                userDTO.IsAccountLocked = user.LockoutEnabled && user.LockoutEnd != null;
                 usersDTO.Add(userDTO);
             }
 
