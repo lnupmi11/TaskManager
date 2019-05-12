@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using TaskManager.DAL.Models.Enums;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace TaskManager.Controllers
 {
@@ -16,17 +17,20 @@ namespace TaskManager.Controllers
         private readonly ITaskService _taskService;
         private readonly IUserService _userService;
         private readonly UserManager<UserProfile> _userManager;
+        private readonly IEmailSender _emailSender;
         private readonly string _infoMessage = "Ban users who are igonorig their tasks and notify them via email";
 
         private const int BAN_END_YEAR = 3000;
         private const int BAN_END_MONTH = 1;
         private const int BAN_END_DAY = 1;
 
-        public UserManagementController(UserManager<UserProfile> userManager, ITaskService taskService, IUserService userService)
+        public UserManagementController(UserManager<UserProfile> userManager, ITaskService taskService,
+            IUserService userService, IEmailSender emailSender)
         {
             _taskService = taskService;
             _userService = userService;
             _userManager = userManager;
+            _emailSender = emailSender;
         }
 
         // GET: Users
@@ -107,9 +111,17 @@ namespace TaskManager.Controllers
                 return Json(ret);
             }
 
-            // if isBanned == true send msg that account banned, otherwise - account unclocked
+            if (isBanned && user.LockoutEnabled)
+            {
+                await _emailSender.SendEmailAsync(user.Email, "Account lock",
+                    "Your account has been locked due to not completing your tasks in time.");
 
-            // TODO : send an email that account has been banned also check if account is really banned
+            }
+            else if(!(user.LockoutEnabled || isBanned))
+            {
+                await _emailSender.SendEmailAsync(user.Email, "Account unlock",
+                   "Your account has been unlocked!");
+            }
 
             return Json(ret);
         }
