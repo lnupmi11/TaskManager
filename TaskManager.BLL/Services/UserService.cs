@@ -17,6 +17,16 @@ namespace TaskManager.BLL.Services
         private IRepository<UserProfile> _userRepository;
         private readonly IMapper _mapper;
 
+        private const int BAN_END_YEAR = 3000;
+        private const int BAN_END_YEAR_PAST = 2000;
+
+        private const int BAN_END_MONTH = 1;
+        private const int BAN_END_DAY = 1;
+
+        private DateTime _lockoutEndDate = new DateTime(BAN_END_YEAR, BAN_END_MONTH, BAN_END_DAY);
+        private DateTime _lockoutEndDatePast = new DateTime(BAN_END_YEAR_PAST, BAN_END_MONTH, BAN_END_DAY);
+
+
         public UserService(IRepository<UserProfile> userRepository, IMapper mapper)
         {
             _userRepository = userRepository;
@@ -84,7 +94,21 @@ namespace TaskManager.BLL.Services
 
         public virtual bool IsAccountLocked(UserProfile user)
         {
-            return user.LockoutEnabled && user.LockoutEnd != null;
+            return user.LockoutEnabled && user.LockoutEnd != null && user.LockoutEnd > DateTime.Now;
+        }
+
+        public virtual void LockAccount(UserProfile user)
+        {
+            user.LockoutEnabled = true;
+            user.LockoutEnd = _lockoutEndDate;
+            Update(user);
+        }
+
+        public virtual void UnlockAccount(UserProfile user)
+        {
+            user.LockoutEnabled = false;
+            user.LockoutEnd = _lockoutEndDatePast;
+            Update(user);
         }
 
         public virtual int CountInactiveTasks(UserProfile user)

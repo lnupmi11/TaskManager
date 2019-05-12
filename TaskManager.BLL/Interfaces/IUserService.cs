@@ -21,6 +21,8 @@ namespace TaskManager.BLL.Interfaces
         void Delete(UserProfile user);
         bool IsAccountLocked(UserProfile user);
         int CountInactiveTasks(UserProfile user);
+        void LockAccount(UserProfile user);
+        void UnlockAccount(UserProfile user);
         IEnumerable<UserProfileDTO> GetUsers(IEnumerable<string> ids);
     }
 }

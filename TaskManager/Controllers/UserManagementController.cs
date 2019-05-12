@@ -20,12 +20,6 @@ namespace TaskManager.Controllers
         private readonly IEmailSender _emailSender;
         private readonly string _infoMessage = "Ban users who are igonorig their tasks and notify them via email";
 
-        private const int BAN_END_YEAR = 3000;
-        private const int BAN_END_MONTH = 1;
-        private const int BAN_END_DAY = 1;
-
-        private static DateTime _lockoutEndDate = new DateTime(BAN_END_YEAR, BAN_END_MONTH, BAN_END_DAY);
-
         public UserManagementController(UserManager<UserProfile> userManager, ITaskService taskService,
             IUserService userService, IEmailSender emailSender)
         {
@@ -53,7 +47,7 @@ namespace TaskManager.Controllers
         }
 
         // POST: User/Ban/{id}
-        public async Task<IActionResult> Ban(string id)
+        public IActionResult Ban(string id)
         {
             var ret = false;
 
@@ -68,16 +62,17 @@ namespace TaskManager.Controllers
                 return Json(ret);
             }
 
-            await _userManager.SetLockoutEnabledAsync(user, true);
-            await _userManager.SetLockoutEndDateAsync(user, _lockoutEndDate);
-
-            ret = true;
+            if (!_userService.IsAccountLocked(user))
+            {
+                _userService.LockAccount(user);
+                ret = true;
+            }
 
             return Json(ret);
         }
 
         // POST: User/Unban/{id}
-        public async Task<IActionResult> Unban(string id)
+        public IActionResult Unban(string id)
         {
             var ret = false;
             if (id == null)
@@ -91,15 +86,16 @@ namespace TaskManager.Controllers
                 return Json(ret);
             }
 
-            await _userManager.SetLockoutEnabledAsync(user, false);
-            await _userManager.SetLockoutEndDateAsync(user, null);
-
-            ret = true;
+            if (_userService.IsAccountLocked(user))
+            {
+                _userService.UnlockAccount(user);
+                ret = true;
+            }
 
             return Json(ret);
         }
 
-        public IActionResult NotifyAccountStatusChanged(string id, bool isBanned)
+        public async Task<IActionResult> NotifyAccountStatusChanged(string id, bool isBanned)
         {
             var ret = false;
             if (id == null)
@@ -121,14 +117,14 @@ namespace TaskManager.Controllers
             {
                 if (isBanned && isAccountLocked)
                 {
-                    _emailSender.SendEmailAsync(user.Email, "Account lock",
-                        "Your account has been locked due to not completing your tasks in time.").Wait();
+                    await _emailSender.SendEmailAsync(user.Email, "Account lock",
+                        "Your account has been locked due to not completing your tasks in time.");
 
                 }
                 else if (!isBanned && !isAccountLocked)
                 {
-                    _emailSender.SendEmailAsync(user.Email, "Account unlock",
-                       "Your account has been unlocked!").Wait();
+                    await _emailSender.SendEmailAsync(user.Email, "Account unlock",
+                       "Your account has been unlocked!");
                 }
             }
             catch (Exception)
