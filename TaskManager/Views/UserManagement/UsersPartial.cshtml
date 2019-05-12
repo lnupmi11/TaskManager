@@ -1,4 +1,5 @@
-﻿@model PaginatedList<UserProfile>
+﻿@using TaskManager.DTO.Models.UserManagement;
+@model List<UserProfileDTO>
 @{
     ViewData["Title"] = "Users";
 }
@@ -18,28 +19,34 @@
             Tasks
         </th>
         <th>
+            Inactive tasks
+        </th>
+        <th>
             Status
         </th>
     </tr>
     @foreach (var item in Model)
     {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Email)
+        </td>
 
-            <td>
-                @Html.DisplayFor(modelItem => item.RegistredOn)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Tasks.Count)
-            </td>
-            <td>
-                @{var isLocked = item.LockoutEnabled ? "" : "checked"; }
-                <input id="toggle_@item.Id" type="checkbox" @isLocked data-toggle="toggle" data-on="Active" data-off="Banned" data-onstyle="success" data-offstyle="danger" >
-            
-                <script>
-                    $('#toggle_' + '@item.Id').change(function () { 
+        <td>
+            @Html.DisplayFor(modelItem => item.RegistredOn)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Tasks.Count)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.InactiveTasksCount)
+        </td>
+        <td>
+            @{var isLocked = item.LockoutEnabled ? "" : "checked"; }
+            <input id="toggle_@item.Id" type="checkbox" @isLocked data-toggle="toggle" data-on="Active" data-off="Banned" data-onstyle="success" data-offstyle="danger">
+
+            <script>
+                    $('#toggle_' + '@item.Id').change(function () {
                         if ($(this).prop('checked')) {
                             unlockUser('@item.Id');
                         }
@@ -48,10 +55,10 @@
                         }
                     });
 
-                </script>
+            </script>
 
-            </td>
-        </tr>
+        </td>
+    </tr>
     }
 </table>
 
@@ -63,9 +70,9 @@
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
             </div>
             <div class="modal-body">
-                 Notify user via email ?
+                Notify user via email ?
                 <div id="userIdModal" style="display:none;"></div>
-                <br/>
+                <br />
                 New status :
                 <div id="userAccountStatus"></div>
             </div>
@@ -93,12 +100,12 @@
                 id: id,
                 isBanned: status == "locked" ? true : false
             },
-             success: function (result) { 
+             success: function (result) {
                  if (result == false) {
                      alert("Failed to notify. Email not exists");
                  }
              }
-        });      
+        });
     }
 
     function lockUser(id) {
@@ -108,7 +115,7 @@
             data: {
                 id : id
             },
-             success: function (result) { 
+             success: function (result) {
                  if (result == true) {
                      debugger;
                      $('#userIdModal').text(id);

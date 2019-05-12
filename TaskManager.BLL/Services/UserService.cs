@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using TaskManager.DAL.Models;
 using TaskManager.BLL.Extensions.Identity;
 using TaskManager.DAL.Interfaces;
 using TaskManager.BLL.Interfaces;
+using AutoMapper;
+using TaskManager.DTO.Models.UserManagement;
 using TaskManager.DAL.Models.Enums;
 using System.Linq;
 
@@ -12,10 +15,12 @@ namespace TaskManager.BLL.Services
     public class UserService : IUserService
     {
         private IRepository<UserProfile> _userRepository;
+        private readonly IMapper _mapper;
 
-        public UserService(IRepository<UserProfile> userRepository)
+        public UserService(IRepository<UserProfile> userRepository, IMapper mapper)
         {
             _userRepository = userRepository;
+            _mapper = mapper;
         }
 
         public virtual UserProfile GetUserProfile(ClaimsPrincipal principal)
@@ -75,6 +80,25 @@ namespace TaskManager.BLL.Services
         public virtual void Delete(UserProfile user)
         {
             _userRepository.Delete(user);
+        }
+
+        public virtual int CountInactiveTasks(UserProfile user)
+        {
+            int countInactive = user.Tasks.Count(p => (p.Status == Status.ToDo && p.EndDate < DateTime.Today));
+            return countInactive;
+        }
+
+        public virtual IEnumerable<UserProfileDTO> GetUsers(IEnumerable<string> ids)
+        {
+            var users = GetUserProfilesByIds(ids);
+            List<UserProfileDTO> usersDTO = new List<UserProfileDTO>();
+            foreach(var user in users)
+            {
+                var userDTO = _mapper.Map<UserProfileDTO>(user);
+                userDTO.InactiveTasksCount = CountInactiveTasks(user);
+                usersDTO.Add(userDTO);
+            }
+            return usersDTO;
         }
     }
 }

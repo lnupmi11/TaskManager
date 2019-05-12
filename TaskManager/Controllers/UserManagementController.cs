@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using TaskManager.BLL.Interfaces;
 using Microsoft.AspNetCore.Identity;
@@ -7,6 +8,7 @@ using TaskManager.Extensions.UI;
 using System.Threading.Tasks;
 using System.Linq;
 using TaskManager.DAL.Models.Enums;
+using TaskManager.DTO.Models.UserManagement;
 using Microsoft.AspNetCore.Authorization;
 
 namespace TaskManager.Controllers
@@ -39,9 +41,9 @@ namespace TaskManager.Controllers
         public async Task<PartialViewResult> UsersPartial()
         {
             var ids = (await _userManager.GetUsersInRoleAsync(Roles.User.ToString())).Select(u => u.Id);
-            var users = _userService.GetUserProfilesByIds(ids);
+            var usersDTO = _userService.GetUsers(ids);
 
-            return PartialView(PaginatedList<UserProfile>.Create(users.AsQueryable(), 1, _itemsPerPage));
+            return PartialView(usersDTO);
         }
 
         // POST: User/Ban/{id}
