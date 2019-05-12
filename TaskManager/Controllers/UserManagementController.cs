@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using TaskManager.BLL.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using TaskManager.DAL.Models;
-using TaskManager.Extensions.UI;
 using System.Threading.Tasks;
 using System.Linq;
 using TaskManager.DAL.Models.Enums;
-using TaskManager.DTO.Models.UserManagement;
 using Microsoft.AspNetCore.Authorization;
 
 namespace TaskManager.Controllers
@@ -19,8 +16,11 @@ namespace TaskManager.Controllers
         private readonly ITaskService _taskService;
         private readonly IUserService _userService;
         private readonly UserManager<UserProfile> _userManager;
-        private readonly int _itemsPerPage = 5;
         private readonly string _infoMessage = "Ban users who are igonorig their tasks and notify them via email";
+
+        private const int BAN_END_YEAR = 3000;
+        private const int BAN_END_MONTH = 1;
+        private const int BAN_END_DAY = 1;
 
         public UserManagementController(UserManager<UserProfile> userManager, ITaskService taskService, IUserService userService)
         {
@@ -62,7 +62,7 @@ namespace TaskManager.Controllers
                 return Json(ret);
             }
 
-            var lockoutEndDate = new DateTime(2999, 01, 01);
+            var lockoutEndDate = new DateTime(BAN_END_YEAR, BAN_END_MONTH, BAN_END_DAY);
             await _userManager.SetLockoutEnabledAsync(user, true);
             await _userManager.SetLockoutEndDateAsync(user, lockoutEndDate);
 
@@ -71,7 +71,7 @@ namespace TaskManager.Controllers
             return Json(ret);
         }
 
-        // POST: User/Ban/{id}
+        // POST: User/Unban/{id}
         public async Task<IActionResult> Unban(string id)
         {
             var ret = false;

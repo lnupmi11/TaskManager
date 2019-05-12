@@ -85,6 +85,7 @@ namespace TaskManager.BLL.Services
         public virtual int CountInactiveTasks(UserProfile user)
         {
             int countInactive = user.Tasks.Count(p => (p.Status == Status.ToDo && p.EndDate < DateTime.Today));
+
             return countInactive;
         }
 
@@ -92,12 +93,14 @@ namespace TaskManager.BLL.Services
         {
             var users = GetUserProfilesByIds(ids);
             List<UserProfileDTO> usersDTO = new List<UserProfileDTO>();
-            foreach(var user in users)
+
+            foreach (var user in users)
             {
                 var userDTO = _mapper.Map<UserProfileDTO>(user);
                 userDTO.InactiveTasksCount = CountInactiveTasks(user);
                 usersDTO.Add(userDTO);
             }
+
             return usersDTO;
         }
     }
