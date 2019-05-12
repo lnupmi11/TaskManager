@@ -65,6 +65,11 @@ namespace TaskManager.Controllers
                     _logger.LogInformation("User logged in.");
                     return RedirectToLocal(returnUrl);
                 }
+                if (result.IsLockedOut)
+                {
+                    _logger.LogWarning("User account locked out.");
+                    return RedirectToAction(nameof(Lockout));
+                }
 
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                 return View(model);
@@ -118,6 +123,13 @@ namespace TaskManager.Controllers
         }
 
         #endregion
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Lockout()
+        {
+            return View("Lockout");
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
