@@ -1,0 +1,142 @@
+﻿@using TaskManager.DTO.Models.UserManagement;
+@model List<UserProfileDTO>
+@{
+    ViewData["Title"] = "Users";
+}
+
+<link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/css/bootstrap4-toggle.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/js/bootstrap4-toggle.min.js"></script>
+
+<table class="table">
+    <tr>
+        <th>
+            Email
+        </th>
+        <th>
+            Registered On
+        </th>
+        <th>
+            Tasks
+        </th>
+        <th>
+            Inactive tasks
+        </th>
+        <th>
+            Status
+        </th>
+    </tr>
+    @foreach (var item in Model)
+    {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Email)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.RegistredOn)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Tasks.Count)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.InactiveTasksCount)
+        </td>
+        <td>
+            @{var isLocked = item.IsAccountLocked ? "" : "checked"; }
+            <input id="toggle_@item.Id" type="checkbox" @isLocked data-toggle="toggle" data-on="Active" data-off="Banned" data-onstyle="success" data-offstyle="danger">
+            <script>
+                    $('#toggle_' + '@item.Id').change(function () {
+                        if ($(this).prop('checked')) {
+                            unlockUser('@item.Id');
+                        }
+                        else {
+                            lockUser('@item.Id');
+                        }
+                    });
+
+            </script>
+        </td>
+    </tr>
+    }
+</table>
+
+<div class="modal" id="notificationModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">User status has changed</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                Notify user via email ?
+                <div id="userIdModal" style="display:none;"></div>
+                <br />
+                New status : <p id="userAccountStatus"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="notifyStatusChanged()" class="btn btn-default" data-dismiss="modal">Yes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function notifyStatusChanged() {
+        var id = $('#userIdModal').text();
+        $('#userIdModal').text("");
+
+        var status = $('#userAccountStatus').text();
+        $('#userAccountStatus').text("");
+
+         $.ajax({
+            type: "POST",
+            url: '@Url.Content("~/UserManagement/NotifyAccountStatusChanged/")',
+            data: {
+                id: id,
+                isBanned: status == "locked" ? true : false
+            },
+             success: function (result) {
+                 if (result == false) {
+                     alert("Failed to notify. Error occured");
+                 }
+             }
+        });
+    }
+
+    function lockUser(id) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Content("~/UserManagement/Ban/")',
+            data: {
+                id : id
+            },
+             success: function (result) {
+                 if (result == true) {
+                     $('#userIdModal').text(id);
+                     $('#userAccountStatus').text("locked");
+                     $('#notificationModal').modal('show');
+                 }
+             }
+        });
+    }
+
+    function unlockUser(id) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Content("~/UserManagement/Unban/")',
+            data: {
+                id : id
+            },
+             success: function (result) {
+                 if (result == true) {
+                     $('#userIdModal').text(id);
+                     $('#userAccountStatus').text("unlocked");
+                     $('#notificationModal').modal('show');
+                 }
+             }
+        });
+    }
+
+</script>
