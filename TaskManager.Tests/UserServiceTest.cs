@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using TaskManager.BLL.Services;
@@ -30,7 +32,74 @@ namespace TaskManager.Tests
             // Assert
             Assert.Equal(actual.Count(), list.Count());
         }
+        [Fact]
+        public void GetUserProfileTest()
+        {
+            // Arrange
+            var claims = new Mock<ClaimsPrincipal>();
+            var identity = new Mock<ClaimsIdentity>();
+            identity.Setup(i => i.IsAuthenticated)
+                .Returns(true);
+            claims.Setup(i => i.Identity)
+                .Returns(identity.Object);
+            claims.Setup(i => i.FindFirst(It.IsAny<string>()))
+                .Returns(new Claim(ClaimTypes.NameIdentifier, "1"));
+            var list1 = GetTestCollection().AsQueryable();
+            var mockSet = new Mock<DbSet<UserProfile>>();
+            mockSet.As<IQueryable<UserProfile>>().Setup(p => p.Provider).Returns(list1.Provider);
+            mockSet.As<IQueryable<UserProfile>>().Setup(p => p.Expression).Returns(list1.Expression);
+            mockSet.As<IQueryable<UserProfile>>().Setup(p => p.ElementType).Returns(list1.ElementType);
+            mockSet.As<IQueryable<UserProfile>>().Setup(p => p.GetEnumerator()).Returns(list1.GetEnumerator);
 
+            var mockCtx = new Mock<ApplicationDbContext>();
+            mockCtx.Setup(p => p.UserProfiles).Returns(mockSet.Object);
+
+            var repo = new Mock<IRepository<UserProfile>>();
+            repo.Setup(r => r.Find(It.IsAny<string>()))
+                .Returns(list.First(i=>i.Id=="1"));
+            var mapper = new Mock<IMapper>();
+            var svc1 = new UserService(repo.Object,mapper.Object);
+
+            // Act
+            var user = svc1.GetUserProfile(claims.Object);
+
+            // Assert
+            Assert.Equal("aaa", user.FirstName);
+        }
+        [Fact]
+        public void GetUserProfileTestByIds()
+        {
+            // Arrange
+            var claims = new Mock<ClaimsPrincipal>();
+            var identity = new Mock<ClaimsIdentity>();
+            identity.Setup(i => i.IsAuthenticated)
+                .Returns(true);
+            claims.Setup(i => i.Identity)
+                .Returns(identity.Object);
+            claims.Setup(i => i.FindFirst(It.IsAny<string>()))
+                .Returns(new Claim(ClaimTypes.NameIdentifier, "1"));
+            var list1 = GetTestCollection().AsQueryable();
+            var mockSet = new Mock<DbSet<UserProfile>>();
+            mockSet.As<IQueryable<UserProfile>>().Setup(p => p.Provider).Returns(list1.Provider);
+            mockSet.As<IQueryable<UserProfile>>().Setup(p => p.Expression).Returns(list1.Expression);
+            mockSet.As<IQueryable<UserProfile>>().Setup(p => p.ElementType).Returns(list1.ElementType);
+            mockSet.As<IQueryable<UserProfile>>().Setup(p => p.GetEnumerator()).Returns(list1.GetEnumerator);
+
+            var mockCtx = new Mock<ApplicationDbContext>();
+            mockCtx.Setup(p => p.UserProfiles).Returns(mockSet.Object);
+
+            var repo = new Mock<IRepository<UserProfile>>();
+            repo.Setup(r => r.GetAllByIds(It.IsAny<List<string>>()))
+                .Returns(new List<UserProfile> { list.First(i => i.Id == "1") });
+            var mapper = new Mock<IMapper>();
+            var svc1 = new UserService(repo.Object, mapper.Object);
+
+            // Act
+            var user = svc1.GetUserProfilesByIds(new List<string>{"1"});
+
+            // Assert
+            Assert.Equal("aaa", user.First().FirstName);
+        }
         [Theory]
         [InlineData("1")]
         [InlineData("2")]
@@ -77,8 +146,9 @@ namespace TaskManager.Tests
                 FirstName = "aaa",
                 LastName = "aaa"
                 }});
+            var mapper = new Mock<IMapper>();
 
-            var service = new UserService(repository.Object);
+            var service = new UserService(repository.Object,mapper.Object);
 
 
             // Act
@@ -106,8 +176,9 @@ namespace TaskManager.Tests
                 FirstName = "aaa",
                 LastName = "aaa"
                 }});
-            var service = new UserService(repository.Object);
+            var mapper = new Mock<IMapper>();
 
+            var service = new UserService(repository.Object, mapper.Object);
             // Act
             service.Delete(expected);
 
@@ -154,8 +225,9 @@ namespace TaskManager.Tests
             mockCtx.Setup(p => p.UserProfiles).Returns(mockSet.Object);
 
             var repository = new UserRepository(mockCtx.Object);
+            var mapper = new Mock<IMapper>();
 
-            var service = new UserService(repository);
+            var service = new UserService(repository,mapper.Object);
             return service;
         }
     }
