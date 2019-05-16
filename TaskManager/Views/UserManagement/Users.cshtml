@@ -1,51 +1,25 @@
-﻿@model TaskManager.Extensions.UI.PaginatedList<UserProfile>
-@using TaskManager.DAL.Models;
-@{
-    ViewData["Title"] = "Users";
-    var index = 0;
-}
-
+﻿
 <h1 class="mt-4">Users</h1>
 
+@await Html.PartialAsync("_StatusMessage", (string)ViewBag.InfoMessage)
 
-<table class="table">
-    <tr>
-        <th>
-            UserName
-        </th>
-        <th>
-            Registered On
-        </th>
-        <th>
-            Tasks
-        </th>
-        <th>
-            Email
-        </th>
-        <th>
-            Actions
-        </th>
-    </tr>
-    @foreach (var item in Model)
-    {
-        var rtId = "item" + index.ToString();
-        <tr id="@rtId">
-            <td>
-                @Html.DisplayFor(modelItem => item.UserName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RegistredOn)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Tasks.Count)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                <a asp-controller="UserManagement" asp-action="Delete" asp-route-id=@item.Id class="btn btn-danger">Delete user</a>
-            </td>
-        </tr>
-        index++;
+<div id="usersPartial"></div>
+
+<script>
+    $('#usersPartial').load('@Url.Content("~/UserManagement/UsersPartial")');
+
+    function updateData() {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Content("~/UserManagement/UsersPartial")',
+                success: function (result) {
+                    $('#usersPartial').html(result);
+                }
+            });
     }
-</table>
+
+</script>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

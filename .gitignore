@@ -268,3 +268,4 @@ __pycache__/
 
 #Secrets
 secrets.json
+TaskManager/appsettings.json

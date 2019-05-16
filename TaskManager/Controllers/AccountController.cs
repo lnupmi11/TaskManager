@@ -3,10 +3,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using TaskManager.DAL.Models;
 using TaskManager.DAL.Models.Enums;
+using TaskManager.DTO.Models.Account;
 using TaskManager.Models.AccountViewModels;
 
 namespace TaskManager.Controllers
@@ -18,15 +20,18 @@ namespace TaskManager.Controllers
         private readonly UserManager<UserProfile> _userManager;
         private readonly SignInManager<UserProfile> _signInManager;
         private readonly ILogger _logger;
+        private readonly IEmailSender _emailSender;
 
         public AccountController(
             UserManager<UserProfile> userManager,
             SignInManager<UserProfile> signInManager,
-            ILogger<AccountController> logger)
+            ILogger<AccountController> logger,
+            IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            _emailSender = emailSender;
         }
 
         [TempData]
@@ -59,6 +64,11 @@ namespace TaskManager.Controllers
                 {
                     _logger.LogInformation("User logged in.");
                     return RedirectToLocal(returnUrl);
+                }
+                if (result.IsLockedOut)
+                {
+                    _logger.LogWarning("User account locked out.");
+                    return RedirectToAction(nameof(Lockout));
                 }
 
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
@@ -114,6 +124,13 @@ namespace TaskManager.Controllers
 
         #endregion
 
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Lockout()
+        {
+            return View("Lockout");
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
@@ -140,23 +157,67 @@ namespace TaskManager.Controllers
                 var user = await _userManager.FindByEmailAsync(model.Email);
                 if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
                 {
-                    // Don't reveal that the user does not exist or is not confirmed
                     return RedirectToAction(nameof(ForgotPasswordConfirmation));
                 }
 
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-                //var callbackUrl = Url.ResetPasswordCallbackLink(user.Id, code, Request.Scheme);
+                var callbackUrl = Url.ResetPasswordCallbackLink(user.Id, code, Request.Scheme);
+
+                await _emailSender.SendEmailAsync(user.Email, "Password reset",
+                    "Click here to restore your password <a href=\"" + callbackUrl + "\">link</a>");
 
                 return RedirectToAction(nameof(ForgotPasswordConfirmation));
             }
 
-            // If we got this far, something failed, redisplay form
             return View(model);
         }
 
         [HttpGet]
         [AllowAnonymous]
         public IActionResult ForgotPasswordConfirmation()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ResetPassword(string code = null)
+        {
+            if (code == null)
+            {
+                throw new ApplicationException("A code must be supplied for password reset.");
+            }
+            var model = new ResetPasswordViewModel { Code = code };
+            return View(model);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                // Don't reveal that the user does not exist
+                return RedirectToAction(nameof(ResetPasswordConfirmation));
+            }
+            var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
+            if (result.Succeeded)
+            {
+                return RedirectToAction(nameof(ResetPasswordConfirmation));
+            }
+            AddErrors(result);
+            return View();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ResetPasswordConfirmation()
         {
             return View();
         }

@@ -162,7 +162,7 @@ namespace TaskManager.Tests
 
             var controller = new TaskController(service);
             // Act
-            controller.Create(task);
+            //controller.Create(task);
             controller.DeleteConfirmed("1");
 
             // Assert

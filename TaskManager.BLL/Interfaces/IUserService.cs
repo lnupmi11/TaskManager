@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using TaskManager.DAL.Models;
 using TaskManager.DAL.Models.Enums;
+using TaskManager.DTO.Models.UserManagement;
 
 namespace TaskManager.BLL.Interfaces
 {
@@ -18,5 +19,10 @@ namespace TaskManager.BLL.Interfaces
         void ChangeSecondName(ClaimsPrincipal principal, string secondName);
         void Update(UserProfile user);
         void Delete(UserProfile user);
+        int CountInactiveTasks(UserProfile user);
+        bool IsAccountLocked(UserProfile user);
+        void LockAccount(UserProfile user);
+        void UnlockAccount(UserProfile user);
+        IEnumerable<UserProfileDTO> GetUsers(IEnumerable<string> ids);
     }
 }
