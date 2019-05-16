@@ -23,170 +23,173 @@
                     <div class="progress mt-auto">
                         <div class="progress-bar" role="progressbar" style="width: @ViewBag.Progress%;" aria-valuenow="@ViewBag.Progress" aria-valuemin="0"
                              aria-valuemax="100">@ViewBag.Progress%</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-3 d-flex">
-            <div class="card mb-grid w-100">
-                <div class="card-body d-flex flex-column">
-                    <div class="d-flex justify-content-between mb-3">
-                        <h5 class="card-title mb-0">
-                            Open tasks
-                        </h5>
-                        <div class="card-title-sub">
-                            @ViewBag.OpenTasks/@ViewBag.AllTasks
                         </div>
                     </div>
+                </div>
+            </div>
 
-                    <div class="progress mt-auto">
-                        <div class="progress-bar" role="progressbar" style="width: @ViewBag.Progress%;" aria-valuenow="@ViewBag.Progress" aria-valuemin="0"
-                             aria-valuemax="100"></div>
+            <div class="col-md-6 col-lg-3 d-flex">
+                <div class="card mb-grid w-100">
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex justify-content-between mb-3">
+                            <h5 class="card-title mb-0">
+                                Open tasks
+                            </h5>
+                            <div class="card-title-sub">
+                                @ViewBag.OpenTasks/@ViewBag.AllTasks
+                            </div>
+                        </div>
+
+                        <div class="progress mt-auto">
+                            <div class="progress-bar" role="progressbar" style="width: @ViewBag.Progress%;" aria-valuenow="@ViewBag.Progress" aria-valuemin="0"
+                                 aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3 d-flex">
+                <div class="card border-0 bg-primary text-white text-center mb-grid w-100">
+                    <div class="d-flex flex-row align-items-center h-100">
+                        <div class="card-body">
+                            <div class="card-info-title">Completed</div>
+                            <h3 class="card-title mb-0">
+                                @ViewBag.Closed
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3 d-flex">
+                <div class="card border-0 bg-success text-white text-center mb-grid w-100">
+                    <div class="d-flex flex-row align-items-center h-100">
+                        <div class="card-body">
+                            <div class="card-info-title">Your rate among 2000 users</div>
+                            <h3 class="card-title mb-0">
+                                1,258
+                            </h3>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-6 col-lg-3 d-flex">
-            <div class="card border-0 bg-primary text-white text-center mb-grid w-100">
-                <div class="d-flex flex-row align-items-center h-100">
-                    <div class="card-body">
-                        <div class="card-info-title">Completed</div>
-                        <h3 class="card-title mb-0">
-                            @ViewBag.Closed
-                        </h3>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div class="row mt-5">
+            <div class="col-lg-2">
+                <form asp-controller="Task" asp-action="Active">
+                    <div class="card">
+                        <article class="card-group-item">
+                            <header class="card-header">
+                                <h6 class="title">Priority</h6>
+                            </header>
+                            <div class="filter-content">
+                                <div class="card-body">
+                                    @foreach (var value in Enum.GetNames(typeof(Priority)))
+                                    {
+                                        <label class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="@value"
+                                                   name="priorities" @(((List<Priority>)ViewBag.Priorities).Any(x => x.ToString() == value) ? "checked" : string.Empty)>
+                                            <span class="form-check-label">
+                                                @value
+                                            </span>
+                                        </label>
+                                    }
+                                </div>
+                            </div>
+                        </article>
 
-        <div class="col-md-6 col-lg-3 d-flex">
-            <div class="card border-0 bg-success text-white text-center mb-grid w-100">
-                <div class="d-flex flex-row align-items-center h-100">
-                    <div class="card-body">
-                        <div class="card-info-title">Your rate among 2000 users</div>
-                        <h3 class="card-title mb-0">
-                            1,258
-                        </h3>
+                        <article class="card-group-item">
+                            <header class="card-header">
+                                <h6 class="title">Category</h6>
+                            </header>
+                            <div class="filter-content">
+                                <div class="card-body">
+                                    @foreach (var value in Enum.GetNames(typeof(Category)))
+                                    {
+                                        <label class="form-check">
+                                            <input class="form-check-input" type="radio" name="category"
+                                                   value="@value" @(((Category?)ViewBag.Category).ToString() == value ? "checked" : string.Empty)>
+                                            <span class="form-check-label">
+                                                @value
+                                            </span>
+                                        </label>
+                                    }
+                                </div>
+                            </div>
+                        </article>
+                        <input type="submit" class="btn btn-success" value="Apply filters" />
                     </div>
-                </div>
+                </form>
+            </div>
+
+            <div class="col-lg-10">
+                <h2 class="pb-1">Active tasks</h2>
+                <a asp-action="Create" class="btn btn-lg btn-primary m-3 mb-5">Create new</a>
+                @foreach (var item in Model)
+                {
+                    index++;
+                    <div class="card mb-5">
+                        <div class="card-header container-fluid bg-light-green">
+                            <div class="row">
+                                <div class="col float-left">
+                                    <div class="card-header-title">TM-@index</div>
+                                </div>
+                                <div class="col text-right">
+                                    <a href="#" class="ml-2" data-toggle="collapse" data-target="#collapseDetails_@item.Id" aria-expanded="false">
+                                        <span data-toggle="tooltip" data-placement="bottom" title="Show/Hide details">
+                                            <i class="icon-list" style="font-size:24px"></i>
+                                        </span>
+                                    </a>
+                                    <a class="ml-2" asp-action="Details" asp-route-id="@item.Id"
+                                       data-toggle="tooltip" data-placement="bottom" title="Details">
+                                        <i class="icon-eye" style="font-size:24px"></i>
+                                    </a>
+                                    <a class="ml-2" asp-action="Edit" asp-route-id="@item.Id"
+                                       data-toggle="tooltip" data-placement="bottom" title="Edit">
+                                        <i class="icon-pencil" style="font-size:24px"></i>
+                                    </a>
+                                    <a class="ml-2" asp-action="Delete" asp-route-id="@item.Id"
+                                       data-toggle="tooltip" data-placement="bottom" title="Delete">
+                                        <i class="icon-trash" style="font-size:24px"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body collapse show">
+                            <h4 class="card-title">@item.Title</h4>
+                            <p class="card-text">@item.Description</p>
+                            <div class="collapse" id="collapseDetails_@item.Id">
+                                <p class="card-text"><b>Categoty:</b> @item.Category</p>
+                                <p class="card-text"><b>Status:</b> @item.Status</p>
+                                <p class="card-text"><b>Priority:</b> @item.Priority</p>
+                                <p class="card-text"><b>Progress:</b> @item.Progress</p>
+                                <p class="card-text"><b>Start date:</b> @item.StartDate.ToString("dd/MM/yyyy")</p>
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
         </div>
     </div>
 
-    <div class="row mt-5">
-        <div class="col-lg-3">
-            <form asp-controller="Task" asp-action="Active">
-                <div class="card">
-                    <article class="card-group-item">
-                        <header class="card-header">
-                            <h6 class="title">Priority</h6>
-                        </header>
-                        <div class="filter-content">
-                            <div class="card-body">
-                                @foreach (var value in Enum.GetNames(typeof(Priority)))
-                                {
-                                    <label class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="@value"
-                                               name="priorities" @(((List<Priority>)ViewBag.Priorities).Any(x => x.ToString() == value) ? "checked" : string.Empty)>
-                                        <span class="form-check-label">
-                                            @value
-                                        </span>
-                                    </label>
-                                }
-                            </div>
-                        </div>
-                    </article>
+    <div class="center-block text-center">
+        @{
+            var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+            var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+        }
 
-                    <article class="card-group-item">
-                        <header class="card-header">
-                            <h6 class="title">Category</h6>
-                        </header>
-                        <div class="filter-content">
-                            <div class="card-body">
-                                @foreach (var value in Enum.GetNames(typeof(Category)))
-                                {
-                                    <label class="form-check">
-                                        <input class="form-check-input" type="radio" name="category"
-                                               value="@value" @(((Category?)ViewBag.Category).ToString() == value ? "checked" : string.Empty)>
-                                        <span class="form-check-label">
-                                            @value
-                                        </span>
-                                    </label>
-                                }
-                            </div>
-                        </div>
-                    </article>
-                    <input type="submit" class="btn btn-success" value="Apply filters" />
-                </div>
-            </form>
-        </div>
-
-        <div class="col-lg-9">
-            <h2 class="pb-1">Active tasks</h2>
-            <a asp-action="Create" class="btn btn-lg btn-primary m-3 mb-5">Create new</a>
-            @foreach (var item in Model)
-            {
-                index++;
-                <div class="card mb-5">
-                    <div class="card-header container-fluid bg-light-green">
-                        <div class="row">
-                            <div class="col float-left">
-                                <div class="card-header-title">TM-@index</div>
-                            </div>
-                            <div class="col text-right">
-                                <a asp-action="Details" asp-route-id="@item.Id"
-                                   data-toggle="tooltip" data-placement="bottom" title="Detail">
-                                    <i class="icon-eye" style="font-size:24px"></i>
-                                </a>
-                                <a asp-action="Edit" asp-route-id="@item.Id"
-                                   data-toggle="tooltip" data-placement="bottom" title="Edit">
-                                    <i class="icon-pencil" style="font-size:24px"></i>
-                                </a>
-                                <a asp-action="Delete" asp-route-id="@item.Id"
-                                   data-toggle="tooltip" data-placement="bottom" title="Delete">
-                                    <i class="icon-trash" style="font-size:24px"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body collapse show">
-                        <h4 class="card-title">@item.Title</h4>
-                        <p class="card-text">@item.Description</p>
-                        <a href="#" data-toggle="collapse" data-target="#collapseDetails" aria-expanded="false">Show more</a>
-                        <div class="collapse" id="collapseDetails">
-                            <hr>
-                            <p class="card-text"><b>Categoty:</b> @item.Category</p>
-                            <p class="card-text"><b>Status:</b> @item.Status</p>
-                            <p class="card-text"><b>Priority:</b> @item.Priority</p>
-                            <p class="card-text"><b>Progress:</b> @item.Progress</p>
-                            <p class="card-text"><b>Start date:</b> @item.StartDate.ToString("dd/MM/yyyy")</p>
-                        </div>
-                    </div>
-                </div>
-            }
-        </div>
+        <a asp-action="Active"
+           asp-route-page="@(Model.PageIndex - 1)"
+           class="btn btn-default @prevDisabled">
+            Previous
+        </a>
+        @Model.PageIndex
+        <a asp-action="Active"
+           asp-route-page="@(Model.PageIndex + 1)"
+           class="btn btn-default @nextDisabled">
+            Next
+        </a>
     </div>
-</div>
 
-<div class="center-block text-center">
-    @{
-        var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
-        var nextDisabled = !Model.HasNextPage ? "disabled" : "";
-    }
-
-    <a asp-action="Active"
-       asp-route-page="@(Model.PageIndex - 1)"
-       class="btn btn-default @prevDisabled">
-        Previous
-    </a>
-    @Model.PageIndex
-    <a asp-action="Active"
-       asp-route-page="@(Model.PageIndex + 1)"
-       class="btn btn-default @nextDisabled">
-        Next
-    </a>
-</div>
-
-<div>
+    <div>
