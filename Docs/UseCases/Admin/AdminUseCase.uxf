@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <diagram program="umlet" version="14.3.0">
-  <zoom_level>10</zoom_level>
+  <zoom_level>9</zoom_level>
   <element>
     <id>UMLActor</id>
     <coordinates>
-      <x>120</x>
-      <y>230</y>
-      <w>100</w>
-      <h>110</h>
+      <x>198</x>
+      <y>234</y>
+      <w>90</w>
+      <h>99</h>
     </coordinates>
     <panel_attributes>Administator</panel_attributes>
     <additional_attributes/>
@@ -15,10 +15,10 @@
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>450</x>
-      <y>420</y>
-      <w>140</w>
-      <h>70</h>
+      <x>495</x>
+      <y>405</y>
+      <w>126</w>
+      <h>63</h>
     </coordinates>
     <panel_attributes>Manage accounts</panel_attributes>
     <additional_attributes/>
@@ -26,10 +26,10 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>190</x>
-      <y>240</y>
-      <w>290</w>
-      <h>220</h>
+      <x>261</x>
+      <y>243</y>
+      <w>261</w>
+      <h>198</h>
     </coordinates>
     <panel_attributes/>
     <additional_attributes>270.0;197.0;10.0;10.0</additional_attributes>
@@ -37,10 +37,10 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>580</x>
-      <y>390</y>
-      <w>220</w>
-      <h>80</h>
+      <x>612</x>
+      <y>378</y>
+      <w>198</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=.&gt;
 &lt;&lt;extends&gt;&gt;</panel_attributes>
@@ -49,21 +49,10 @@
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>780</x>
-      <y>360</y>
-      <w>160</w>
-      <h>70</h>
-    </coordinates>
-    <panel_attributes>Delete User Accounts</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLUseCase</id>
-    <coordinates>
-      <x>780</x>
-      <y>470</y>
-      <w>160</w>
-      <h>70</h>
+      <x>792</x>
+      <y>522</y>
+      <w>144</w>
+      <h>63</h>
     </coordinates>
     <panel_attributes>View All User Accounts</panel_attributes>
     <additional_attributes/>
@@ -71,22 +60,22 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>580</x>
-      <y>460</y>
-      <w>220</w>
-      <h>60</h>
+      <x>612</x>
+      <y>441</y>
+      <w>198</w>
+      <h>126</h>
     </coordinates>
     <panel_attributes>lt=.&gt;
 &lt;&lt;extends&gt;&gt;</panel_attributes>
-    <additional_attributes>200.0;35.0;10.0;10.0</additional_attributes>
+    <additional_attributes>200.0;115.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>440</x>
-      <y>210</y>
-      <w>140</w>
-      <h>70</h>
+      <x>486</x>
+      <y>216</y>
+      <w>126</w>
+      <h>63</h>
     </coordinates>
     <panel_attributes>ManageOwn Account</panel_attributes>
     <additional_attributes/>
@@ -94,10 +83,10 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>190</x>
-      <y>230</y>
-      <w>270</w>
-      <h>40</h>
+      <x>261</x>
+      <y>234</y>
+      <w>243</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes/>
     <additional_attributes>250.0;17.0;10.0;20.0</additional_attributes>
@@ -105,10 +94,10 @@
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>440</x>
-      <y>60</y>
-      <w>140</w>
-      <h>70</h>
+      <x>486</x>
+      <y>81</y>
+      <w>126</w>
+      <h>63</h>
     </coordinates>
     <panel_attributes>Log Out</panel_attributes>
     <additional_attributes/>
@@ -116,10 +105,10 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>190</x>
-      <y>80</y>
-      <w>270</w>
-      <h>190</h>
+      <x>261</x>
+      <y>99</y>
+      <w>243</w>
+      <h>171</h>
     </coordinates>
     <panel_attributes/>
     <additional_attributes>250.0;17.0;10.0;170.0</additional_attributes>
@@ -127,10 +116,10 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>570</x>
-      <y>170</y>
-      <w>230</w>
-      <h>90</h>
+      <x>603</x>
+      <y>180</y>
+      <w>207</w>
+      <h>81</h>
     </coordinates>
     <panel_attributes>lt=.&gt;
 &lt;&lt;extends&gt;&gt;</panel_attributes>
@@ -139,10 +128,10 @@
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>780</x>
-      <y>140</y>
-      <w>160</w>
-      <h>70</h>
+      <x>792</x>
+      <y>153</y>
+      <w>144</w>
+      <h>63</h>
     </coordinates>
     <panel_attributes>Change Password</panel_attributes>
     <additional_attributes/>
@@ -150,10 +139,10 @@
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>780</x>
-      <y>250</y>
-      <w>160</w>
-      <h>70</h>
+      <x>792</x>
+      <y>252</y>
+      <w>144</w>
+      <h>63</h>
     </coordinates>
     <panel_attributes>Edit Personal Info</panel_attributes>
     <additional_attributes/>
@@ -161,10 +150,10 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>570</x>
-      <y>240</y>
-      <w>230</w>
-      <h>70</h>
+      <x>603</x>
+      <y>243</y>
+      <w>207</w>
+      <h>63</h>
     </coordinates>
     <panel_attributes>lt=.&gt;
 &lt;&lt;extends&gt;&gt;</panel_attributes>
@@ -173,12 +162,82 @@
   <element>
     <id>UMLPackage</id>
     <coordinates>
-      <x>330</x>
-      <y>0</y>
-      <w>710</w>
-      <h>570</h>
+      <x>387</x>
+      <y>27</y>
+      <w>864</w>
+      <h>639</h>
     </coordinates>
     <panel_attributes>Account Management System</panel_attributes>
     <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>792</x>
+      <y>351</y>
+      <w>144</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>Lock User Accounts</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>927</x>
+      <y>369</y>
+      <w>153</w>
+      <h>81</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;extends&gt;&gt;</panel_attributes>
+    <additional_attributes>150.0;70.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>1062</x>
+      <y>396</y>
+      <w>180</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>Notificate user about changes 
+via email</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>792</x>
+      <y>441</y>
+      <w>144</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>Unlock User Accounts</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>612</x>
+      <y>432</y>
+      <w>198</w>
+      <h>54</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;extends&gt;&gt;</panel_attributes>
+    <additional_attributes>200.0;40.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>927</x>
+      <y>423</y>
+      <w>153</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;extends&gt;&gt;</panel_attributes>
+    <additional_attributes>150.0;10.0;10.0;50.0</additional_attributes>
   </element>
 </diagram>
