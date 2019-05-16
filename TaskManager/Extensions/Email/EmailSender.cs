@@ -25,7 +25,7 @@ namespace TaskManager.Extensions.Email
 
             mail.To.Add(email);
 
-            mail.Subject = "Notification from your favourite web site - " + subject;
+            mail.Subject = "Notification from Task Manager - " + subject;
             mail.Body = message;
             mail.Priority = MailPriority.High;
 
