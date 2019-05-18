@@ -56,6 +56,56 @@ namespace TaskManager.Tests
             Assert.Equal(1, actual.Count());
         }
         [Fact]
+        public void GetByFiltersTest()
+        {
+            var list = GetTestList().AsQueryable();
+            var service = SetUpService();
+
+            // Act
+            var actual = service.GetByFilters(priorities: new List<Priority> { Priority.Critical }, category: Category.Work);
+
+            // Assert
+            Assert.Equal(3, actual.Count());
+        }
+        [Fact]
+        public void GetUsersTasksTest()
+        {
+            var list = GetTestList().AsQueryable();
+            var service = SetUpService();
+            var claims = new Mock<ClaimsPrincipal>();
+            var identity = new Mock<ClaimsIdentity>();
+            identity.Setup(i => i.IsAuthenticated)
+                .Returns(true);
+            claims.Setup(i => i.Identity)
+                .Returns(identity.Object);
+            claims.Setup(i => i.FindFirst(It.IsAny<string>()))
+                .Returns(new Claim(ClaimTypes.NameIdentifier, "1"));
+            // Act
+            var actual = service.GetUserTasks(claims.Object);
+
+            // Assert
+            Assert.NotNull(actual);
+        }
+        [Fact]
+        public void GetUsersTasksByFiltersListTest()
+        {
+            var list = GetTestList().AsQueryable();
+            var service = SetUpService();
+            var claims = new Mock<ClaimsPrincipal>();
+            var identity = new Mock<ClaimsIdentity>();
+            identity.Setup(i => i.IsAuthenticated)
+                .Returns(true);
+            claims.Setup(i => i.Identity)
+                .Returns(identity.Object);
+            claims.Setup(i => i.FindFirst(It.IsAny<string>()))
+                .Returns(new Claim(ClaimTypes.NameIdentifier, "1"));
+            // Act
+            var actual = service.GetUserTasksByFilters(claims.Object, priorities: new List<Priority> { Priority.Critical }, category: Category.Work);
+
+            // Assert
+            Assert.Equal(3, actual.Count());
+        }
+        [Fact]
         public void GetUsersActiveListTest()
         {
             var list = GetTestList().AsQueryable();

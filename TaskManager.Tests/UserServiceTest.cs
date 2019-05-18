@@ -186,7 +186,78 @@ namespace TaskManager.Tests
             repository.Verify(r => r.Delete(It.IsAny<UserProfile>()), Times.Once());
           
         }
+        [Fact]
+        public void CountInactiveTaskTests()
+        {
+            // Act
+            var profile = svc.GetUserProfile("1");
+            var res = svc.CountInactiveTasks(profile);
+            // Assert
+            Assert.Equal(0,res);
+        }
+        [Fact]
+        public void IsAccountLockedTests()
+        {
+            // Act
+            var profile = svc.GetUserProfile("1");
+            var res = svc.IsAccountLocked(profile);
+            // Assert
+            Assert.False(res);
+        }
+        [Fact]
+        public void AccountLockedTest()
+        {
+            // Arrange
+            var expected = new UserProfile
+            {
+                FirstName = "aaa",
+                LastName = "aaa"
+            };
+            var repository = new Mock<IRepository<UserProfile>>();
+            repository.Setup(r => r.GetAllByIds(new List<string> { expected.Id })).Returns(new List<UserProfile>{new UserProfile
+            {
+                FirstName = "aaa",
+                LastName = "aaa"
+                }});
+            var mapper = new Mock<IMapper>();
 
+            var service = new UserService(repository.Object, mapper.Object);
+
+
+            // Act
+            service.LockAccount(expected);
+
+            // Assert
+            repository.Verify(r => r.Update(It.IsAny<UserProfile>()), Times.Once());
+
+        }
+        [Fact]
+        public void UnAccountLockedTest()
+        {
+            // Arrange
+            var expected = new UserProfile
+            {
+                FirstName = "aaa",
+                LastName = "aaa",
+
+            };
+            var repository = new Mock<IRepository<UserProfile>>();
+            repository.Setup(r => r.GetAllByIds(new List<string> { expected.Id })).Returns(new List<UserProfile>{new UserProfile
+            {
+                FirstName = "aaa",
+                LastName = "aaa"
+                }});
+            var mapper = new Mock<IMapper>();
+
+            var service = new UserService(repository.Object, mapper.Object);
+
+
+            // Act
+            service.UnlockAccount(expected);
+            // Assert
+            repository.Verify(r => r.Update(It.IsAny<UserProfile>()), Times.Once());
+
+        }
         private IEnumerable<UserProfile> GetTestCollection()
         {
             return new[]
