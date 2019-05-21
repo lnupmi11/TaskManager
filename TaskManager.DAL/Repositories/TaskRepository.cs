@@ -21,7 +21,8 @@ namespace TaskManager.DAL.Repositories
         {
             return _context.Tasks
                 .Include(u => u.User)
-                .Include(c => c.Changes);
+                .Include(c => c.Changes)
+                .Include(c => c.Categories);
         }
 
         public virtual IEnumerable<TaskItem> GetAllWhere(Func<TaskItem, Boolean> predicate)
@@ -29,6 +30,7 @@ namespace TaskManager.DAL.Repositories
             return _context.Tasks
                 .Include(u => u.User)
                 .Include(c => c.Changes)
+                .Include(t => t.Categories)
                 .Where(predicate);
         }
 
@@ -39,6 +41,7 @@ namespace TaskManager.DAL.Repositories
             return _context.Tasks
                 .Include(u => u.User)
                 .Include(c => c.Changes)
+                .Include(c => c.Categories)
                 .Where(p => tasksIds.Contains(p.Id));
         }
 
@@ -46,6 +49,7 @@ namespace TaskManager.DAL.Repositories
         {
             return _context.Tasks
                 .Include(u => u.User)
+                .Include(c => c.Categories)
                 .Include(c => c.Changes)
                 .Where(p => p.Id == id)
                 .SingleOrDefault();
@@ -56,6 +60,7 @@ namespace TaskManager.DAL.Repositories
             return _context.Tasks
                 .Include(u => u.User)
                 .Include(c => c.Changes)
+                .Include(c => c.Categories)
                 .Where(p => p.Id == id)
                 .AsNoTracking()
                 .SingleOrDefault();
@@ -66,6 +71,7 @@ namespace TaskManager.DAL.Repositories
             return _context.Tasks
                 .Include(u => u.User)
                 .Include(c => c.Changes)
+                .Include(c => c.Categories)
                 .Where(predicate)
                 .SingleOrDefault();
         }

@@ -22,5 +22,7 @@ namespace TaskManager.DAL.Models
         public DateTime RegistredOn { get; set; }
 
         public virtual ICollection<TaskItem> Tasks { get; set; }
+
+        public virtual ICollection<CategoryItem> Categories { get; set; }
     }
 }

@@ -1,8 +1,11 @@
 ﻿@model TaskManager.DTO.Task.TaskItemDTO;
 @using TaskManager.DAL.Models.Enums;
+@using Newtonsoft.Json;
 
 @{
     ViewData["Title"] = "Edit";
+    
+    var categoriesJson = JsonConvert.SerializeObject(ViewBag.Categories);
 }
 
 <div class="container">
@@ -43,11 +46,8 @@
                 </div>
                 <div class="col col-sm-12 col-md-6">
                     <div class="form-group">
-                        <label asp-for="Category" class="control-label"></label>
-                        <select asp-for="Category" class="form-control" asp-items="Html.GetEnumSelectList<Category>()">
-                            <option selected="selected" value="">Please select</option>
-                        </select>
-                        <span asp-validation-for="Category" class="text-danger"></span>
+                        <label asp-for="CategoriesStr" class="control-label"></label>
+                        <input asp-for="CategoriesStr" class="form-control" />
                     </div>
                     <div class="form-group">
                         <label asp-for="Priority" class="control-label"></label>
@@ -85,5 +85,11 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <link rel="stylesheet" href="~/css/amsify.suggestags.css">
     <script src="~/js/dateValidation.js" type="text/javascript"></script>
+    <script src="~/js/jquery.amsify.suggestags.js"></script>
+    <script>
+        var categoriesSuggestions =@Html.Raw(categoriesJson);
+    </script>
+    <script src="~/js/categories.js"></script>
 }

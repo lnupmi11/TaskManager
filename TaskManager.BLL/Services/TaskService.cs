@@ -16,12 +16,18 @@ namespace TaskManager.BLL.Services
     {
         private readonly IRepository<TaskItem> _taskRepository;
         private readonly IRepository<UserProfile> _userRepository;
+        private readonly IRepository<CategoryItem> _categoryRepository;
+        private readonly IRepository<TaskCategories> _taskCategoryRepository;
         private readonly IMapper _mapper;
 
-        public TaskService(IRepository<TaskItem> taskRepository, IRepository<UserProfile> userRepository, IMapper mapper)
+        public TaskService(IRepository<TaskItem> taskRepository, IRepository<UserProfile> userRepository,
+                            IRepository<CategoryItem> categoryRepository, IRepository<TaskCategories> taskCategoryRepository,
+                            IMapper mapper)
         {
             _taskRepository = taskRepository;
             _userRepository = userRepository;
+            _categoryRepository = categoryRepository;
+            _taskCategoryRepository = taskCategoryRepository;
             _mapper = mapper;
         }
 
@@ -29,7 +35,7 @@ namespace TaskManager.BLL.Services
         {
             var tasksDTO = _taskRepository
                 .GetAll()
-                .Select(task => _mapper.Map<TaskItemDTO>(task))
+                .Select(task => _mapper.Map<TaskItemDTOResponse>(task))
                 .ToList();
 
             return tasksDTO;
@@ -39,80 +45,80 @@ namespace TaskManager.BLL.Services
         {
             var tasksDTO = _taskRepository
                 .GetAllWhere(p => p.UserId == principal.GetUserId())
-                .Select(task => _mapper.Map<TaskItemDTO>(task))
+                .Select(task => _mapper.Map<TaskItemDTOResponse>(task))
                 .ToList();
 
             return tasksDTO;
         }
 
-        public virtual IEnumerable<TaskItemDTO> GetByFilters(List<Priority> priorities, Category? category)
+        public virtual IEnumerable<TaskItemDTO> GetByFilters(List<Priority> priorities, List<string> categories)
         {
             var tasksDTO = _taskRepository
-                .GetAllWhere(x => (!category.HasValue || x.Category == category) &&
+                .GetAllWhere(x => (categories.Count == 0 || x.Categories.Any(c => categories.Contains(c.CategoryId))) &&
                 (priorities.Count == 0 || priorities.Contains(x.Priority)))
-                .Select(task => _mapper.Map<TaskItemDTO>(task))
+                .Select(task => _mapper.Map<TaskItemDTOResponse>(task))
                 .ToList();
 
             return tasksDTO;
         }
 
-        public virtual IEnumerable<TaskItemDTO> GetUserTasksByFilters(ClaimsPrincipal principal, List<Priority> priorities, Category? category)
+        public virtual IEnumerable<TaskItemDTO> GetUserTasksByFilters(ClaimsPrincipal principal, List<Priority> priorities, List<string> categories)
         {
             var tasksDTO = _taskRepository
                 .GetAllWhere(x => (x.UserId == principal.GetUserId()) &&
-                (!category.HasValue || x.Category == category) &&
+                (categories.Count == 0 || x.Categories.Any(c => categories.Contains(c.CategoryId))) &&
                 (priorities.Count == 0 || priorities.Contains(x.Priority)))
-                .Select(task => _mapper.Map<TaskItemDTO>(task))
+                .Select(task => _mapper.Map<TaskItemDTOResponse>(task))
                 .ToList();
 
             return tasksDTO;
         }
 
-        public virtual IEnumerable<TaskItemDTO> GetActiveByFilters(List<Priority> priorities, Category? category)
+        public virtual IEnumerable<TaskItemDTO> GetActiveByFilters(List<Priority> priorities, List<string> categories)
         {
             var tasksDTO = _taskRepository
-                .GetAllWhere(x => (!category.HasValue || x.Category == category) &&
+                .GetAllWhere(x => (categories.Count == 0 || x.Categories.Any(c => categories.Contains(c.CategoryId))) &&
                 (priorities.Count == 0 || priorities.Contains(x.Priority)) &&
                 (x.Status != Status.Closed))
-                .Select(task => _mapper.Map<TaskItemDTO>(task))
+                .Select(task => _mapper.Map<TaskItemDTOResponse>(task))
                 .ToList();
 
             return tasksDTO;
         }
 
-        public virtual IEnumerable<TaskItemDTO> GetUserActiveTasksByFilters(ClaimsPrincipal principal, List<Priority> priorities, Category? category)
+        public virtual IEnumerable<TaskItemDTO> GetUserActiveTasksByFilters(ClaimsPrincipal principal, List<Priority> priorities, List<string> categories)
         {
             var tasksDTO = _taskRepository
                 .GetAllWhere(x => (x.UserId == principal.GetUserId()) &&
-                (!category.HasValue || x.Category == category) &&
+                (categories.Count == 0 || x.Categories.Any(c => categories.Contains(c.CategoryId))) &&
                 (priorities.Count == 0 || priorities.Contains(x.Priority)) &&
                 (x.Status != Status.Closed))
-                .Select(task => _mapper.Map<TaskItemDTO>(task))
+                .Select(task => _mapper.Map<TaskItemDTOResponse>(task))
                 .ToList();
 
             return tasksDTO;
         }
 
-        public virtual IEnumerable<TaskItemDTO> GetArchivedByFilters(List<Priority> priorities, Category? category)
+        public virtual IEnumerable<TaskItemDTO> GetArchivedByFilters(List<Priority> priorities, List<string> categories)
         {
             var tasksDTO = _taskRepository
-                .GetAllWhere(x => (!category.HasValue || x.Category == category) &&
+                .GetAllWhere(x => (categories.Count == 0 || x.Categories.Any(c => categories.Contains(c.CategoryId))) &&
                 (priorities.Count == 0 || priorities.Contains(x.Priority)) &&
                 (x.Status == Status.Closed))
-                .Select(task => _mapper.Map<TaskItemDTO>(task))
+                .Select(task => _mapper.Map<TaskItemDTOResponse>(task))
                 .ToList();
 
             return tasksDTO;
         }
 
-        public virtual IEnumerable<TaskItemDTO> GetUserArchivedTasksByFilters(ClaimsPrincipal principal, List<Priority> priorities, Category? category)
+        public virtual IEnumerable<TaskItemDTO> GetUserArchivedTasksByFilters(ClaimsPrincipal principal, List<Priority> priorities, List<string> categories)
         {
             var tasksDTO = _taskRepository
                 .GetAllWhere(x => (x.UserId == principal.GetUserId()) &&
-                (!category.HasValue || x.Category == category) &&
+                (categories.Count == 0 || x.Categories.Any(c => categories.Contains(c.CategoryId))) &&
                 (priorities.Count == 0 || priorities.Contains(x.Priority)) &&
                 (x.Status == Status.Closed))
-                .Select(task => _mapper.Map<TaskItemDTO>(task))
+                .Select(task => _mapper.Map<TaskItemDTOResponse>(task))
                 .ToList();
 
             return tasksDTO;
@@ -120,26 +126,34 @@ namespace TaskManager.BLL.Services
 
         public virtual void Create(ClaimsPrincipal user, TaskItemDTO taskItemDTO)
         {
+            var categoriesList = taskItemDTO.CategoriesStr.Split(',').ToList();
+            var categories = SyncCategories(categoriesList, user.GetUserId());
+
             var taskItem = _mapper.Map<TaskItem>(taskItemDTO);
             taskItem.User = _userRepository.Find(user.GetUserId());
             _taskRepository.Create(taskItem);
-        }
 
+            CreateTaskCategories(categories, taskItem.Id);
+        }
+        
         public virtual TaskItemDTO Find(string id)
         {
             var taskItem = _taskRepository.Find(id);
-            var taskItemDTO = _mapper.Map<TaskItemDTO>(taskItem);
+            var taskItemDTO = _mapper.Map<TaskItemDTOResponse>(taskItem);
 
             return taskItemDTO;
         }
 
         public virtual void Delete(string id)
         {
+            DeleteTaskCategoreis(id);
             _taskRepository.Delete(id);
         }
 
         public virtual void Update(TaskItemDTO taskItemDTO)
         {
+            CreateUpdateTaskCategories(taskItemDTO.UserId, taskItemDTO);
+
             var taskItem = _mapper.Map<TaskItem>(taskItemDTO);
             var prevTaskItem = _taskRepository.FindAsNoTracking(taskItem.Id);
             var diff = GetDiff(prevTaskItem, taskItem);
@@ -185,6 +199,54 @@ namespace TaskManager.BLL.Services
             }
 
             return changes;
+        }
+
+        private List<CategoryItem> SyncCategories(List<string> categories, string userId)
+        {
+            var taskCategories = new List<CategoryItem>();
+            foreach (var item in categories)
+            {
+                var category = _categoryRepository.Find(c => c.Name == item);
+                if (category != null)
+                {
+                    taskCategories.Add(category);
+                }
+                else
+                {
+                    var newCategory = new CategoryItem { Name = item, UserId = userId };
+                    _categoryRepository.Create(newCategory);
+                    taskCategories.Add(newCategory);
+                }
+            }
+
+            return taskCategories;
+        }
+
+        private void CreateTaskCategories(List<CategoryItem> categories, string taskId)
+        {
+            foreach (var category in categories)
+            {
+                var taskCategory = new TaskCategories { CategoryId = category.Id, TaskId = taskId };
+                _taskCategoryRepository.Create(taskCategory);
+            }
+        }
+
+        private void DeleteTaskCategoreis(string taskId)
+        {
+            var items = _taskCategoryRepository.GetAllWhere(t => t.TaskId == taskId).ToList();
+            foreach (var item in items)
+            {
+                _taskCategoryRepository.Delete(item.Id);
+            }
+        }
+
+        private void CreateUpdateTaskCategories(string userId, TaskItemDTO taskItemDTO)
+        {
+            DeleteTaskCategoreis(taskItemDTO.Id);
+
+            var categoriesList = taskItemDTO.CategoriesStr.Split(',').ToList();
+            var categories = SyncCategories(categoriesList, userId);
+            CreateTaskCategories(categories, taskItemDTO.Id);
         }
     }
 }

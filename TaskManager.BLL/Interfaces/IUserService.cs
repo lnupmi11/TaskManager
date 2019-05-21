@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
 using TaskManager.DAL.Models;
-using TaskManager.DAL.Models.Enums;
 using TaskManager.DTO.Models.UserManagement;
 
 namespace TaskManager.BLL.Interfaces
