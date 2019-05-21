@@ -17,6 +17,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.2.4" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="2.2.5" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,5 +25,11 @@
     <ProjectReference Include="..\TaskManager.BLL\TaskManager.BLL.csproj" />
     <ProjectReference Include="..\TaskManager.DAL\TaskManager.DAL.csproj" />
     <ProjectReference Include="..\TaskManager.DTO\TaskManager.DTO.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNetCore.Identity.UI, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="use.cs" />
   </ItemGroup>
 </Project>
