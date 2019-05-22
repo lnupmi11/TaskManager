@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using TaskManager.DAL.Models;
 using TaskManager.DAL.Models.Enums;
 
@@ -28,8 +27,9 @@ namespace TaskManager.DTO.Task
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime EndDate { get; set; }
 
+        [Required]
         [Display(Name = "Categories")]
-        public virtual string CategoriesStr { get; set; }
+        public virtual string CategoriesStr { get; set; } = string.Empty;
 
         public Priority Priority { get; set; }
 
