@@ -70,7 +70,12 @@ namespace TaskManager.DAL.Repositories
 
         public CategoryItem FindAsNoTracking(string id)
         {
-            throw new NotImplementedException();
+            return _context.Categories
+                .Include(u => u.User)
+                .Include(t => t.TaskCategories)
+                .Where(p => p.Id == id)
+                .AsNoTracking()
+                .SingleOrDefault();
         }
 
         public IEnumerable<CategoryItem> GetAll()
@@ -82,7 +87,12 @@ namespace TaskManager.DAL.Repositories
 
         public IEnumerable<CategoryItem> GetAllByIds(IEnumerable<string> ids)
         {
-            throw new NotImplementedException();
+            HashSet<string> categoriesIds = new HashSet<string>(ids);
+
+            return _context.Categories
+                .Include(u => u.User)
+                .Include(t => t.TaskCategories)
+                .Where(p => categoriesIds.Contains(p.Id));
         }
 
         public IEnumerable<CategoryItem> GetAllWhere(Func<CategoryItem, bool> predicate)
