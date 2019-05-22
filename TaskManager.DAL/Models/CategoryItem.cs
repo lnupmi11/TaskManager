@@ -6,6 +6,11 @@ namespace TaskManager.DAL.Models
 {
     public class CategoryItem
     {
+        public CategoryItem()
+        {
+            TaskCategories = new List<TaskCategories>();
+        }
+
         [Key]
         public string Id { get; set; }
 

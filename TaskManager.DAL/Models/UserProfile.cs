@@ -11,6 +11,7 @@ namespace TaskManager.DAL.Models
         public UserProfile()
         {
             Tasks = new List<TaskItem>();
+            Categories = new List<CategoryItem>();
         }
 
         public string FirstName { get; set; }

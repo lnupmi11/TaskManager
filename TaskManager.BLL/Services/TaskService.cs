@@ -135,11 +135,12 @@ namespace TaskManager.BLL.Services
 
             CreateTaskCategories(categories, taskItem.Id);
         }
-        
+
         public virtual TaskItemDTO Find(string id)
         {
             var taskItem = _taskRepository.Find(id);
             var taskItemDTO = _mapper.Map<TaskItemDTOResponse>(taskItem);
+            taskItemDTO.Categories = _taskCategoryRepository.GetAllWhere(c => c.TaskId == id).ToList();
 
             return taskItemDTO;
         }
