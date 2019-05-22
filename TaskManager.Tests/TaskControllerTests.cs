@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using TaskManager.BLL.Interfaces;
 using TaskManager.BLL.Services;
 using TaskManager.Controllers;
 using TaskManager.DAL.EF;
@@ -44,7 +45,10 @@ namespace TaskManager.Tests
 
             var service = new Mock<TaskService>(repository,userRep.Object,mapper.Object);
             service.Setup(i => i.Create(principal.Object, task));
-            var controller = new TaskController(service.Object);
+
+            var categoryService = new Mock<ICategoryService>();
+
+            var controller = new TaskController(service.Object, categoryService.Object);
 
             // Act
             var view = controller.Create(task);
@@ -83,7 +87,8 @@ namespace TaskManager.Tests
             var userService = new Mock<UserService>(userRep.Object);
             repository.Setup(i => i.FindAsNoTracking(It.IsAny<string>())).Returns(taskItem1);
             var service = new Mock<TaskService>(repository.Object, userRep.Object, mapper.Object);
-            var controller = new TaskController(service.Object);
+            var categoryService = new Mock<ICategoryService>();
+            var controller = new TaskController(service.Object, categoryService.Object);
             // Act
             controller.Create(task);
             task.Description = "new";
@@ -107,6 +112,10 @@ namespace TaskManager.Tests
 
             var userRep = new UserRepository(context);
 
+            var categoryRep = new CategoryRepository(context);
+
+            var taskCategoriesRep = new TaskCategoryRepository(context);
+
             var mapper = new Mock<IMapper>();
             var task = new TaskItemDTO { Id = "1", Description = "Description", UserId = "1" };
             var taskItem = new TaskItem { Id = "1", Description = "Description", UserId = "1" };
@@ -118,9 +127,10 @@ namespace TaskManager.Tests
 
             var userService = new Mock<UserService>(userRep);
 
-            var service = new TaskService(repository, userRep, mapper.Object);
+            var service = new TaskService(repository, userRep, categoryRep, taskCategoriesRep, mapper.Object);
+            var categoryService = new Mock<ICategoryService>();
 
-            var controller = new TaskController(service);
+            var controller = new TaskController(service, categoryService.Object);
             // Act
             var view = controller.Create(task);
 
@@ -149,6 +159,8 @@ namespace TaskManager.Tests
             principal.Setup(b => b.FindFirst(It.IsAny<string>())).Returns(new Claim(ClaimTypes.NameIdentifier, "1"));
 
             var userRep = new Mock<UserRepository>(context);
+            var categoryRep = new Mock<CategoryRepository>(context);
+            var taskCategoriesRep = new Mock<TaskCategoryRepository>(context);
 
             var mapper = new Mock<IMapper>();
             var task = new TaskItemDTO { Id = "1", Description = "Description", UserId = "1" };
@@ -158,9 +170,10 @@ namespace TaskManager.Tests
    
             var userService = new Mock<UserService>(userRep.Object);
 
-            var service = new TaskService(repository, userRep.Object, mapper.Object);
+            var service = new TaskService(repository, userRep.Object, categoryRep.Object, taskCategoriesRep.Object, mapper.Object);
+            var categoryService = new Mock<ICategoryService>();
 
-            var controller = new TaskController(service);
+            var controller = new TaskController(service, categoryService.Object);
             // Act
             //controller.Create(task);
             controller.DeleteConfirmed("1");
@@ -186,6 +199,8 @@ namespace TaskManager.Tests
             principal.Setup(b => b.FindFirst(It.IsAny<string>())).Returns(new Claim(ClaimTypes.NameIdentifier, "1"));
 
             var userRep = new Mock<UserRepository>(context);
+            var categoryRep = new Mock<CategoryRepository>(context);
+            var taskCategoriesRep = new Mock<TaskCategoryRepository>(context);
 
             var mapper = new Mock<IMapper>();
             var task = new TaskItemDTO { Id = "1", Description = "Description", UserId = "1" };
@@ -194,10 +209,11 @@ namespace TaskManager.Tests
             mapper.Setup(x => x.Map<TaskItemDTO>(taskItem)).Returns(task);
 
             var userService = new Mock<UserService>(userRep.Object);
+            var categoryService = new Mock<ICategoryService>();
 
-            var service = new TaskService(repository, userRep.Object, mapper.Object);
+            var service = new TaskService(repository, userRep.Object, categoryRep.Object, taskCategoriesRep.Object, mapper.Object);
 
-            var controller = new TaskController(service);
+            var controller = new TaskController(service, categoryService.Object);
             // Act
             controller.Create(task);
             controller.DeleteConfirmed("1");
@@ -217,14 +233,17 @@ namespace TaskManager.Tests
             var repository = new Mock<TaskRepository>(context);
 
             var userRep = new Mock<UserRepository>(context);
+            var categoryRep = new Mock<CategoryRepository>(context);
+            var taskCategoriesRep = new Mock<TaskCategoryRepository>(context);
 
             var userService = new Mock<UserService>(userRep.Object);
 
             var mapper = new Mock<IMapper>();
 
-            var service = new TaskService(repository.Object, userRep.Object, mapper.Object);
+            var service = new TaskService(repository.Object, userRep.Object, categoryRep.Object, taskCategoriesRep.Object, mapper.Object);
+            var categoryService = new Mock<ICategoryService>();
 
-            var controller = new TaskController(service);
+            var controller = new TaskController(service, categoryService.Object);
             // Act
             var actionResult = controller.Delete("1");
 

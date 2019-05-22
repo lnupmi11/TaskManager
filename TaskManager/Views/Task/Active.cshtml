@@ -105,13 +105,13 @@
                             </header>
                             <div class="filter-content">
                                 <div class="card-body">
-                                    @foreach (var value in Enum.GetNames(typeof(Category)))
+                                    @foreach (var category in ViewBag.Categories)
                                     {
                                         <label class="form-check">
-                                            <input class="form-check-input" type="radio" name="category"
-                                                   value="@value" @(((Category?)ViewBag.Category).ToString() == value ? "checked" : string.Empty)>
+                                            <input class="form-check-input" type="checkbox" name="categories"
+                                                   value="@category.Id" @(((List<string>)ViewBag.CategoriesSelected).Any(x => x == category.Id) ? "checked" : string.Empty)>
                                             <span class="form-check-label">
-                                                @value
+                                                @category.Name
                                             </span>
                                         </label>
                                     }
@@ -160,7 +160,7 @@
                             <h4 class="card-title">@item.Title</h4>
                             <p class="card-text">@item.Description</p>
                             <div class="collapse" id="collapseDetails_@item.Id">
-                                <p class="card-text"><b>Categoty:</b> @item.Category</p>
+                                <p class="card-text"><b>Categories:</b> @item.CategoriesStr</p>
                                 <p class="card-text"><b>Status:</b> @item.Status</p>
                                 <p class="card-text"><b>Priority:</b> @item.Priority</p>
                                 <p class="card-text"><b>Progress:</b> @item.Progress</p>

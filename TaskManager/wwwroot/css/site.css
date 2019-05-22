@@ -341,3 +341,8 @@ footer.footer {
 .bg-grey {
     background-color: #e9ecef;
 }
+
+.amsify-suggestags-input-area .amsify-select-tag.col-bg {
+    background-color: #1D809F !important;
+    color: #fff !important;
+}

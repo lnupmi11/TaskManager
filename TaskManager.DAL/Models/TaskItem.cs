@@ -11,6 +11,7 @@ namespace TaskManager.DAL.Models
         public TaskItem()
         {
             Changes = new List<TaskChanges>();
+            Categories = new List<TaskCategories>();
         }
 
         [Key]
@@ -33,8 +34,6 @@ namespace TaskManager.DAL.Models
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime EndDate { get; set; }
 
-        public Category Category { get; set; }
-
         public Priority Priority { get; set; }
 
         public Status Status { get; set; }
@@ -45,5 +44,7 @@ namespace TaskManager.DAL.Models
         public virtual UserProfile User { get; set; }
 
         public virtual ICollection<TaskChanges> Changes { get; set; }
+
+        public virtual ICollection<TaskCategories> Categories { get; set; }
     }
 }

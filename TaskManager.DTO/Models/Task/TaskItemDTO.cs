@@ -27,12 +27,14 @@ namespace TaskManager.DTO.Task
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime EndDate { get; set; }
 
-        public Category Category { get; set; }
+        [Required]
+        [Display(Name = "Categories")]
+        public virtual string CategoriesStr { get; set; } = string.Empty;
 
         public Priority Priority { get; set; }
 
         public Status Status { get; set; }
-        
+
         public string UserId { get; set; }
 
         public int? OpenTask { get; set; }
@@ -40,5 +42,7 @@ namespace TaskManager.DTO.Task
         public int? AllTask { get; set; }
 
         public ICollection<TaskChanges> Changes { get; set; }
+
+        public ICollection<TaskCategories> Categories { get; set; }
     }
 }
