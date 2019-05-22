@@ -45,22 +45,4 @@ namespace TaskManager.DTO.Task
 
         public ICollection<TaskCategories> Categories { get; set; }
     }
-
-    public class TaskItemDTOResponse : TaskItemDTO
-    {
-        [Display(Name = "Categories")]
-        public override string CategoriesStr
-        {
-            get
-            {
-                return Categories == null ?
-                    string.Empty
-                    : string.Join(", ", Categories.Select(_ => _.Category.Name));
-            }
-            set
-            {
-                
-            }
-        }
-    }
 }

@@ -8,6 +8,7 @@ using TaskManager.BLL.Interfaces;
 using TaskManager.DAL.Interfaces;
 using TaskManager.DAL.Models;
 using TaskManager.DAL.Models.Enums;
+using TaskManager.DTO.Models.Task;
 using TaskManager.DTO.Task;
 
 namespace TaskManager.BLL.Services
