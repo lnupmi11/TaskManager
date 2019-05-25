@@ -63,7 +63,7 @@ namespace TaskManager.Controllers
         // GET: Task/Create
         public IActionResult Create()
         {
-            ViewBag.Categories = _categoryService.GetAllByUserId(User.GetUserId()).Select(c => c.Name).ToList();
+            ViewBag.Categories = GetUserCategories();
             return View();
         }
 
@@ -78,6 +78,8 @@ namespace TaskManager.Controllers
 
                 return RedirectToAction(nameof(Active));
             }
+
+            ViewBag.Categories = GetUserCategories();
 
             return View(taskItemDTO);
         }
@@ -96,7 +98,7 @@ namespace TaskManager.Controllers
                 return NotFound();
             }
 
-            ViewBag.Categories = _categoryService.GetAllByUserId(User.GetUserId()).Select(c => c.Name).ToList();
+            ViewBag.Categories = GetUserCategories();
 
             return View(taskItemDTO);
         }
@@ -131,6 +133,8 @@ namespace TaskManager.Controllers
 
                 return RedirectToAction(nameof(Active));
             }
+
+            ViewBag.Categories = GetUserCategories();
 
             return View(taskItemDTO);
         }
@@ -182,6 +186,11 @@ namespace TaskManager.Controllers
             ViewBag.Closed = closed;
             var progress = (all == 0) ? 0 : closed * 1.0 / all * 100;
             ViewBag.Progress = Math.Round(progress);
+        }
+
+        private List<string> GetUserCategories()
+        {
+            return _categoryService.GetAllByUserId(User.GetUserId()).Select(c => c.Name).ToList();
         }
 
         #endregion
