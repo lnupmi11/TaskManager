@@ -15,10 +15,6 @@ namespace TaskManager.DTO.Models.Task
                     string.Empty
                     : string.Join(", ", Categories.Select(_ => _.Category.Name));
             }
-            set
-            {
-
-            }
         }
     }
 }
