@@ -28,17 +28,7 @@ namespace TaskManager.Controllers
         // GET: Active
         public IActionResult Active(List<Priority> priorities, List<string> categories, int? page)
         {
-            ViewBag.Priorities = priorities;
-            ViewBag.CategoriesSelected = categories;
-            ViewBag.Categories = _categoryService.GetAllByUser(User);
-            var open = _taskService.GetUserActiveTasksByFilters(User,priorities, categories).Count();
-            ViewBag.OpenTasks = open;
-            var all = _taskService.GetUserTasks(User).Count();
-            ViewBag.AllTasks = all;
-            var closed = _taskService.GetUserArchivedTasksByFilters(User, priorities, categories).Count();
-            ViewBag.Closed = closed;
-            var progress = (all == 0) ? 0 : closed * 1.0 / all * 100;
-            ViewBag.Progress = Math.Round(progress);
+            SetFilters(priorities, categories, page);
             var tasks = _taskService.GetUserActiveTasksByFilters(User, priorities, categories);
 
             return View(PaginatedList<TaskItemDTO>.Create(tasks.AsQueryable(), page ?? 1, _itemsPerPage));
@@ -47,17 +37,7 @@ namespace TaskManager.Controllers
         // GET: Archive
         public IActionResult Archive(List<Priority> priorities, List<string> categories, int? page)
         {
-            ViewBag.Priorities = priorities;
-            ViewBag.CategoriesSelected = categories;
-            ViewBag.Categories = _categoryService.GetAllByUser(User);
-            var open = _taskService.GetUserActiveTasksByFilters(User, priorities, categories).Count();
-            ViewBag.OpenTasks = open;
-            var all = _taskService.GetUserTasks(User).Count();
-            ViewBag.AllTasks = all;
-            var closed = _taskService.GetUserArchivedTasksByFilters(User, priorities, categories).Count();
-            ViewBag.Closed = closed;
-            var progress = (all == 0) ? 0 : closed * 1.0 / all * 100;
-            ViewBag.Progress = Math.Round(progress);
+            SetFilters(priorities, categories, page);
             var tasks = _taskService.GetUserArchivedTasksByFilters(User, priorities, categories);
 
             return View(PaginatedList<TaskItemDTO>.Create(tasks.AsQueryable(), page ?? 1, _itemsPerPage));
@@ -177,7 +157,7 @@ namespace TaskManager.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(string id)
         {
-            if(!_taskService.Any(id))
+            if (!_taskService.Any(id))
             {
                 return NotFound();
             }
@@ -186,5 +166,25 @@ namespace TaskManager.Controllers
 
             return RedirectToAction(nameof(Active));
         }
+
+        #region Helpers
+
+        private void SetFilters(List<Priority> priorities, List<string> categories, int? page)
+        {
+            ViewBag.Priorities = priorities;
+            ViewBag.CategoriesSelected = categories;
+            ViewBag.Categories = _categoryService.GetAllByUser(User);
+            var open = _taskService.GetUserActiveTasksByFilters(User, priorities, categories).Count();
+            ViewBag.OpenTasks = open;
+            var all = _taskService.GetUserTasks(User).Count();
+            ViewBag.AllTasks = all;
+            var closed = _taskService.GetUserArchivedTasksByFilters(User, priorities, categories).Count();
+            ViewBag.Closed = closed;
+            var progress = (all == 0) ? 0 : closed * 1.0 / all * 100;
+            ViewBag.Progress = Math.Round(progress);
+        }
+
+        #endregion
+
     }
 }

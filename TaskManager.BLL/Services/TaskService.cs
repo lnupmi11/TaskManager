@@ -21,9 +21,11 @@ namespace TaskManager.BLL.Services
         private readonly IRepository<TaskCategories> _taskCategoryRepository;
         private readonly IMapper _mapper;
 
-        public TaskService(IRepository<TaskItem> taskRepository, IRepository<UserProfile> userRepository,
-                            IRepository<CategoryItem> categoryRepository, IRepository<TaskCategories> taskCategoryRepository,
-                            IMapper mapper)
+        public TaskService(IRepository<TaskItem> taskRepository,
+                           IRepository<UserProfile> userRepository,
+                           IRepository<CategoryItem> categoryRepository,
+                           IRepository<TaskCategories> taskCategoryRepository,
+                           IMapper mapper)
         {
             _taskRepository = taskRepository;
             _userRepository = userRepository;
@@ -154,11 +156,10 @@ namespace TaskManager.BLL.Services
 
         public virtual void Update(TaskItemDTO taskItemDTO)
         {
-            CreateUpdateTaskCategories(taskItemDTO.UserId, taskItemDTO);
-
+            var prevTaskItem = _taskRepository.FindAsNoTracking(taskItemDTO.Id);
+            UpdateTaskCategories(taskItemDTO.UserId, taskItemDTO);
             var taskItem = _mapper.Map<TaskItem>(taskItemDTO);
-            var prevTaskItem = _taskRepository.FindAsNoTracking(taskItem.Id);
-            var diff = GetDiff(prevTaskItem, taskItem);
+            var diff = GetDiff(prevTaskItem, taskItem, taskItemDTO.CategoriesStr);
 
             foreach (var item in diff)
             {
@@ -173,7 +174,7 @@ namespace TaskManager.BLL.Services
             return _taskRepository.Any(e => e.Id == id);
         }
 
-        private List<TaskChanges> GetDiff(TaskItem oldTask, TaskItem newTask)
+        private List<TaskChanges> GetDiff(TaskItem oldTask, TaskItem newTask, string newCategories)
         {
             List<TaskChanges> changes = new List<TaskChanges>();
 
@@ -183,21 +184,40 @@ namespace TaskManager.BLL.Services
             {
                 var oOldValue = oProperty.GetValue(oldTask, null);
                 var oNewValue = oProperty.GetValue(newTask, null);
-                if (!Equals(oOldValue, oNewValue) &&
-                    oProperty.Name != "Changes" &&
-                    oProperty.Name != "User")
-                {
-                    var sOldValue = oOldValue == null ? "" : oOldValue.ToString();
-                    var sNewValue = oNewValue == null ? "" : oNewValue.ToString();
-                    var date = DateTime.Now;
-                    changes.Add(new TaskChanges
-                    {
-                        ModifiedOn = date,
-                        Description = oProperty.Name + " was changed from \"" + sOldValue + "\" to \"" + sNewValue + "\"",
-                        TaskId = newTask.Id
-                    });
 
+                if (Equals(oOldValue, oNewValue))
+                    continue;
+
+                if (oProperty.Name == "Changes" ||
+                    oProperty.Name == "User")
+                {
+                    continue;
                 }
+
+                string oldValue = "", newValue = ""; 
+                var diff = new TaskChanges
+                {
+                    ModifiedOn = DateTime.Now,
+                    TaskId = newTask.Id
+                };
+
+                if (oProperty.Name == "Categories")
+                {
+                    oldValue = string.Join(", ", oldTask.Categories.Select(c => c.Category.Name));
+
+                    if (oldValue == newCategories)
+                        continue;
+
+                    newValue = newCategories;
+                }
+                else
+                {
+                    oldValue = oOldValue == null ? "" : oOldValue.ToString();
+                    newValue = oNewValue == null ? "" : oNewValue.ToString();
+                }
+
+                diff.Description = oProperty.Name + " was changed from \"" + oldValue + "\" to \"" + newValue + "\"";    
+                changes.Add(diff);
             }
 
             return changes;
@@ -242,7 +262,7 @@ namespace TaskManager.BLL.Services
             }
         }
 
-        private void CreateUpdateTaskCategories(string userId, TaskItemDTO taskItemDTO)
+        private void UpdateTaskCategories(string userId, TaskItemDTO taskItemDTO)
         {
             DeleteTaskCategoreis(taskItemDTO.Id);
 
