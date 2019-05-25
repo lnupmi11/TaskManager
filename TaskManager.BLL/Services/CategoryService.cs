@@ -17,7 +17,8 @@ namespace TaskManager.BLL.Services
         private readonly IMapper _mapper;
 
         public CategoryService(IRepository<CategoryItem> categoryRepository,
-                               IRepository<UserProfile> userRepository, IMapper mapper)
+                               IRepository<UserProfile> userRepository,
+                               IMapper mapper)
         {
             _categoryRepository = categoryRepository;
             _userRepository = userRepository;
