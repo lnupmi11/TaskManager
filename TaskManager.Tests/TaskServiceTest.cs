@@ -38,7 +38,7 @@ namespace TaskManager.Tests
             var service = SetUpService();
 
             // Act
-            var actual = service.GetActiveByFilters(priorities: new List<Priority> { Priority.Critical }, categories: new List<string> { "Work" });
+            var actual = service.GetActiveByFilters(priorities: new List<Priority> { Priority.Critical }, categories: new List<string>());
 
             // Assert
             Assert.Equal(2, actual.Count());
@@ -50,7 +50,7 @@ namespace TaskManager.Tests
             var service = SetUpService();
 
             // Act
-            var actual = service.GetArchivedByFilters(priorities: new List<Priority> { Priority.Critical }, categories: new List<string> { "Work" });
+            var actual = service.GetArchivedByFilters(priorities: new List<Priority> { Priority.Critical }, categories: new List<string>());
 
             // Assert
             Assert.Equal(1, actual.Count());
@@ -62,7 +62,7 @@ namespace TaskManager.Tests
             var service = SetUpService();
 
             // Act
-            var actual = service.GetByFilters(priorities: new List<Priority> { Priority.Critical }, category: Category.Work);
+            var actual = service.GetByFilters(priorities: new List<Priority> { Priority.Critical }, categories: new List<string>());
 
             // Assert
             Assert.Equal(3, actual.Count());
@@ -100,7 +100,7 @@ namespace TaskManager.Tests
             claims.Setup(i => i.FindFirst(It.IsAny<string>()))
                 .Returns(new Claim(ClaimTypes.NameIdentifier, "1"));
             // Act
-            var actual = service.GetUserTasksByFilters(claims.Object, priorities: new List<Priority> { Priority.Critical }, category: Category.Work);
+            var actual = service.GetUserTasksByFilters(claims.Object, priorities: new List<Priority> { Priority.Critical },categories: new List<string>());
 
             // Assert
             Assert.Equal(3, actual.Count());
@@ -119,7 +119,7 @@ namespace TaskManager.Tests
             claims.Setup(i => i.FindFirst(It.IsAny<string>()))
                 .Returns(new Claim(ClaimTypes.NameIdentifier, "1"));
             // Act
-            var actual = service.GetUserActiveTasksByFilters(claims.Object, priorities: new List<Priority> { Priority.Critical }, categories: new List<string> { "Work"});
+            var actual = service.GetUserActiveTasksByFilters(claims.Object, priorities: new List<Priority> { Priority.Critical }, categories: new List<string>());
 
             // Assert
             Assert.Equal(2, actual.Count());

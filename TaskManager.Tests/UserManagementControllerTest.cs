@@ -42,8 +42,10 @@ namespace TaskManager.Tests
             var userRep = new Mock<UserRepository>(context);
             var mapper = new Mock<IMapper>();
             var userService = new Mock<UserService>(userRep.Object,mapper.Object);
-            var service = new Mock<TaskService>(taskRep.Object, userRep.Object, mapper.Object);
 
+            var catRep = new Mock<CategoryRepository>(context);
+            var taskCatRep = new Mock<TaskCategoryRepository>(context);
+            var service = new Mock<TaskService>(taskRep.Object, userRep.Object, catRep.Object, taskCatRep.Object, mapper.Object);
             var mockUserManager = new Mock<UserManager<UserProfile>>(
                     new Mock<IUserStore<UserProfile>>().Object,
                     new Mock<IOptions<IdentityOptions>>().Object,
@@ -81,7 +83,10 @@ namespace TaskManager.Tests
             var userService = new Mock<UserService>(userRep.Object, mapper.Object);
             userService.Setup(i => i.GetUserProfile("1")).Returns(user);
 
-            var service = new Mock<TaskService>(taskRep.Object, userRep.Object, mapper.Object);
+            var catRep = new Mock<CategoryRepository>(context);
+            var taskCatRep = new Mock<TaskCategoryRepository>(context);
+
+            var service = new Mock<TaskService>(taskRep.Object, userRep.Object, catRep.Object, taskCatRep.Object, mapper.Object);
 
             var mockUserManager = new Mock<UserManager<UserProfile>>(
                     new Mock<IUserStore<UserProfile>>().Object,
@@ -121,7 +126,9 @@ namespace TaskManager.Tests
             var userService = new Mock<UserService>(userRep.Object, mapper.Object);
             userService.Setup(i => i.GetUserProfile("1")).Returns(user);
 
-            var service = new Mock<TaskService>(taskRep.Object, userRep.Object, mapper.Object);
+            var catRep = new Mock<CategoryRepository>(context);
+            var taskCatRep = new Mock<TaskCategoryRepository>(context);
+            var service = new Mock<TaskService>(taskRep.Object, userRep.Object, catRep.Object, taskCatRep.Object, mapper.Object);
 
             var mockUserManager = new Mock<UserManager<UserProfile>>(
                     new Mock<IUserStore<UserProfile>>().Object,

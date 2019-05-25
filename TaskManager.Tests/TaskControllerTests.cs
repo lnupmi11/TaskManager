@@ -131,13 +131,13 @@ namespace TaskManager.Tests
             principal.Setup(b => b.Identity.IsAuthenticated).Returns(true);
             principal.Setup(b => b.FindFirst(It.IsAny<string>())).Returns(new Claim(ClaimTypes.NameIdentifier, "1"));
 
-            var userService = new Mock<UserService>(userRep);
+            var userService = new UserService(userRep.Object,mapper.Object);
 
-            var service = new Mock<TaskService>(repository, userRep.Object, categoryRep, taskCategoriesRep, mapper.Object);
+            var service = new TaskService(repository, userRep.Object, categoryRep, taskCategoriesRep, mapper.Object);
 
             var categoryService = new Mock<ICategoryService>();
 
-            var controller = new TaskController(service.Object, categoryService.Object);
+            var controller = new TaskController(service, categoryService.Object);
             // Act
             var view = controller.Create(task);
 
