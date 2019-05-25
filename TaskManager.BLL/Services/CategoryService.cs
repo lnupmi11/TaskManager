@@ -7,7 +7,6 @@ using TaskManager.BLL.Interfaces;
 using TaskManager.DAL.Interfaces;
 using TaskManager.DAL.Models;
 using TaskManager.DTO.Models.Category;
-using TaskManager.DTO.Task;
 
 namespace TaskManager.BLL.Services
 {
@@ -17,7 +16,9 @@ namespace TaskManager.BLL.Services
         private readonly IRepository<UserProfile> _userRepository;
         private readonly IMapper _mapper;
 
-        public CategoryService(IRepository<CategoryItem> categoryRepository, IRepository<UserProfile> userRepository, IMapper mapper)
+        public CategoryService(IRepository<CategoryItem> categoryRepository,
+                               IRepository<UserProfile> userRepository,
+                               IMapper mapper)
         {
             _categoryRepository = categoryRepository;
             _userRepository = userRepository;

@@ -20,8 +20,10 @@ namespace TaskManager.Controllers
         private readonly IEmailSender _emailSender;
         private readonly string _infoMessage = "Ban users who are igonorig their tasks and notify them via email";
 
-        public UserManagementController(UserManager<UserProfile> userManager, ITaskService taskService,
-            IUserService userService, IEmailSender emailSender)
+        public UserManagementController(UserManager<UserProfile> userManager,
+                                        ITaskService taskService,
+                                        IUserService userService,
+                                        IEmailSender emailSender)
         {
             _taskService = taskService;
             _userService = userService;
