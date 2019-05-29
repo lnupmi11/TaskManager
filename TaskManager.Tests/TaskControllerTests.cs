@@ -15,6 +15,7 @@ using TaskManager.DAL.Models;
 using TaskManager.DAL.Repositories;
 using TaskManager.DTO.Task;
 using Xunit;
+
 namespace TaskManager.Tests
 {
     public class TaskControllerTests
@@ -102,53 +103,6 @@ namespace TaskManager.Tests
             var str = view.ToString();
             // Assert
             Assert.NotNull(view);
-        }
-
-        [Fact]
-        public void DetailsTest()
-        {
-            // Arrange
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "details")
-                .Options;
-
-            var context = new ApplicationDbContext(options);
-
-            var repository = new TaskRepository(context);
-
-            var userRep = new Mock<UserRepository>(context);
-
-            var categoryRep = new CategoryRepository(context);
-
-            var taskCategoriesRep = new TaskCategoryRepository(context);
-
-            var mapper = new Mock<IMapper>();
-            var task = new TaskItemDTO { Id = "1", Description = "Description", UserId = "1" };
-            var taskItem = new TaskItem { Id = "1", Description = "Description", UserId = "1",};
-            mapper.Setup(x => x.Map<TaskItem>(task)).Returns(taskItem);
-            mapper.Setup(x => x.Map<TaskItemDTO>(taskItem)).Returns(task);
-            var principal = new Mock<ClaimsPrincipal>();
-            principal.Setup(b => b.Identity.IsAuthenticated).Returns(true);
-            principal.Setup(b => b.FindFirst(It.IsAny<string>())).Returns(new Claim(ClaimTypes.NameIdentifier, "1"));
-
-            var userService = new UserService(userRep.Object,mapper.Object);
-
-            var service = new TaskService(repository, userRep.Object, categoryRep, taskCategoriesRep, mapper.Object);
-
-            var categoryService = new Mock<ICategoryService>();
-
-            var controller = new TaskController(service, categoryService.Object);
-            // Act
-            var view = controller.Create(task);
-
-            var actionResult = controller.Details("1");
-
-            var contentResult = actionResult as ViewResult;
-
-            var okResult = Assert.IsType<ViewResult>(actionResult);
-
-            Assert.Equal("Description", ((controller.Details(task.Id) as ViewResult).Model as TaskItemDTO).Description);
-
         }
 
         [Fact]
