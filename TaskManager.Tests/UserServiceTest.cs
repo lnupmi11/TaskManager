@@ -258,6 +258,92 @@ namespace TaskManager.Tests
             repository.Verify(r => r.Update(It.IsAny<UserProfile>()), Times.Once());
 
         }
+        [Fact]
+        public void ChangeFirstNameTest()
+        {
+            //Arrange
+            var profile = svc.GetUserProfile("1");
+            // Act
+            svc.ChangeFirstName(profile, "bbb");
+            // Assert
+            Assert.Equal("bbb", profile.FirstName);
+        }
+        [Fact]
+        public void ChangeSecondNameTest()
+        {
+            //Arrange
+            var profile = svc.GetUserProfile("1");
+            // Act
+            svc.ChangeSecondName(profile, "bbb");
+            // Assert
+            Assert.Equal("bbb", profile.LastName);
+        }
+        [Fact]
+        public void ChangeFirstNameClaimsTest()
+        {
+            // Arrange
+            var claims = new Mock<ClaimsPrincipal>();
+            var identity = new Mock<ClaimsIdentity>();
+            identity.Setup(i => i.IsAuthenticated)
+                .Returns(true);
+            claims.Setup(i => i.Identity)
+                .Returns(identity.Object);
+            claims.Setup(i => i.FindFirst(It.IsAny<string>()))
+                .Returns(new Claim(ClaimTypes.NameIdentifier, "1"));
+            var list1 = GetTestCollection().AsQueryable();
+            var mockSet = new Mock<DbSet<UserProfile>>();
+            mockSet.As<IQueryable<UserProfile>>().Setup(p => p.Provider).Returns(list1.Provider);
+            mockSet.As<IQueryable<UserProfile>>().Setup(p => p.Expression).Returns(list1.Expression);
+            mockSet.As<IQueryable<UserProfile>>().Setup(p => p.ElementType).Returns(list1.ElementType);
+            mockSet.As<IQueryable<UserProfile>>().Setup(p => p.GetEnumerator()).Returns(list1.GetEnumerator);
+
+            var mockCtx = new Mock<ApplicationDbContext>();
+            mockCtx.Setup(p => p.UserProfiles).Returns(mockSet.Object);
+
+            var repo = new Mock<IRepository<UserProfile>>();
+            repo.Setup(r => r.Find(It.IsAny<string>()))
+                .Returns(list.First(i => i.Id == "1"));
+            var mapper = new Mock<IMapper>();
+            var svc1 = new UserService(repo.Object, mapper.Object);
+            var profile = svc1.GetUserProfile(claims.Object);
+            // Act
+            svc1.ChangeFirstName(claims.Object, "ccc");
+            // Assert
+            Assert.Equal("ccc", profile.FirstName);
+        }
+        [Fact]
+        public void ChangeSecondNameClaimsTest()
+        {
+            // Arrange
+            var claims = new Mock<ClaimsPrincipal>();
+            var identity = new Mock<ClaimsIdentity>();
+            identity.Setup(i => i.IsAuthenticated)
+                .Returns(true);
+            claims.Setup(i => i.Identity)
+                .Returns(identity.Object);
+            claims.Setup(i => i.FindFirst(It.IsAny<string>()))
+                .Returns(new Claim(ClaimTypes.NameIdentifier, "1"));
+            var list1 = GetTestCollection().AsQueryable();
+            var mockSet = new Mock<DbSet<UserProfile>>();
+            mockSet.As<IQueryable<UserProfile>>().Setup(p => p.Provider).Returns(list1.Provider);
+            mockSet.As<IQueryable<UserProfile>>().Setup(p => p.Expression).Returns(list1.Expression);
+            mockSet.As<IQueryable<UserProfile>>().Setup(p => p.ElementType).Returns(list1.ElementType);
+            mockSet.As<IQueryable<UserProfile>>().Setup(p => p.GetEnumerator()).Returns(list1.GetEnumerator);
+
+            var mockCtx = new Mock<ApplicationDbContext>();
+            mockCtx.Setup(p => p.UserProfiles).Returns(mockSet.Object);
+
+            var repo = new Mock<IRepository<UserProfile>>();
+            repo.Setup(r => r.Find(It.IsAny<string>()))
+                .Returns(list.First(i => i.Id == "1"));
+            var mapper = new Mock<IMapper>();
+            var svc1 = new UserService(repo.Object, mapper.Object);
+            var profile = svc1.GetUserProfile(claims.Object);
+            // Act
+            svc1.ChangeSecondName(claims.Object, "ccc");
+            // Assert
+            Assert.Equal("ccc", profile.LastName);
+        }
         private IEnumerable<UserProfile> GetTestCollection()
         {
             return new[]
