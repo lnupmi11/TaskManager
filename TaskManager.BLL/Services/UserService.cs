@@ -1,14 +1,14 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
-using System.Security.Claims;
-using TaskManager.DAL.Models;
-using TaskManager.BLL.Extensions.Identity;
-using TaskManager.DAL.Interfaces;
-using TaskManager.BLL.Interfaces;
-using AutoMapper;
-using TaskManager.DTO.Models.UserManagement;
-using TaskManager.DAL.Models.Enums;
 using System.Linq;
+using System.Security.Claims;
+using TaskManager.BLL.Extensions.Identity;
+using TaskManager.BLL.Interfaces;
+using TaskManager.DAL.Interfaces;
+using TaskManager.DAL.Models;
+using TaskManager.DAL.Models.Enums;
+using TaskManager.DTO.Models.UserManagement;
 
 namespace TaskManager.BLL.Services
 {

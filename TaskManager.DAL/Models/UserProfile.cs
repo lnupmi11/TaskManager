@@ -11,6 +11,7 @@ namespace TaskManager.DAL.Models
         public UserProfile()
         {
             Tasks = new List<TaskItem>();
+            Categories = new List<CategoryItem>();
         }
 
         public string FirstName { get; set; }
@@ -22,5 +23,7 @@ namespace TaskManager.DAL.Models
         public DateTime RegistredOn { get; set; }
 
         public virtual ICollection<TaskItem> Tasks { get; set; }
+
+        public virtual ICollection<CategoryItem> Categories { get; set; }
     }
 }

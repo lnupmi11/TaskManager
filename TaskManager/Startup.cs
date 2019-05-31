@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TaskManager.BLL.Interfaces;
 using TaskManager.BLL.Services;
@@ -33,7 +34,8 @@ namespace TaskManager
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-               options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+               options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+               x => x.MigrationsAssembly("TaskManager")));
 
             services.AddIdentity<UserProfile, IdentityRole>(
                 config => config.SignIn.RequireConfirmedEmail = true)
@@ -49,10 +51,14 @@ namespace TaskManager
 
             services.AddScoped(typeof(IRepository<TaskItem>), typeof(TaskRepository));
             services.AddScoped(typeof(IRepository<UserProfile>), typeof(UserRepository));
+            services.AddScoped(typeof(IRepository<CategoryItem>), typeof(CategoryRepository));
+            services.AddScoped(typeof(IRepository<TaskCategories>), typeof(TaskCategoryRepository));
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ITaskService, TaskService>();
+            services.AddTransient<ICategoryService, CategoryService>();
 
             CreateRoles(services.BuildServiceProvider()).Wait();
+            CreateCategories(services.BuildServiceProvider());
         }
 
         private async Task CreateRoles(IServiceProvider serviceProvider)
@@ -94,6 +100,31 @@ namespace TaskManager
                     Name = userRole
                 };
                 await roleManager.CreateAsync(role);
+            }
+        }
+
+        private void CreateCategories(IServiceProvider serviceProvider)
+        {
+            var categoriesManager = serviceProvider.GetRequiredService<IRepository<CategoryItem>>();
+            var categoryValues = new List<string>
+            {
+                        "Sport Activity",
+                        "Phone Call",
+                        "Mettings",
+                        "Family",
+                        "Friends",
+                        "Weekend",
+                        "Work",
+                        "Homework"
+            };
+
+            foreach (var value in categoryValues)
+            {
+                if (!categoriesManager.Any(p => p.Name == value))
+                {
+                    var category = new CategoryItem { Name = value };
+                    categoriesManager.Create(category);
+                }
             }
         }
 

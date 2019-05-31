@@ -38,7 +38,7 @@ namespace TaskManager.Tests
             var service = SetUpService();
 
             // Act
-            var actual = service.GetActiveByFilters(priorities:new List<Priority>{Priority.Critical},category:Category.Work);
+            var actual = service.GetActiveByFilters(priorities: new List<Priority> { Priority.Critical }, categories: new List<string>());
 
             // Assert
             Assert.Equal(2, actual.Count());
@@ -50,10 +50,60 @@ namespace TaskManager.Tests
             var service = SetUpService();
 
             // Act
-            var actual = service.GetArchivedByFilters(priorities: new List<Priority> { Priority.Critical }, category: Category.Work);
+            var actual = service.GetArchivedByFilters(priorities: new List<Priority> { Priority.Critical }, categories: new List<string>());
 
             // Assert
             Assert.Equal(1, actual.Count());
+        }
+        [Fact]
+        public void GetByFiltersTest()
+        {
+            var list = GetTestList().AsQueryable();
+            var service = SetUpService();
+
+            // Act
+            var actual = service.GetByFilters(priorities: new List<Priority> { Priority.Critical }, categories: new List<string>());
+
+            // Assert
+            Assert.Equal(3, actual.Count());
+        }
+        [Fact]
+        public void GetUsersTasksTest()
+        {
+            var list = GetTestList().AsQueryable();
+            var service = SetUpService();
+            var claims = new Mock<ClaimsPrincipal>();
+            var identity = new Mock<ClaimsIdentity>();
+            identity.Setup(i => i.IsAuthenticated)
+                .Returns(true);
+            claims.Setup(i => i.Identity)
+                .Returns(identity.Object);
+            claims.Setup(i => i.FindFirst(It.IsAny<string>()))
+                .Returns(new Claim(ClaimTypes.NameIdentifier, "1"));
+            // Act
+            var actual = service.GetUserTasks(claims.Object);
+
+            // Assert
+            Assert.NotNull(actual);
+        }
+        [Fact]
+        public void GetUsersTasksByFiltersListTest()
+        {
+            var list = GetTestList().AsQueryable();
+            var service = SetUpService();
+            var claims = new Mock<ClaimsPrincipal>();
+            var identity = new Mock<ClaimsIdentity>();
+            identity.Setup(i => i.IsAuthenticated)
+                .Returns(true);
+            claims.Setup(i => i.Identity)
+                .Returns(identity.Object);
+            claims.Setup(i => i.FindFirst(It.IsAny<string>()))
+                .Returns(new Claim(ClaimTypes.NameIdentifier, "1"));
+            // Act
+            var actual = service.GetUserTasksByFilters(claims.Object, priorities: new List<Priority> { Priority.Critical },categories: new List<string>());
+
+            // Assert
+            Assert.Equal(3, actual.Count());
         }
         [Fact]
         public void GetUsersActiveListTest()
@@ -69,7 +119,7 @@ namespace TaskManager.Tests
             claims.Setup(i => i.FindFirst(It.IsAny<string>()))
                 .Returns(new Claim(ClaimTypes.NameIdentifier, "1"));
             // Act
-            var actual = service.GetUserActiveTasksByFilters(claims.Object,priorities: new List<Priority> { Priority.Critical }, category: Category.Work);
+            var actual = service.GetUserActiveTasksByFilters(claims.Object, priorities: new List<Priority> { Priority.Critical }, categories: new List<string>());
 
             // Assert
             Assert.Equal(2, actual.Count());
@@ -88,7 +138,7 @@ namespace TaskManager.Tests
             claims.Setup(i => i.FindFirst(It.IsAny<string>()))
                 .Returns(new Claim(ClaimTypes.NameIdentifier, "1"));
             // Act
-            var actual = service.GetUserArchivedTasksByFilters(claims.Object, priorities: new List<Priority> { Priority.Critical }, category:null);
+            var actual = service.GetUserArchivedTasksByFilters(claims.Object, priorities: new List<Priority> { Priority.Critical }, categories: new List<string>());
             // Assert
             Assert.NotNull(actual);
         }
@@ -111,8 +161,9 @@ namespace TaskManager.Tests
             var mapper = new Mock<IMapper>();
 
             var userService = new Mock<UserService>(userRep.Object);
-
-            var service = new Mock<TaskService>(repository.Object, userRep.Object, mapper.Object);
+            var catRep = new Mock<CategoryRepository>(mockContext.Object);
+            var taskRep = new Mock<TaskCategoryRepository>(mockContext.Object);
+            var service = new Mock<TaskService>(repository.Object, userRep.Object,catRep.Object,taskRep.Object, mapper.Object);
 
             var principal = new Mock<ClaimsPrincipal>();
             principal.Setup(b => b.Identity.IsAuthenticated).Returns(true);
@@ -134,7 +185,7 @@ namespace TaskManager.Tests
             var repository = new Mock<TaskRepository>(mockContext.Object);
 
             var userRep = new Mock<UserRepository>(mockContext.Object);
-            
+
             var mapper = new Mock<IMapper>();
             var task = new TaskItemDTO { Id = "1", Description = "Description", UserId = "1" };
             var taskItem = new TaskItem { Id = "1", Description = "Description", UserId = "1" };
@@ -145,7 +196,9 @@ namespace TaskManager.Tests
 
             var userService = new Mock<UserService>(userRep.Object);
 
-            var service = new Mock<TaskService>(repository.Object, userRep.Object, mapper.Object);
+            var catRep = new Mock<CategoryRepository>(mockContext.Object);
+            var taskRep = new Mock<TaskCategoryRepository>(mockContext.Object);
+            var service = new Mock<TaskService>(repository.Object, userRep.Object, catRep.Object, taskRep.Object, mapper.Object);
             var cp = new Mock<ClaimsPrincipal>();
             cp.Setup(m => m.HasClaim(It.IsAny<string>(), It.IsAny<string>())).Returns(true);
 
@@ -154,9 +207,9 @@ namespace TaskManager.Tests
             IdentityExtensions.Implementation = mockMyImplementation.Object;
             mockMyImplementation.Setup(m => m.GetUserId(cp.Object)).Returns("1");
             // Act 
-            service.Setup(i=>i.Create(cp.Object, task));
+            service.Setup(i => i.Create(cp.Object, task));
             service.Object.Create(cp.Object, task);
-            service.Setup(i=>i.Update(task));
+            service.Setup(i => i.Update(task));
             service.Object.Update(task);
             // Assert
             service.Verify(i => i.Update(task));
@@ -183,14 +236,16 @@ namespace TaskManager.Tests
             mapper.Setup(x => x.Map<TaskItemDTO>(taskItem)).Returns(task);
             var userService = new Mock<UserService>(userRep.Object);
 
-            var service = new Mock<TaskService>(repository.Object, userRep.Object, mapper.Object);
+            var catRep = new Mock<CategoryRepository>(mockContext.Object);
+            var taskRep = new Mock<TaskCategoryRepository>(mockContext.Object);
+            var service = new Mock<TaskService>(repository.Object, userRep.Object, catRep.Object, taskRep.Object, mapper.Object);
             var cp = new Mock<ClaimsPrincipal>();
             cp.Setup(m => m.HasClaim(It.IsAny<string>(), It.IsAny<string>())).Returns(true);
             var mockMyImplementation = new Mock<IdentityExtension>();
 
             IdentityExtensions.Implementation = mockMyImplementation.Object;
             mockMyImplementation.Setup(m => m.GetUserId(cp.Object)).Returns("1");
-            service.Setup(x => x.Create(cp.Object,exp));
+            service.Setup(x => x.Create(cp.Object, exp));
             service.Object.Create(cp.Object, exp);
             service.Setup(x => x.Any(exp.Id));
             service.Object.Any(exp.Id);
@@ -218,7 +273,9 @@ namespace TaskManager.Tests
 
             var userService = new Mock<UserService>(userRep.Object);
 
-            var service = new Mock<TaskService>(repository.Object, userRep.Object, mapper.Object);
+            var catRep = new Mock<CategoryRepository>(mockContext.Object);
+            var taskRep = new Mock<TaskCategoryRepository>(mockContext.Object);
+            var service = new Mock<TaskService>(repository.Object, userRep.Object, catRep.Object, taskRep.Object, mapper.Object);
 
             service.Setup(x => x.Delete(task.Id));
             service.Object.Delete(task.Id);
@@ -240,9 +297,9 @@ namespace TaskManager.Tests
         {
             return new[]
             {
-                new TaskItem{Id="1",Description="aaaa",Status=Status.Active ,Priority=Priority.Critical,Category=Category.Work,UserId="1"},
-                new TaskItem{Id="2",Description="bbbb",Status=Status.Active ,Priority=Priority.Critical,Category=Category.Work,UserId="1"},
-                new TaskItem{Id="3",Description="cccc",Status = Status.Closed, Priority=Priority.Critical,Category=Category.Work,UserId="1"}
+                new TaskItem{Id="1",Description="aaaa",Status=Status.Active ,Priority=Priority.Critical, Categories = new List<TaskCategories>(){ new TaskCategories { Category = new CategoryItem { Name = "Work", Id = "1" } } }, UserId="1"},
+                new TaskItem{Id="2",Description="bbbb",Status=Status.Active ,Priority=Priority.Critical, Categories = new List<TaskCategories>(){ new TaskCategories { Category = new CategoryItem { Name = "Work", Id = "1" } } }, UserId="1"},
+                new TaskItem{Id="3",Description="cccc",Status = Status.Closed, Priority=Priority.Critical, Categories = new List<TaskCategories>(){ new TaskCategories { Category = new CategoryItem { Name = "Work", Id = "1" } } }, UserId="1"}
             };
         }
         private TaskService SetUpService()
@@ -262,19 +319,21 @@ namespace TaskManager.Tests
             var userRep = new Mock<UserRepository>(mockContext.Object);
 
             var mapper = new Mock<IMapper>();
-            var task = new TaskItemDTO { Id = "1", Description = "aaaa",Status=Status.Active ,Priority=Priority.Critical,Category=Category.Work, UserId = "1" };
-            var taskItem = new TaskItem { Id = "1", Description = "aaaa", Status = Status.Active, Priority = Priority.Critical, Category = Category.Work, UserId = "1" };
+            var task = new TaskItemDTO { Id = "1", Description = "aaaa", Status = Status.Active, Priority = Priority.Critical, Categories = new List<TaskCategories>() { new TaskCategories { Category = new CategoryItem { Name = "Work",Id="1" } } }, UserId = "1" };
+            var taskItem = new TaskItem { Id = "1", Description = "aaaa", Status = Status.Active, Priority = Priority.Critical, Categories = new List<TaskCategories>() { new TaskCategories { Category = new CategoryItem { Name = "Work", Id = "1" } } }, UserId = "1" };
             mapper.Setup(x => x.Map<TaskItemDTO>(taskItem)).Returns(task);
-            var task1 = new TaskItemDTO { Id = "1", Description = "bbbb", Status = Status.Active, Priority = Priority.Critical, Category = Category.Work, UserId = "1" };
-            var taskItem1 = new TaskItem { Id = "1", Description = "bbbb", Status = Status.Active, Priority = Priority.Critical, Category = Category.Work, UserId = "1" };
+            var task1 = new TaskItemDTO { Id = "1", Description = "bbbb", Status = Status.Active, Priority = Priority.Critical, Categories = new List<TaskCategories>() { new TaskCategories { Category = new CategoryItem { Name = "Work", Id = "1" } } }, UserId = "1" };
+            var taskItem1 = new TaskItem { Id = "1", Description = "bbbb", Status = Status.Active, Priority = Priority.Critical, Categories = new List<TaskCategories>() { new TaskCategories { Category = new CategoryItem { Name = "Work", Id = "1" } } }, UserId = "1" };
             mapper.Setup(x => x.Map<TaskItemDTO>(taskItem1)).Returns(task1);
-            var task2 = new TaskItemDTO { Id = "1", Description = "cccc" , Status = Status.Closed, Priority = Priority.Critical, Category = Category.Work, UserId = "1" };
-            var taskItem2 = new TaskItem { Id = "1", Description = "cccc", Status = Status.Closed, Priority = Priority.Critical, Category = Category.Work, UserId = "1" };
+            var task2 = new TaskItemDTO { Id = "1", Description = "cccc", Status = Status.Closed, Priority = Priority.Critical, Categories = new List<TaskCategories>() { new TaskCategories { Category = new CategoryItem { Name = "Work", Id = "1" } } }, UserId = "1" };
+            var taskItem2 = new TaskItem { Id = "1", Description = "cccc", Status = Status.Closed, Priority = Priority.Critical, Categories = new List<TaskCategories>() { new TaskCategories { Category = new CategoryItem { Name = "Work", Id = "1" } } }, UserId = "1" };
             mapper.Setup(x => x.Map<TaskItemDTO>(taskItem2)).Returns(task2);
 
             var userService = new Mock<UserService>(userRep.Object);
 
-            var service = new TaskService(repository, userRep.Object, mapper.Object);
+            var catRep = new Mock<CategoryRepository>(mockContext.Object);
+            var taskRep = new Mock<TaskCategoryRepository>(mockContext.Object);
+            var service = new TaskService(repository, userRep.Object, catRep.Object, taskRep.Object, mapper.Object);
             return service;
 
         }
