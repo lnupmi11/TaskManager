@@ -53,7 +53,7 @@ namespace TaskManager.Tests
             var actual = service.GetArchivedByFilters(priorities: new List<Priority> { Priority.Critical }, categories: new List<string>());
 
             // Assert
-            Assert.Equal(1, actual.Count());
+            Assert.Single(actual);
         }
         [Fact]
         public void GetByFiltersTest()
@@ -153,7 +153,7 @@ namespace TaskManager.Tests
 
             var repository = new Mock<TaskRepository>(mockContext.Object);
 
-            // Act 
+            // Act
             var expTaskDTO = new TaskItemDTO { Id = "4", Description = "ssss" };
 
             var userRep = new Mock<UserRepository>(mockContext.Object);
@@ -206,7 +206,7 @@ namespace TaskManager.Tests
 
             IdentityExtensions.Implementation = mockMyImplementation.Object;
             mockMyImplementation.Setup(m => m.GetUserId(cp.Object)).Returns("1");
-            // Act 
+            // Act
             service.Setup(i => i.Create(cp.Object, task));
             service.Object.Create(cp.Object, task);
             service.Setup(i => i.Update(task));
@@ -225,7 +225,7 @@ namespace TaskManager.Tests
 
             var repository = new Mock<TaskRepository>(mockContext.Object);
 
-            // Act 
+            // Act
             var exp = new TaskItemDTO { Id = "4", Description = "ssss" };
 
             var userRep = new Mock<UserRepository>(mockContext.Object);

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -42,12 +43,11 @@ namespace TaskManager
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddAutoMapper();
+            services.AddAutoMapper(typeof(Startup));
 
-            services.AddMvc();
+            services.AddMvc(option => option.EnableEndpointRouting = false);
             services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
             services.AddTransient<IEmailSender, EmailSender>();
-
 
             services.AddScoped(typeof(IRepository<TaskItem>), typeof(TaskRepository));
             services.AddScoped(typeof(IRepository<UserProfile>), typeof(UserRepository));
@@ -57,12 +57,13 @@ namespace TaskManager
             services.AddTransient<ITaskService, TaskService>();
             services.AddTransient<ICategoryService, CategoryService>();
 
-            CreateRoles(services.BuildServiceProvider()).Wait();
-            CreateCategories(services.BuildServiceProvider());
+            CreateRoles(services).Wait();
+            CreateCategories(services);
         }
 
-        private async Task CreateRoles(IServiceProvider serviceProvider)
+        private async Task CreateRoles(IServiceCollection services)
         {
+            var serviceProvider = services.BuildServiceProvider();
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = serviceProvider.GetRequiredService<UserManager<UserProfile>>();
             var adminRole = Roles.Admin.ToString();
@@ -103,8 +104,9 @@ namespace TaskManager
             }
         }
 
-        private void CreateCategories(IServiceProvider serviceProvider)
+        private void CreateCategories(IServiceCollection services)
         {
+            var serviceProvider = services.BuildServiceProvider();
             var categoriesManager = serviceProvider.GetRequiredService<IRepository<CategoryItem>>();
             var categoryValues = new List<string>
             {
@@ -129,7 +131,7 @@ namespace TaskManager
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostEnvironment env)
         {
             if (env.IsDevelopment())
             {

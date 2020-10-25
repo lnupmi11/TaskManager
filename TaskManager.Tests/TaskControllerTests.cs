@@ -24,7 +24,11 @@ namespace TaskManager.Tests
         [Fact]
         public void CreateTest()
         {
-            var context = new ApplicationDbContext();
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName: "update")
+                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
+                .Options;
+            var context = new ApplicationDbContext(options);
 
             var repository = new TaskRepository(context);
 
@@ -128,7 +132,7 @@ namespace TaskManager.Tests
             var taskItem = new TaskItem { Id = "1", Description = "Description", UserId = "1" };
             mapper.Setup(x => x.Map<TaskItem>(task)).Returns(taskItem);
             mapper.Setup(x => x.Map<TaskItemDTO>(taskItem)).Returns(task);
-   
+
             var userService = new Mock<UserService>(userRep.Object);
 
             var service = new TaskService(repository, userRep.Object, categoryRep.Object, taskCategoriesRep.Object, mapper.Object);
@@ -215,6 +219,6 @@ namespace TaskManager.Tests
             // Assert
             Assert.IsType<NotFoundResult>(actionResult);
         }
-       
+
     }
 }
